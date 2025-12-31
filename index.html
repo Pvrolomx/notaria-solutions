@@ -591,6 +591,42 @@
             .calc-back, .btn-export-pdf, .btn-primary { display: none !important; }
         }
 
+        
+        /* Calc Tabs */
+        .calc-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .calc-tab {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .calc-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .calc-tab:hover:not(.active) {
+            border-color: var(--primary);
+        }
+        .info-excedente {
+            background: #EBF5FF;
+            border-left: 3px solid var(--primary);
+            padding: 0.75rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
         .enajenantes-section {
             background: var(--bg);
             border-radius: 12px;
@@ -969,6 +1005,13 @@
                 <div class="calc-card">
                     <h3>💰 Calculadora ISR por Enajenación</h3>
                     
+                    <div class="calc-tabs">
+                        <button class="calc-tab active" onclick="setTipoCalculo('normal', this)">Normal</button>
+                        <button class="calc-tab" onclick="setTipoCalculo('excedente', this)">Excedente Terreno</button>
+                    </div>
+                    
+                    <!-- Fechas normales -->
+                    <div id="fechasNormal">
                     <div class="calc-grid">
                         <div class="calc-field">
                             <label>Fecha Venta</label>
@@ -978,6 +1021,25 @@
                             <label>Fecha Compra</label>
                             <input type="date" id="isrFechaCompra" value="2015-06-12">
                         </div>
+                    </div>
+                    </div>
+                    
+                    <!-- Fechas excedente terreno -->
+                    <div id="fechasExcedente" style="display:none;">
+                    <div class="calc-field">
+                        <label>Fecha Venta</label>
+                        <input type="date" id="isrFechaVentaExc" value="2024-12-31">
+                    </div>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Fecha Compra Terreno</label>
+                            <input type="date" id="isrFechaCompraTerreno" value="2010-03-15">
+                        </div>
+                        <div class="calc-field">
+                            <label>Fecha Construcción</label>
+                            <input type="date" id="isrFechaConstruccion" value="2015-06-12">
+                        </div>
+                    </div>
                     </div>
                     <div class="calc-grid">
                         <div class="calc-field">
@@ -1259,31 +1321,88 @@
             });
         });
 
+        
+        let tipoCalculo = 'normal';
+        
+        function setTipoCalculo(tipo, btn) {
+            tipoCalculo = tipo;
+            document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            
+            if (tipo === 'normal') {
+                document.getElementById('fechasNormal').style.display = 'block';
+                document.getElementById('fechasExcedente').style.display = 'none';
+            } else {
+                document.getElementById('fechasNormal').style.display = 'none';
+                document.getElementById('fechasExcedente').style.display = 'block';
+            }
+        }
+
         function calcularISR() {
-            const fV = new Date(document.getElementById('isrFechaVenta').value);
-            const fC = new Date(document.getElementById('isrFechaCompra').value);
+            let fV, fCTerreno, fCConst, aniosTerreno, aniosConst, factorTerreno, factorConst;
+            
             const pV = parseFloat(document.getElementById('isrPrecioVenta').value) || 0;
             const pC = parseFloat(document.getElementById('isrPrecioCompra').value) || 0;
             const pctT = parseFloat(document.getElementById('isrPctTerreno').value) / 100;
             const pctCo = parseFloat(document.getElementById('isrPctConst').value) / 100;
             
-            let anios = Math.floor((fV - fC) / (365.25 * 24 * 60 * 60 * 1000));
-            anios = Math.max(1, Math.min(anios, 20));
+            if (tipoCalculo === 'normal') {
+                fV = new Date(document.getElementById('isrFechaVenta').value);
+                fCTerreno = new Date(document.getElementById('isrFechaCompra').value);
+                fCConst = fCTerreno;
+            } else {
+                fV = new Date(document.getElementById('isrFechaVentaExc').value);
+                fCTerreno = new Date(document.getElementById('isrFechaCompraTerreno').value);
+                fCConst = new Date(document.getElementById('isrFechaConstruccion').value);
+            }
             
+            // Años para terreno
+            aniosTerreno = Math.floor((fV - fCTerreno) / (365.25 * 24 * 60 * 60 * 1000));
+            aniosTerreno = Math.max(1, Math.min(aniosTerreno, 20));
+            
+            // Años para construcción
+            aniosConst = Math.floor((fV - fCConst) / (365.25 * 24 * 60 * 60 * 1000));
+            aniosConst = Math.max(1, Math.min(aniosConst, 20));
+            
+            // INPC
             const inpcV = INPC[fV.getFullYear()] || 141;
-            const inpcC = INPC[fC.getFullYear()] || 87.5;
-            const factor = inpcV / inpcC;
+            const inpcCTerreno = INPC[fCTerreno.getFullYear()] || 87.5;
+            const inpcCConst = INPC[fCConst.getFullYear()] || 87.5;
             
-            const terrenoAct = pC * pctT * factor;
-            const pctDep = Math.min(anios * 3, 80) / 100;
-            const constAct = pC * pctCo * (1 - pctDep) * factor;
+            factorTerreno = inpcV / inpcCTerreno;
+            factorConst = inpcV / inpcCConst;
+            
+            // Terreno actualizado
+            const terrenoAct = pC * pctT * factorTerreno;
+            
+            // Construcción: depreciación + actualización
+            const pctDep = Math.min(aniosConst * 3, 80) / 100;
+            const constAct = pC * pctCo * (1 - pctDep) * factorConst;
+            
             const deduc = terrenoAct + constAct;
+            
+            // Años para ISR (usar el mayor)
+            const anios = Math.max(aniosTerreno, aniosConst);
             
             // Obtener enajenantes
             const rows = document.querySelectorAll('.enajenante-row');
-            let resultHTML = `
-                <div class="calc-result-row"><span>Factor INPC</span><span>${factor.toFixed(4)}</span></div>
-                <div class="calc-result-row"><span>Años</span><span>${anios}</span></div>
+            let resultHTML = '';
+            
+            if (tipoCalculo === 'excedente') {
+                resultHTML += `
+                    <div style="background:#EBF5FF;padding:0.75rem;border-radius:8px;margin-bottom:0.75rem;font-size:0.8rem;">
+                        <strong>📊 Excedente de Terreno</strong><br>
+                        Terreno: ${aniosTerreno} años, Factor ${factorTerreno.toFixed(4)}<br>
+                        Construcción: ${aniosConst} años, Factor ${factorConst.toFixed(4)}
+                    </div>
+                `;
+            }
+            
+            resultHTML += `
+                <div class="calc-result-row"><span>Factor INPC ${tipoCalculo === 'excedente' ? '(prom)' : ''}</span><span>${((factorTerreno + factorConst) / 2).toFixed(4)}</span></div>
+                <div class="calc-result-row"><span>Años (mayor)</span><span>${anios}</span></div>
+                <div class="calc-result-row"><span>Terreno Actualizado</span><span>${fmt(terrenoAct)}</span></div>
+                <div class="calc-result-row"><span>Construcción Actualizada</span><span>${fmt(constAct)}</span></div>
                 <div class="calc-result-row"><span>Deducciones Totales</span><span>${fmt(deduc)}</span></div>
                 <hr style="margin:0.75rem 0;border:none;border-top:1px solid var(--border);">
             `;
@@ -1299,11 +1418,9 @@
                 const esCasa = row.querySelector('.enajenante-casa-check').checked;
                 const esExt = tipo === 'extranjero';
                 
-                // Proporcionar valores según porcentaje
                 const precioVentaEn = pV * pct;
                 const deducEn = deduc * pct;
                 
-                // Exención casa habitación
                 let exen = 0;
                 if (esCasa && !esExt) exen = Math.min(5925000 * pct, precioVentaEn - deducEn);
                 
@@ -1351,6 +1468,7 @@
             document.getElementById('isrResultado').style.display = 'block';
             document.getElementById('isrResultado').innerHTML = resultHTML + '<button class="btn btn-export-pdf btn-full" onclick="exportarPDF()">📄 Exportar PDF</button>';
         }
+
 
         
         
