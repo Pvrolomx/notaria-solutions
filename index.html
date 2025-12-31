@@ -553,6 +553,82 @@
             align-items: center;
             gap: 0.5rem;
         }
+        
+        /* Enajenantes */
+        .enajenantes-section {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .enajenantes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .enajenantes-header label {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .btn-add-enajenante {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .enajenante-row {
+            display: grid;
+            grid-template-columns: 1fr 60px 100px auto auto;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background: var(--white);
+            border-radius: 8px;
+        }
+        .enajenante-row input, .enajenante-row select {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+        .enajenante-nombre { min-width: 0; }
+        .enajenante-pct { width: 60px; text-align: center; }
+        .enajenante-tipo { width: 100px; }
+        .enajenante-casa { font-size: 0.7rem; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; }
+        .enajenante-casa input { width: 14px; height: 14px; }
+        .btn-remove-enajenante {
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .enajenantes-total {
+            text-align: right;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+        }
+        @media (max-width: 500px) {
+            .enajenante-row {
+                grid-template-columns: 1fr 50px;
+                gap: 0.4rem;
+            }
+            .enajenante-tipo, .enajenante-casa, .btn-remove-enajenante {
+                grid-column: span 1;
+            }
+        }
+
         .calc-checks input[type="checkbox"] {
             width: 18px;
             height: 18px;
@@ -850,11 +926,12 @@
                 </div>
             </div>
             
-            <!-- Calculadora ISR -->
+                        <!-- Calculadora ISR -->
             <div id="calc-isr" class="calc-panel" style="display:none;">
                 <button class="calc-back" onclick="showCalcMenu()">← Volver</button>
                 <div class="calc-card">
                     <h3>💰 Calculadora ISR por Enajenación</h3>
+                    
                     <div class="calc-grid">
                         <div class="calc-field">
                             <label>Fecha Venta</label>
@@ -885,10 +962,30 @@
                             <input type="number" id="isrPctConst" value="80">
                         </div>
                     </div>
-                    <div class="calc-checks">
-                        <label><input type="checkbox" id="isrExtranjero"> Extranjero (sin RFC)</label>
-                        <label><input type="checkbox" id="isrCasa"> Casa Habitación</label>
+                    
+                    <!-- ENAJENANTES -->
+                    <div class="enajenantes-section">
+                        <div class="enajenantes-header">
+                            <label>Enajenantes</label>
+                            <button type="button" class="btn-add-enajenante" onclick="agregarEnajenante()">+ Agregar</button>
+                        </div>
+                        <div id="enajenantesContainer">
+                            <div class="enajenante-row" data-index="0">
+                                <input type="text" placeholder="Nombre" class="enajenante-nombre" value="Enajenante 1">
+                                <input type="number" placeholder="%" class="enajenante-pct" value="100" min="0" max="100">
+                                <select class="enajenante-tipo">
+                                    <option value="residente">Residente</option>
+                                    <option value="extranjero">Extranjero</option>
+                                </select>
+                                <label class="enajenante-casa"><input type="checkbox" class="enajenante-casa-check"> Casa Hab.</label>
+                                <button type="button" class="btn-remove-enajenante" onclick="quitarEnajenante(this)" style="display:none;">✕</button>
+                            </div>
+                        </div>
+                        <div class="enajenantes-total">
+                            Total: <span id="totalPorcentaje">100</span>%
+                        </div>
                     </div>
+                    
                     <button class="btn btn-primary btn-full" onclick="calcularISR()">Calcular ISR</button>
                     <div id="isrResultado" class="calc-result" style="display:none;"></div>
                 </div>
@@ -1072,6 +1169,59 @@
             return 0;
         }
         
+        
+        // Enajenantes
+        let enajenanteIndex = 1;
+        
+        function agregarEnajenante() {
+            const container = document.getElementById('enajenantesContainer');
+            const div = document.createElement('div');
+            div.className = 'enajenante-row';
+            div.dataset.index = enajenanteIndex;
+            div.innerHTML = `
+                <input type="text" placeholder="Nombre" class="enajenante-nombre" value="Enajenante ${enajenanteIndex + 1}">
+                <input type="number" placeholder="%" class="enajenante-pct" value="0" min="0" max="100" onchange="actualizarTotalPct()">
+                <select class="enajenante-tipo">
+                    <option value="residente">Residente</option>
+                    <option value="extranjero">Extranjero</option>
+                </select>
+                <label class="enajenante-casa"><input type="checkbox" class="enajenante-casa-check"> Casa Hab.</label>
+                <button type="button" class="btn-remove-enajenante" onclick="quitarEnajenante(this)">✕</button>
+            `;
+            container.appendChild(div);
+            enajenanteIndex++;
+            actualizarBotonesRemove();
+            actualizarTotalPct();
+        }
+        
+        function quitarEnajenante(btn) {
+            btn.parentElement.remove();
+            actualizarBotonesRemove();
+            actualizarTotalPct();
+        }
+        
+        function actualizarBotonesRemove() {
+            const rows = document.querySelectorAll('.enajenante-row');
+            rows.forEach((row, i) => {
+                const btn = row.querySelector('.btn-remove-enajenante');
+                if (btn) btn.style.display = rows.length > 1 ? 'block' : 'none';
+            });
+        }
+        
+        function actualizarTotalPct() {
+            const inputs = document.querySelectorAll('.enajenante-pct');
+            let total = 0;
+            inputs.forEach(inp => total += parseFloat(inp.value) || 0);
+            document.getElementById('totalPorcentaje').textContent = total;
+            document.getElementById('totalPorcentaje').style.color = total === 100 ? 'var(--success)' : 'var(--danger)';
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.enajenante-pct').forEach(inp => {
+                inp.addEventListener('change', actualizarTotalPct);
+            });
+        });
+
         function calcularISR() {
             const fV = new Date(document.getElementById('isrFechaVenta').value);
             const fC = new Date(document.getElementById('isrFechaCompra').value);
@@ -1079,8 +1229,6 @@
             const pC = parseFloat(document.getElementById('isrPrecioCompra').value) || 0;
             const pctT = parseFloat(document.getElementById('isrPctTerreno').value) / 100;
             const pctCo = parseFloat(document.getElementById('isrPctConst').value) / 100;
-            const esExt = document.getElementById('isrExtranjero').checked;
-            const esCasa = document.getElementById('isrCasa').checked;
             
             let anios = Math.floor((fV - fC) / (365.25 * 24 * 60 * 60 * 1000));
             anios = Math.max(1, Math.min(anios, 20));
@@ -1094,39 +1242,79 @@
             const constAct = pC * pctCo * (1 - pctDep) * factor;
             const deduc = terrenoAct + constAct;
             
-            let exen = 0;
-            if (esCasa && !esExt) exen = Math.min(5925000, pV - deduc);
-            
-            let util = Math.max(0, pV - deduc - exen);
-            let isr = 0, mejor = '';
-            
-            if (util > 0) {
-                if (esExt) {
-                    const isr35 = util * 0.35;
-                    const isrTab = calcISRTabla(util / anios) * anios;
-                    if (isr35 <= isrTab) { isr = isr35; mejor = '35% Flat'; }
-                    else { isr = isrTab; mejor = 'Tablas'; }
-                } else {
-                    isr = calcISRTabla(util / anios) * anios;
-                }
-            }
-            
-            const isrEst = esExt ? 0 : Math.min(util * 0.05, isr);
-            const isrFed = isr - isrEst;
-            
-            document.getElementById('isrResultado').style.display = 'block';
-            document.getElementById('isrResultado').innerHTML = `
+            // Obtener enajenantes
+            const rows = document.querySelectorAll('.enajenante-row');
+            let resultHTML = `
                 <div class="calc-result-row"><span>Factor INPC</span><span>${factor.toFixed(4)}</span></div>
                 <div class="calc-result-row"><span>Años</span><span>${anios}</span></div>
-                <div class="calc-result-row"><span>Deducciones</span><span>${fmt(deduc)}</span></div>
-                ${exen > 0 ? '<div class="calc-result-row"><span>Exención</span><span>' + fmt(exen) + '</span></div>' : ''}
-                <div class="calc-result-row"><span>Utilidad Gravable</span><span>${fmt(util)}</span></div>
-                ${esExt && util > 0 ? '<div class="calc-result-row" style="background:#D1FAE5;margin:0.5rem -1rem;padding:0.5rem 1rem;border-radius:8px;"><span>✅ Mejor: ' + mejor + '</span><span>' + fmt(isr) + '</span></div>' : ''}
-                <div class="calc-result-row"><span>ISR Estado</span><span>${fmt(isrEst)}</span></div>
-                <div class="calc-result-row"><span>ISR Federación</span><span>${fmt(isrFed)}</span></div>
-                <div class="calc-result-row total"><span>💰 TOTAL ISR</span><span>${fmt(isr)}</span></div>
+                <div class="calc-result-row"><span>Deducciones Totales</span><span>${fmt(deduc)}</span></div>
+                <hr style="margin:0.75rem 0;border:none;border-top:1px solid var(--border);">
             `;
+            
+            let isrTotalGlobal = 0;
+            let isrEstadoGlobal = 0;
+            let isrFedGlobal = 0;
+            
+            rows.forEach((row, i) => {
+                const nombre = row.querySelector('.enajenante-nombre').value;
+                const pct = parseFloat(row.querySelector('.enajenante-pct').value) / 100;
+                const tipo = row.querySelector('.enajenante-tipo').value;
+                const esCasa = row.querySelector('.enajenante-casa-check').checked;
+                const esExt = tipo === 'extranjero';
+                
+                // Proporcionar valores según porcentaje
+                const precioVentaEn = pV * pct;
+                const deducEn = deduc * pct;
+                
+                // Exención casa habitación
+                let exen = 0;
+                if (esCasa && !esExt) exen = Math.min(5925000 * pct, precioVentaEn - deducEn);
+                
+                let util = Math.max(0, precioVentaEn - deducEn - exen);
+                let isr = 0, mejor = '';
+                
+                if (util > 0) {
+                    if (esExt) {
+                        const isr35 = util * 0.35;
+                        const isrTab = calcISRTabla(util / anios) * anios;
+                        if (isr35 <= isrTab) { isr = isr35; mejor = '35%'; }
+                        else { isr = isrTab; mejor = 'Tablas'; }
+                    } else {
+                        isr = calcISRTabla(util / anios) * anios;
+                    }
+                }
+                
+                const isrEst = esExt ? 0 : Math.min(util * 0.05, isr);
+                const isrFed = isr - isrEst;
+                
+                isrTotalGlobal += isr;
+                isrEstadoGlobal += isrEst;
+                isrFedGlobal += isrFed;
+                
+                resultHTML += `
+                    <div style="background:${esExt ? '#FEF3C7' : '#DBEAFE'};margin:0.5rem -1rem;padding:0.75rem 1rem;border-radius:8px;">
+                        <div style="font-weight:600;margin-bottom:0.5rem;">${nombre} (${(pct*100).toFixed(0)}%) ${esExt ? '🌎' : '🇲🇽'}</div>
+                        <div class="calc-result-row"><span>Utilidad Gravable</span><span>${fmt(util)}</span></div>
+                        ${exen > 0 ? '<div class="calc-result-row"><span>Exención</span><span>-' + fmt(exen) + '</span></div>' : ''}
+                        ${esExt && util > 0 ? '<div class="calc-result-row"><span>Mejor opción</span><span>' + mejor + '</span></div>' : ''}
+                        <div class="calc-result-row"><span>ISR Estado</span><span>${fmt(isrEst)}</span></div>
+                        <div class="calc-result-row"><span>ISR Fed</span><span>${fmt(isrFed)}</span></div>
+                        <div class="calc-result-row" style="font-weight:600;"><span>ISR Total</span><span>${fmt(isr)}</span></div>
+                    </div>
+                `;
+            });
+            
+            resultHTML += `
+                <hr style="margin:0.75rem 0;border:none;border-top:2px solid var(--primary);">
+                <div class="calc-result-row"><span>ISR Estado Total</span><span>${fmt(isrEstadoGlobal)}</span></div>
+                <div class="calc-result-row"><span>ISR Federación Total</span><span>${fmt(isrFedGlobal)}</span></div>
+                <div class="calc-result-row total"><span>💰 TOTAL ISR</span><span>${fmt(isrTotalGlobal)}</span></div>
+            `;
+            
+            document.getElementById('isrResultado').style.display = 'block';
+            document.getElementById('isrResultado').innerHTML = resultHTML;
         }
+
         
         function calcularISTP() {
             const estado = document.getElementById('istpEstado').value;
