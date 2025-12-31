@@ -27,258 +27,278 @@
             color: var(--text);
             min-height: 100vh;
         }
-        .app-container { display: flex; min-height: 100vh; }
         
-        /* Sidebar */
-        .sidebar {
-            width: 260px;
-            background: var(--primary);
-            color: var(--white);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
+        /* Header Mobile-First */
+        .app-header {
+            background: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
             z-index: 100;
         }
-        .sidebar-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .sidebar-logo-icon {
-            width: 42px;
-            height: 42px;
-            background: var(--accent);
-            border-radius: 8px;
+        .app-logo {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
-        }
-        .sidebar-logo-text h1 {
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .sidebar-logo-text p {
-            font-size: 0.65rem;
-            opacity: 0.7;
-            letter-spacing: 0.5px;
-        }
-        .sidebar-nav {
-            flex: 1;
-            padding: 1rem 0;
-            overflow-y: auto;
-        }
-        .nav-section {
-            margin-bottom: 1.5rem;
-        }
-        .nav-section-title {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            opacity: 0.4;
-            padding: 0 1.5rem;
+            gap: 0.75rem;
             margin-bottom: 0.5rem;
         }
-        .nav-item {
+        .app-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.8rem 1.5rem;
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.2s;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .app-logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .app-logo-text p {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        .user-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        .user-bar button {
+            background: none;
+            border: none;
+            color: var(--danger);
             cursor: pointer;
-            border-left: 3px solid transparent;
+            font-size: 0.75rem;
         }
-        .nav-item:hover {
-            background: rgba(255,255,255,0.1);
-            color: var(--white);
+        
+        /* Main Container */
+        .app-main {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 1.5rem;
         }
-        .nav-item.active {
-            background: rgba(255,255,255,0.1);
-            color: var(--white);
-            border-left-color: var(--accent);
+        
+        /* Main Menu Grid - 4 botones grandes */
+        .main-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
-        .nav-item-icon { width: 22px; text-align: center; font-size: 1.1rem; }
-        .nav-item-badge {
-            margin-left: auto;
+        .menu-btn {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .menu-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .menu-btn:active {
+            transform: scale(0.98);
+        }
+        .menu-btn-icon {
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+        .menu-btn-icon.clientes { background: linear-gradient(135deg, #1E3A5F 0%, #2D5A8B 100%); }
+        .menu-btn-icon.expedientes { background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%); }
+        .menu-btn-icon.agenda { background: linear-gradient(135deg, #059669 0%, #34D399 100%); }
+        .menu-btn-icon.calculadoras { background: linear-gradient(135deg, #D97706 0%, #FBBF24 100%); }
+        .menu-btn-content {
+            padding: 1rem;
+        }
+        .menu-btn-content h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+        .menu-btn-content p {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        .menu-btn-badge {
+            display: inline-block;
             background: var(--accent);
             color: var(--primary);
             font-size: 0.65rem;
             font-weight: 600;
-            padding: 0.15rem 0.5rem;
+            padding: 0.2rem 0.5rem;
             border-radius: 10px;
+            margin-left: 0.5rem;
         }
-        .sidebar-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
+        
+        /* Secondary Menu - Chat y Llamadas */
+        .secondary-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
         }
-        .user-info { display: flex; align-items: center; gap: 0.75rem; }
-        .user-avatar {
-            width: 38px;
-            height: 38px;
-            background: var(--accent);
+        .secondary-btn {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .secondary-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.1);
+        }
+        .secondary-btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .secondary-btn-icon.chat { background: #DBEAFE; }
+        .secondary-btn-icon.llamadas { background: #D1FAE5; }
+        .secondary-btn-text h4 { font-size: 0.85rem; font-weight: 500; }
+        .secondary-btn-text p { font-size: 0.65rem; color: var(--text-light); }
+        .secondary-btn-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 600;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--primary);
         }
-        .user-details h4 { font-size: 0.85rem; font-weight: 500; }
-        .user-details p { font-size: 0.7rem; opacity: 0.7; }
         
-        /* Main */
-        .main-content {
-            flex: 1;
-            margin-left: 260px;
-            min-height: 100vh;
-        }
-        .header {
-            background: var(--white);
-            padding: 1rem 2rem;
+        /* Panels */
+        .panel { display: none; }
+        .panel.active { display: block; }
+        
+        .panel-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 50;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
-        .header-left h2 { font-size: 1.25rem; font-weight: 600; }
-        .header-left p { font-size: 0.8rem; color: var(--text-light); }
-        .header-right { display: flex; align-items: center; gap: 1rem; }
-        .header-search {
-            display: flex;
-            align-items: center;
-            background: var(--bg);
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            gap: 0.5rem;
-        }
-        .header-search input {
-            border: none;
-            background: transparent;
-            outline: none;
-            font-size: 0.85rem;
-            width: 200px;
-        }
-        .header-btn {
+        .back-btn {
             width: 40px;
             height: 40px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid var(--border);
             background: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            position: relative;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
-        .header-btn-badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 18px;
-            height: 18px;
-            background: var(--danger);
-            color: white;
-            font-size: 0.6rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .panel-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
         }
-        .page-content { padding: 2rem; }
-        .panel { display: none; }
-        .panel.active { display: block; }
+        .panel-header p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
         
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 2rem;
+        /* Stats Cards */
+        .stats-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
         }
         .stat-card {
             background: var(--white);
             border-radius: 12px;
-            padding: 1.25rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 1rem;
+            min-width: 120px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .stat-card-header {
+        .stat-card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-card-label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        
+        /* List Items */
+        .list-container {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .list-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
         }
-        .stat-card-icon {
+        .list-header h3 { font-size: 0.9rem; font-weight: 600; }
+        .list-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .list-item:last-child { border-bottom: none; }
+        .list-item-avatar {
             width: 44px;
             height: 44px;
-            border-radius: 10px;
+            border-radius: 12px;
+            background: var(--bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
-        .stat-card-icon.blue { background: #EBF5FF; }
-        .stat-card-icon.green { background: #ECFDF5; }
-        .stat-card-icon.yellow { background: #FFFBEB; }
-        .stat-card-icon.purple { background: #F5F3FF; }
-        .stat-card-value { font-size: 1.75rem; font-weight: 700; color: var(--primary); }
-        .stat-card-label { font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem; }
+        .list-item-info { flex: 1; }
+        .list-item-info h4 { font-size: 0.9rem; font-weight: 500; }
+        .list-item-info p { font-size: 0.75rem; color: var(--text-light); }
         
-        /* Tables */
-        .data-table-container {
-            background: var(--white);
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-        }
-        .data-table-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .data-table-header h3 { font-size: 1rem; font-weight: 600; }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th {
-            text-align: left;
-            padding: 0.9rem 1.5rem;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-light);
-            background: var(--bg);
-            font-weight: 500;
-        }
-        .data-table td {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.875rem;
-        }
-        .data-table tr:last-child td { border-bottom: none; }
-        .data-table tr:hover { background: var(--bg); }
-        
-        /* Status */
+        /* Status Badge */
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-            padding: 0.3rem 0.7rem;
+            gap: 0.3rem;
+            padding: 0.25rem 0.6rem;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 500;
         }
         .status-badge.pending { background: #FEF3C7; color: #92400E; }
@@ -290,10 +310,11 @@
         .btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
-            padding: 0.6rem 1.25rem;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -301,75 +322,26 @@
         }
         .btn-primary { background: var(--primary); color: var(--white); }
         .btn-primary:hover { background: var(--primary-light); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-        .btn-outline:hover { background: var(--bg); }
-        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        .btn-outline { background: var(--white); border: 1px solid var(--border); color: var(--text); }
+        .btn-full { width: 100%; }
         
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .quick-action-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid var(--border);
-        }
-        .quick-action-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.1);
-        }
-        .quick-action-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
-            background: var(--bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-        .quick-action-text h4 { font-size: 0.85rem; font-weight: 500; }
-        .quick-action-text p { font-size: 0.7rem; color: var(--text-light); }
-        
-        /* Chat */
+        /* Chat Panel */
         .chat-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 1.5rem;
-            height: calc(100vh - 180px);
-        }
-        .chat-sidebar {
             background: var(--white);
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            height: calc(100vh - 250px);
             display: flex;
             flex-direction: column;
         }
-        .chat-sidebar-header {
+        .chat-header {
             padding: 1rem;
             border-bottom: 1px solid var(--border);
-            font-weight: 600;
-        }
-        .chat-list { flex: 1; overflow-y: auto; }
-        .chat-item {
-            padding: 1rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border);
         }
-        .chat-item:hover { background: var(--bg); }
-        .chat-item.active { background: #EBF5FF; }
         .chat-avatar {
             width: 40px;
             height: 40px;
@@ -380,37 +352,20 @@
             align-items: center;
             justify-content: center;
             font-weight: 600;
-            font-size: 0.85rem;
-        }
-        .chat-item-info { flex: 1; }
-        .chat-item-name { font-weight: 500; font-size: 0.9rem; }
-        .chat-item-preview { font-size: 0.75rem; color: var(--text-light); }
-        .chat-main {
-            background: var(--white);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-        }
-        .chat-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
         .chat-messages {
             flex: 1;
-            padding: 1.5rem;
+            padding: 1rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
         }
         .message {
-            max-width: 70%;
+            max-width: 80%;
             padding: 0.75rem 1rem;
-            border-radius: 12px;
-            font-size: 0.9rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
         }
         .message.sent {
             background: var(--primary);
@@ -423,670 +378,480 @@
             align-self: flex-start;
             border-bottom-left-radius: 4px;
         }
-        .message-time {
-            font-size: 0.65rem;
-            opacity: 0.7;
-            margin-top: 0.25rem;
-        }
         .chat-input {
-            padding: 1rem 1.5rem;
+            padding: 1rem;
             border-top: 1px solid var(--border);
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
         }
         .chat-input input {
             flex: 1;
             padding: 0.75rem 1rem;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            outline: none;
-        }
-        .chat-input input:focus { border-color: var(--primary); }
-        
-        /* Calculadora */
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-        .calc-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .calc-card h3 {
-            font-size: 1rem;
-            margin-bottom: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .calc-field { margin-bottom: 1rem; }
-        .calc-field label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-bottom: 0.4rem;
-        }
-        .calc-field input, .calc-field select {
-            width: 100%;
-            padding: 0.7rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            outline: none;
-        }
-        .calc-field input:focus, .calc-field select:focus { border-color: var(--primary); }
-        .calc-result {
-            background: var(--bg);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-        }
-        .calc-result-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
+            border-radius: 25px;
             font-size: 0.85rem;
+            outline: none;
         }
-        .calc-result-row.total {
-            border-top: 1px solid var(--border);
-            margin-top: 0.5rem;
-            padding-top: 1rem;
-            font-weight: 600;
-            font-size: 1rem;
+        .chat-input button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
         }
         
-        /* Call */
+        /* Call Panel */
         .call-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: calc(100vh - 200px);
+            background: var(--white);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         .call-avatar {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             background: var(--primary);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin: 0 auto 1.5rem;
         }
-        .call-name { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .call-status { color: var(--text-light); margin-bottom: 2rem; }
-        .call-actions { display: flex; gap: 1rem; }
+        .call-name { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .call-status { color: var(--text-light); margin-bottom: 2rem; font-size: 0.85rem; }
+        .call-actions { display: flex; justify-content: center; gap: 1.5rem; }
         .call-btn {
-            width: 60px;
-            height: 60px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             transition: all 0.2s;
         }
         .call-btn.mute { background: var(--bg); }
         .call-btn.video { background: var(--bg); }
+        .call-btn.call { background: var(--success); color: white; }
         .call-btn.end { background: var(--danger); color: white; }
-        .call-btn:hover { transform: scale(1.1); }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar { width: 70px; }
-            .sidebar-logo-text, .nav-section-title, .nav-item span:not(.nav-item-icon), .user-details { display: none; }
-            .nav-item { justify-content: center; padding: 1rem; }
-            .main-content { margin-left: 70px; }
-            .header { padding: 1rem; }
-            .page-content { padding: 1rem; }
-            .chat-container { grid-template-columns: 1fr; }
-            .chat-sidebar { display: none; }
+        /* Calculadora */
+        .calc-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
+        .calc-card h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; }
+        .calc-field { margin-bottom: 1rem; }
+        .calc-field label { display: block; font-size: 0.75rem; color: var(--text-light); margin-bottom: 0.4rem; }
+        .calc-field input, .calc-field select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .calc-result { background: var(--bg); padding: 1rem; border-radius: 10px; margin-top: 1rem; }
+        .calc-result-row { display: flex; justify-content: space-between; padding: 0.4rem 0; font-size: 0.85rem; }
+        .calc-result-row.total { border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.75rem; font-weight: 600; }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        .quick-action {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .quick-action-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .quick-action-text { font-size: 0.7rem; color: var(--text-light); }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <div class="sidebar-logo-icon">⚖️</div>
-                    <div class="sidebar-logo-text">
-                        <h1>Notarial Solutions</h1>
-                        <p>Sistema Integral</p>
+    <header class="app-header">
+        <div class="app-logo">
+            <div class="app-logo-icon">⚖️</div>
+            <div class="app-logo-text">
+                <h1>Notarial Solutions</h1>
+                <p>Sistema Integral</p>
+            </div>
+        </div>
+        <div class="user-bar">
+            <span>Lic. Rodríguez • Notario #42</span>
+            <button>Salir</button>
+        </div>
+    </header>
+    
+    <main class="app-main">
+        <!-- HOME -->
+        <div id="panel-home" class="panel active">
+            <div class="main-menu">
+                <button class="menu-btn" onclick="showPanel('clientes')">
+                    <div class="menu-btn-icon clientes">👥</div>
+                    <div class="menu-btn-content">
+                        <h3>Clientes</h3>
+                        <p>156 registrados</p>
                     </div>
-                </div>
+                </button>
+                <button class="menu-btn" onclick="showPanel('expedientes')">
+                    <div class="menu-btn-icon expedientes">📁</div>
+                    <div class="menu-btn-content">
+                        <h3>Expedientes <span class="menu-btn-badge">24</span></h3>
+                        <p>Activos</p>
+                    </div>
+                </button>
+                <button class="menu-btn" onclick="showPanel('agenda')">
+                    <div class="menu-btn-icon agenda">📅</div>
+                    <div class="menu-btn-content">
+                        <h3>Agenda</h3>
+                        <p>4 citas hoy</p>
+                    </div>
+                </button>
+                <button class="menu-btn" onclick="showPanel('calculadoras')">
+                    <div class="menu-btn-icon calculadoras">🧮</div>
+                    <div class="menu-btn-content">
+                        <h3>Calculadoras</h3>
+                        <p>Honorarios, ISR</p>
+                    </div>
+                </button>
             </div>
             
-            <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <div class="nav-section-title">Gestión</div>
-                    <a class="nav-item active" data-panel="clientes">
-                        <span class="nav-item-icon">👥</span>
-                        <span>Clientes</span>
-                    </a>
-                    <a class="nav-item" data-panel="expedientes">
-                        <span class="nav-item-icon">📁</span>
-                        <span>Expedientes</span>
-                        <span class="nav-item-badge">24</span>
-                    </a>
-                    <a class="nav-item" data-panel="agenda">
-                        <span class="nav-item-icon">📅</span>
-                        <span>Agenda</span>
-                    </a>
-                    <a class="nav-item" data-panel="calculadoras">
-                        <span class="nav-item-icon">🧮</span>
-                        <span>Calculadoras</span>
-                    </a>
-                </div>
-                
-                <div class="nav-section">
-                    <div class="nav-section-title">Comunicación</div>
-                    <a class="nav-item" data-panel="chat">
-                        <span class="nav-item-icon">💬</span>
-                        <span>Chat</span>
-                        <span class="nav-item-badge">3</span>
-                    </a>
-                    <a class="nav-item" data-panel="llamadas">
-                        <span class="nav-item-icon">📞</span>
-                        <span>Llamadas</span>
-                    </a>
-                </div>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <div class="user-info">
-                    <div class="user-avatar">LR</div>
-                    <div class="user-details">
-                        <h4>Lic. Rodríguez</h4>
-                        <p>Notario Público #42</p>
+            <div class="secondary-menu">
+                <button class="secondary-btn" onclick="showPanel('chat')">
+                    <div class="secondary-btn-icon chat">💬</div>
+                    <div class="secondary-btn-text">
+                        <h4>Chat</h4>
+                        <p>Mensajes</p>
                     </div>
-                </div>
+                    <div class="secondary-btn-badge">3</div>
+                </button>
+                <button class="secondary-btn" onclick="showPanel('llamadas')">
+                    <div class="secondary-btn-icon llamadas">📞</div>
+                    <div class="secondary-btn-text">
+                        <h4>Llamadas</h4>
+                        <p>Voz y video</p>
+                    </div>
+                </button>
             </div>
-        </aside>
+        </div>
         
-        <main class="main-content">
-            <header class="header">
-                <div class="header-left">
-                    <h2 id="pageTitle">Clientes</h2>
-                    <p id="pageSubtitle">Directorio de clientes</p>
+        <!-- CLIENTES -->
+        <div id="panel-clientes" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <div>
+                    <h2>Clientes</h2>
+                    <p>Directorio de clientes</p>
                 </div>
-                <div class="header-right">
-                    <div class="header-search">
-                        <span>🔍</span>
-                        <input type="text" placeholder="Buscar...">
-                    </div>
-                    <button class="header-btn">
-                        <span>🔔</span>
-                        <span class="header-btn-badge">3</span>
-                    </button>
-                </div>
-            </header>
+            </div>
             
-            <div class="page-content">
-                <!-- CLIENTES -->
-                <div id="panel-clientes" class="panel active">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div>
-                                    <div class="stat-card-value">156</div>
-                                    <div class="stat-card-label">Clientes Totales</div>
-                                </div>
-                                <div class="stat-card-icon blue">👥</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div>
-                                    <div class="stat-card-value">12</div>
-                                    <div class="stat-card-label">Nuevos este mes</div>
-                                </div>
-                                <div class="stat-card-icon green">📈</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div>
-                                    <div class="stat-card-value">89</div>
-                                    <div class="stat-card-label">Con expedientes activos</div>
-                                </div>
-                                <div class="stat-card-icon yellow">📁</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="data-table-container">
-                        <div class="data-table-header">
-                            <h3>Directorio de Clientes</h3>
-                            <button class="btn btn-primary">+ Nuevo Cliente</button>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Cliente</th>
-                                    <th>RFC</th>
-                                    <th>Teléfono</th>
-                                    <th>Expedientes</th>
-                                    <th>Último Contacto</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>María García López</strong></td>
-                                    <td>GALM850215ABC</td>
-                                    <td>+52 33 1234 5678</td>
-                                    <td><span class="status-badge progress">3 activos</span></td>
-                                    <td>Hoy</td>
-                                    <td><button class="btn btn-outline btn-sm">Ver</button></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Carlos Mendoza Ríos</strong></td>
-                                    <td>MERC780930XYZ</td>
-                                    <td>+52 33 9876 5432</td>
-                                    <td><span class="status-badge pending">1 activo</span></td>
-                                    <td>Ayer</td>
-                                    <td><button class="btn btn-outline btn-sm">Ver</button></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Grupo Industrial MX S.A.</strong></td>
-                                    <td>GIM201015XYZ</td>
-                                    <td>+52 33 5555 1234</td>
-                                    <td><span class="status-badge urgent">2 urgentes</span></td>
-                                    <td>Hace 2 días</td>
-                                    <td><button class="btn btn-outline btn-sm">Ver</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-card-value">156</div>
+                    <div class="stat-card-label">Total</div>
                 </div>
-                
-                <!-- EXPEDIENTES -->
-                <div id="panel-expedientes" class="panel">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div>
-                                    <div class="stat-card-value">47</div>
-                                    <div class="stat-card-label">Expedientes Activos</div>
-                                </div>
-                                <div class="stat-card-icon blue">📁</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div>
-                                    <div class="stat-card-value">8</div>
-                                    <div class="stat-card-label">Pendientes de Firma</div>
-                                </div>
-                                <div class="stat-card-icon yellow">✍️</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div>
-                                    <div class="stat-card-value">3</div>
-                                    <div class="stat-card-label">Urgentes</div>
-                                </div>
-                                <div class="stat-card-icon purple">🚨</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="quick-actions">
-                        <div class="quick-action-card">
-                            <div class="quick-action-icon">📝</div>
-                            <div class="quick-action-text">
-                                <h4>Nuevo Expediente</h4>
-                                <p>Compraventa, Poder, etc.</p>
-                            </div>
-                        </div>
-                        <div class="quick-action-card">
-                            <div class="quick-action-icon">📤</div>
-                            <div class="quick-action-text">
-                                <h4>Subir Documento</h4>
-                                <p>Anexar a expediente</p>
-                            </div>
-                        </div>
-                        <div class="quick-action-card">
-                            <div class="quick-action-icon">✍️</div>
-                            <div class="quick-action-text">
-                                <h4>Programar Firma</h4>
-                                <p>Agendar cita</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="data-table-container">
-                        <div class="data-table-header">
-                            <h3>Expedientes Recientes</h3>
-                            <button class="btn btn-primary">+ Nuevo Expediente</button>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Folio</th>
-                                    <th>Tipo</th>
-                                    <th>Cliente</th>
-                                    <th>Estado</th>
-                                    <th>Próxima Acción</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>EXP-2024-0847</strong></td>
-                                    <td>Compraventa</td>
-                                    <td>María García López</td>
-                                    <td><span class="status-badge progress">● En proceso</span></td>
-                                    <td>Firma - 3 Ene 10:00</td>
-                                    <td><button class="btn btn-outline btn-sm">Abrir</button></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>EXP-2024-0846</strong></td>
-                                    <td>Poder Notarial</td>
-                                    <td>Carlos Mendoza R.</td>
-                                    <td><span class="status-badge pending">● Pendiente firma</span></td>
-                                    <td>Esperando documentos</td>
-                                    <td><button class="btn btn-outline btn-sm">Abrir</button></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>EXP-2024-0844</strong></td>
-                                    <td>Constitución SA</td>
-                                    <td>Grupo Industrial MX</td>
-                                    <td><span class="status-badge urgent">● Urgente</span></td>
-                                    <td>Revisión legal</td>
-                                    <td><button class="btn btn-outline btn-sm">Abrir</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-card-value">12</div>
+                    <div class="stat-card-label">Nuevos</div>
                 </div>
-                
-                <!-- AGENDA -->
-                <div id="panel-agenda" class="panel">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div>
-                                    <div class="stat-card-value">4</div>
-                                    <div class="stat-card-label">Citas Hoy</div>
-                                </div>
-                                <div class="stat-card-icon blue">📅</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div>
-                                    <div class="stat-card-value">12</div>
-                                    <div class="stat-card-label">Esta Semana</div>
-                                </div>
-                                <div class="stat-card-icon green">📆</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="data-table-container">
-                        <div class="data-table-header">
-                            <h3>📅 Citas de Hoy - 31 Diciembre 2024</h3>
-                            <button class="btn btn-primary">+ Nueva Cita</button>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Hora</th>
-                                    <th>Cliente</th>
-                                    <th>Expediente</th>
-                                    <th>Tipo</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>10:00 AM</strong></td>
-                                    <td>María García</td>
-                                    <td>EXP-2024-0847</td>
-                                    <td>Firma de Escritura</td>
-                                    <td><span class="status-badge complete">Confirmada</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>12:30 PM</strong></td>
-                                    <td>Nuevo Cliente</td>
-                                    <td>-</td>
-                                    <td>Consulta Inicial</td>
-                                    <td><span class="status-badge pending">Por confirmar</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>4:00 PM</strong></td>
-                                    <td>Carlos Mendoza</td>
-                                    <td>EXP-2024-0846</td>
-                                    <td>Entrega Documentos</td>
-                                    <td><span class="status-badge complete">Confirmada</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-card-value">89</div>
+                    <div class="stat-card-label">Activos</div>
                 </div>
-                
-                <!-- CALCULADORAS -->
-                <div id="panel-calculadoras" class="panel">
-                    <div class="calc-grid">
-                        <div class="calc-card">
-                            <h3>🧮 Honorarios Notariales</h3>
-                            <div class="calc-field">
-                                <label>Tipo de Operación</label>
-                                <select id="calcTipo">
-                                    <option value="compraventa">Compraventa</option>
-                                    <option value="hipoteca">Hipoteca</option>
-                                    <option value="poder">Poder Notarial</option>
-                                    <option value="testamento">Testamento</option>
-                                    <option value="constitucion">Constitución de Sociedad</option>
-                                </select>
-                            </div>
-                            <div class="calc-field">
-                                <label>Valor de la Operación ($)</label>
-                                <input type="number" id="calcValor" placeholder="0.00" oninput="calcularHonorarios()">
-                            </div>
-                            <div class="calc-result">
-                                <div class="calc-result-row">
-                                    <span>Honorarios Base</span>
-                                    <span id="resHonorarios">$0.00</span>
-                                </div>
-                                <div class="calc-result-row">
-                                    <span>IVA (16%)</span>
-                                    <span id="resIVA">$0.00</span>
-                                </div>
-                                <div class="calc-result-row">
-                                    <span>Derechos Registro</span>
-                                    <span id="resRegistro">$0.00</span>
-                                </div>
-                                <div class="calc-result-row total">
-                                    <span>TOTAL ESTIMADO</span>
-                                    <span id="resTotal">$0.00</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="calc-card">
-                            <h3>📊 ISR por Enajenación</h3>
-                            <div class="calc-field">
-                                <label>Valor de Venta ($)</label>
-                                <input type="number" id="isrVenta" placeholder="0.00" oninput="calcularISR()">
-                            </div>
-                            <div class="calc-field">
-                                <label>Valor de Adquisición ($)</label>
-                                <input type="number" id="isrAdquisicion" placeholder="0.00" oninput="calcularISR()">
-                            </div>
-                            <div class="calc-field">
-                                <label>Años de Propiedad</label>
-                                <input type="number" id="isrAnios" placeholder="0" oninput="calcularISR()">
-                            </div>
-                            <div class="calc-result">
-                                <div class="calc-result-row">
-                                    <span>Ganancia</span>
-                                    <span id="isrGanancia">$0.00</span>
-                                </div>
-                                <div class="calc-result-row total">
-                                    <span>ISR ESTIMADO</span>
-                                    <span id="isrTotal">$0.00</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+            
+            <div class="list-container">
+                <div class="list-header">
+                    <h3>Clientes Recientes</h3>
+                    <button class="btn btn-primary">+ Nuevo</button>
                 </div>
-                
-                <!-- CHAT -->
-                <div id="panel-chat" class="panel">
-                    <div class="chat-container">
-                        <div class="chat-sidebar">
-                            <div class="chat-sidebar-header">💬 Conversaciones</div>
-                            <div class="chat-list">
-                                <div class="chat-item active">
-                                    <div class="chat-avatar">AS</div>
-                                    <div class="chat-item-info">
-                                        <div class="chat-item-name">Ana - Asistente</div>
-                                        <div class="chat-item-preview">Ok, ya lo reviso</div>
-                                    </div>
-                                </div>
-                                <div class="chat-item">
-                                    <div class="chat-avatar">MG</div>
-                                    <div class="chat-item-info">
-                                        <div class="chat-item-name">María García</div>
-                                        <div class="chat-item-preview">Gracias por la info</div>
-                                    </div>
-                                </div>
-                                <div class="chat-item">
-                                    <div class="chat-avatar">CM</div>
-                                    <div class="chat-item-info">
-                                        <div class="chat-item-name">Carlos Mendoza</div>
-                                        <div class="chat-item-preview">¿A qué hora es la cita?</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="chat-main">
-                            <div class="chat-header">
-                                <div style="display:flex;align-items:center;gap:0.75rem;">
-                                    <div class="chat-avatar">AS</div>
-                                    <div>
-                                        <div style="font-weight:500;">Ana - Asistente</div>
-                                        <div style="font-size:0.75rem;color:var(--text-light);">En línea</div>
-                                    </div>
-                                </div>
-                                <button class="btn btn-outline" onclick="showPanel('llamadas')">📞 Llamar</button>
-                            </div>
-                            <div class="chat-messages">
-                                <div class="message received">
-                                    Lic., ya llegaron los documentos del expediente 0847
-                                    <div class="message-time">10:30 AM</div>
-                                </div>
-                                <div class="message sent">
-                                    Perfecto, revisa que estén completos y me avisas
-                                    <div class="message-time">10:32 AM</div>
-                                </div>
-                                <div class="message received">
-                                    Ok, ya lo reviso
-                                    <div class="message-time">10:33 AM</div>
-                                </div>
-                            </div>
-                            <div class="chat-input">
-                                <input type="text" placeholder="Escribe un mensaje...">
-                                <button class="btn btn-primary">Enviar</button>
-                            </div>
-                        </div>
+                <div class="list-item">
+                    <div class="list-item-avatar">👤</div>
+                    <div class="list-item-info">
+                        <h4>María García López</h4>
+                        <p>GALM850215 • 3 expedientes</p>
                     </div>
+                    <span class="status-badge progress">Activo</span>
                 </div>
-                
-                <!-- LLAMADAS -->
-                <div id="panel-llamadas" class="panel">
-                    <div class="call-container">
-                        <div class="call-avatar">AS</div>
-                        <div class="call-name">Ana - Asistente</div>
-                        <div class="call-status">Listo para llamar</div>
-                        <div class="call-actions">
-                            <button class="call-btn mute">🎤</button>
-                            <button class="call-btn video">📹</button>
-                            <button class="call-btn end" style="background:var(--success);">📞</button>
-                        </div>
-                        <p style="margin-top:3rem;color:var(--text-light);font-size:0.85rem;">
-                            Selecciona un contacto del Chat o Clientes para iniciar llamada
-                        </p>
+                <div class="list-item">
+                    <div class="list-item-avatar">👤</div>
+                    <div class="list-item-info">
+                        <h4>Carlos Mendoza Ríos</h4>
+                        <p>MERC780930 • 1 expediente</p>
+                    </div>
+                    <span class="status-badge pending">Pendiente</span>
+                </div>
+                <div class="list-item">
+                    <div class="list-item-avatar">🏢</div>
+                    <div class="list-item-info">
+                        <h4>Grupo Industrial MX</h4>
+                        <p>GIM201015 • 2 expedientes</p>
+                    </div>
+                    <span class="status-badge urgent">Urgente</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- EXPEDIENTES -->
+        <div id="panel-expedientes" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <div>
+                    <h2>Expedientes</h2>
+                    <p>Gestión de expedientes</p>
+                </div>
+            </div>
+            
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-card-value">47</div>
+                    <div class="stat-card-label">Activos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value">8</div>
+                    <div class="stat-card-label">Firma pend.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value">3</div>
+                    <div class="stat-card-label">Urgentes</div>
+                </div>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="quick-action">
+                    <div class="quick-action-icon">📝</div>
+                    <div class="quick-action-text">Nuevo</div>
+                </div>
+                <div class="quick-action">
+                    <div class="quick-action-icon">📤</div>
+                    <div class="quick-action-text">Subir Doc</div>
+                </div>
+                <div class="quick-action">
+                    <div class="quick-action-icon">✍️</div>
+                    <div class="quick-action-text">Firma</div>
+                </div>
+                <div class="quick-action">
+                    <div class="quick-action-icon">🔍</div>
+                    <div class="quick-action-text">Buscar</div>
+                </div>
+            </div>
+            
+            <div class="list-container">
+                <div class="list-header">
+                    <h3>Expedientes Recientes</h3>
+                </div>
+                <div class="list-item">
+                    <div class="list-item-avatar">📁</div>
+                    <div class="list-item-info">
+                        <h4>EXP-2024-0847</h4>
+                        <p>Compraventa • María García</p>
+                    </div>
+                    <span class="status-badge progress">En proceso</span>
+                </div>
+                <div class="list-item">
+                    <div class="list-item-avatar">📁</div>
+                    <div class="list-item-info">
+                        <h4>EXP-2024-0846</h4>
+                        <p>Poder Notarial • Carlos M.</p>
+                    </div>
+                    <span class="status-badge pending">Pendiente</span>
+                </div>
+                <div class="list-item">
+                    <div class="list-item-avatar">📁</div>
+                    <div class="list-item-info">
+                        <h4>EXP-2024-0844</h4>
+                        <p>Constitución SA • Grupo Ind.</p>
+                    </div>
+                    <span class="status-badge urgent">Urgente</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AGENDA -->
+        <div id="panel-agenda" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <div>
+                    <h2>Agenda</h2>
+                    <p>31 Diciembre 2024</p>
+                </div>
+            </div>
+            
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-card-value">4</div>
+                    <div class="stat-card-label">Hoy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value">12</div>
+                    <div class="stat-card-label">Semana</div>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary btn-full" style="margin-bottom:1rem;">+ Nueva Cita</button>
+            
+            <div class="list-container">
+                <div class="list-header">
+                    <h3>Citas de Hoy</h3>
+                </div>
+                <div class="list-item">
+                    <div class="list-item-avatar">🕐</div>
+                    <div class="list-item-info">
+                        <h4>10:00 AM - María García</h4>
+                        <p>Firma de Escritura • EXP-0847</p>
+                    </div>
+                    <span class="status-badge complete">Confirmada</span>
+                </div>
+                <div class="list-item">
+                    <div class="list-item-avatar">🕐</div>
+                    <div class="list-item-info">
+                        <h4>12:30 PM - Nuevo Cliente</h4>
+                        <p>Consulta Inicial • Testamento</p>
+                    </div>
+                    <span class="status-badge pending">Por confirmar</span>
+                </div>
+                <div class="list-item">
+                    <div class="list-item-avatar">🕐</div>
+                    <div class="list-item-info">
+                        <h4>4:00 PM - Carlos Mendoza</h4>
+                        <p>Entrega Documentos • EXP-0846</p>
+                    </div>
+                    <span class="status-badge complete">Confirmada</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CALCULADORAS -->
+        <div id="panel-calculadoras" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <div>
+                    <h2>Calculadoras</h2>
+                    <p>Herramientas de cálculo</p>
+                </div>
+            </div>
+            
+            <div class="calc-card">
+                <h3>🧮 Honorarios Notariales</h3>
+                <div class="calc-field">
+                    <label>Tipo de Operación</label>
+                    <select id="calcTipo" onchange="calcularHonorarios()">
+                        <option value="compraventa">Compraventa</option>
+                        <option value="hipoteca">Hipoteca</option>
+                        <option value="poder">Poder Notarial</option>
+                        <option value="testamento">Testamento</option>
+                    </select>
+                </div>
+                <div class="calc-field">
+                    <label>Valor de la Operación ($)</label>
+                    <input type="number" id="calcValor" placeholder="0.00" oninput="calcularHonorarios()">
+                </div>
+                <div class="calc-result">
+                    <div class="calc-result-row">
+                        <span>Honorarios</span>
+                        <span id="resHonorarios">$0.00</span>
+                    </div>
+                    <div class="calc-result-row">
+                        <span>IVA (16%)</span>
+                        <span id="resIVA">$0.00</span>
+                    </div>
+                    <div class="calc-result-row total">
+                        <span>TOTAL</span>
+                        <span id="resTotal">$0.00</span>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+        
+        <!-- CHAT -->
+        <div id="panel-chat" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <div>
+                    <h2>Chat</h2>
+                    <p>Mensajería interna</p>
+                </div>
+            </div>
+            
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-avatar">AS</div>
+                    <div>
+                        <div style="font-weight:500;">Ana - Asistente</div>
+                        <div style="font-size:0.7rem;color:var(--text-light);">En línea</div>
+                    </div>
+                </div>
+                <div class="chat-messages">
+                    <div class="message received">Ya llegaron los documentos del expediente 0847</div>
+                    <div class="message sent">Perfecto, revisa que estén completos</div>
+                    <div class="message received">Ok, ya lo reviso</div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="Escribe un mensaje...">
+                    <button>➤</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LLAMADAS -->
+        <div id="panel-llamadas" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <div>
+                    <h2>Llamadas</h2>
+                    <p>Voz y video</p>
+                </div>
+            </div>
+            
+            <div class="call-container">
+                <div class="call-avatar">AS</div>
+                <div class="call-name">Ana - Asistente</div>
+                <div class="call-status">Listo para llamar</div>
+                <div class="call-actions">
+                    <button class="call-btn mute">🎤</button>
+                    <button class="call-btn call">📞</button>
+                    <button class="call-btn video">📹</button>
+                </div>
+            </div>
+        </div>
+    </main>
     
     <script>
-        // Navegación
-        const navItems = document.querySelectorAll('.nav-item');
-        const panels = document.querySelectorAll('.panel');
-        const pageTitle = document.getElementById('pageTitle');
-        const pageSubtitle = document.getElementById('pageSubtitle');
-        
-        const panelInfo = {
-            clientes: { title: 'Clientes', subtitle: 'Directorio de clientes' },
-            expedientes: { title: 'Expedientes', subtitle: 'Gestión de expedientes activos' },
-            agenda: { title: 'Agenda', subtitle: 'Calendario de citas y firmas' },
-            calculadoras: { title: 'Calculadoras', subtitle: 'Herramientas de cálculo' },
-            chat: { title: 'Chat', subtitle: 'Mensajería interna' },
-            llamadas: { title: 'Llamadas', subtitle: 'Comunicación por voz y video' }
-        };
-        
         function showPanel(panelId) {
-            navItems.forEach(nav => nav.classList.remove('active'));
-            document.querySelector(`[data-panel="${panelId}"]`)?.classList.add('active');
-            panels.forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById(`panel-${panelId}`).classList.add('active');
-            pageTitle.textContent = panelInfo[panelId].title;
-            pageSubtitle.textContent = panelInfo[panelId].subtitle;
         }
         
-        navItems.forEach(item => {
-            item.addEventListener('click', () => showPanel(item.dataset.panel));
-        });
-        
-        // Calculadora Honorarios
         function calcularHonorarios() {
             const valor = parseFloat(document.getElementById('calcValor').value) || 0;
             const tipo = document.getElementById('calcTipo').value;
             
-            let tasaBase = 0.005; // 0.5% por defecto
-            if (tipo === 'poder') tasaBase = 0;
-            if (tipo === 'testamento') tasaBase = 0;
-            if (tipo === 'constitucion') tasaBase = 0.003;
+            let honorarios = tipo === 'poder' ? 3500 : tipo === 'testamento' ? 5000 : Math.max(valor * 0.005, 5000);
+            const iva = honorarios * 0.16;
+            const total = honorarios + iva;
             
-            let honorariosBase = tipo === 'poder' ? 3500 : tipo === 'testamento' ? 5000 : valor * tasaBase;
-            if (honorariosBase < 5000 && tipo !== 'poder' && tipo !== 'testamento') honorariosBase = 5000;
-            
-            const iva = honorariosBase * 0.16;
-            const registro = valor * 0.01;
-            const total = honorariosBase + iva + registro;
-            
-            document.getElementById('resHonorarios').textContent = '$' + honorariosBase.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById('resHonorarios').textContent = '$' + honorarios.toLocaleString('es-MX', {minimumFractionDigits: 2});
             document.getElementById('resIVA').textContent = '$' + iva.toLocaleString('es-MX', {minimumFractionDigits: 2});
-            document.getElementById('resRegistro').textContent = '$' + registro.toLocaleString('es-MX', {minimumFractionDigits: 2});
             document.getElementById('resTotal').textContent = '$' + total.toLocaleString('es-MX', {minimumFractionDigits: 2});
-        }
-        
-        // Calculadora ISR
-        function calcularISR() {
-            const venta = parseFloat(document.getElementById('isrVenta').value) || 0;
-            const adquisicion = parseFloat(document.getElementById('isrAdquisicion').value) || 0;
-            const anios = parseInt(document.getElementById('isrAnios').value) || 1;
-            
-            const ganancia = venta - adquisicion;
-            const gananciaAnual = ganancia / Math.min(anios, 20);
-            const isr = gananciaAnual > 0 ? gananciaAnual * 0.35 * Math.min(anios, 20) : 0;
-            
-            document.getElementById('isrGanancia').textContent = '$' + ganancia.toLocaleString('es-MX', {minimumFractionDigits: 2});
-            document.getElementById('isrTotal').textContent = '$' + isr.toLocaleString('es-MX', {minimumFractionDigits: 2});
         }
     </script>
 </body>
