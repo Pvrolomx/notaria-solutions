@@ -484,6 +484,81 @@
         }
         .quick-action-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
         .quick-action-text { font-size: 0.7rem; color: var(--text-light); }
+    
+        /* Calculadoras Menu */
+        .calc-menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .calc-menu-btn {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+        .calc-menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+        .calc-menu-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .calc-menu-icon.isr { background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%); }
+        .calc-menu-icon.istp { background: linear-gradient(135deg, #059669 0%, #34D399 100%); }
+        .calc-menu-icon.iva { background: linear-gradient(135deg, #D97706 0%, #FBBF24 100%); }
+        .calc-menu-text h4 { font-size: 1rem; font-weight: 600; }
+        .calc-menu-text p { font-size: 0.75rem; color: var(--text-light); }
+        .calc-panel { margin-top: 1rem; }
+        .calc-back {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .calc-checks {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        .calc-checks label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .calc-checks input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
     </style>
 </head>
 <body>
@@ -741,47 +816,142 @@
         </div>
         
         <!-- CALCULADORAS -->
-        <div id="panel-calculadoras" class="panel">
+                <div id="panel-calculadoras" class="panel">
             <div class="panel-header">
                 <button class="back-btn" onclick="showPanel('home')">←</button>
                 <div>
                     <h2>Calculadoras</h2>
-                    <p>Herramientas de cálculo</p>
+                    <p>Herramientas de cálculo notarial</p>
                 </div>
             </div>
             
-            <div class="calc-card">
-                <h3>🧮 Honorarios Notariales</h3>
-                <div class="calc-field">
-                    <label>Tipo de Operación</label>
-                    <select id="calcTipo" onchange="calcularHonorarios()">
-                        <option value="compraventa">Compraventa</option>
-                        <option value="hipoteca">Hipoteca</option>
-                        <option value="poder">Poder Notarial</option>
-                        <option value="testamento">Testamento</option>
-                    </select>
-                </div>
-                <div class="calc-field">
-                    <label>Valor de la Operación ($)</label>
-                    <input type="number" id="calcValor" placeholder="0.00" oninput="calcularHonorarios()">
-                </div>
-                <div class="calc-result">
-                    <div class="calc-result-row">
-                        <span>Honorarios</span>
-                        <span id="resHonorarios">$0.00</span>
+            <!-- Menu de Calculadoras -->
+            <div id="calc-menu" class="calc-menu-grid">
+                <div class="calc-menu-btn" onclick="showCalc('isr')">
+                    <div class="calc-menu-icon isr">💰</div>
+                    <div class="calc-menu-text">
+                        <h4>ISR</h4>
+                        <p>Impuesto Sobre la Renta</p>
                     </div>
-                    <div class="calc-result-row">
-                        <span>IVA (16%)</span>
-                        <span id="resIVA">$0.00</span>
+                </div>
+                <div class="calc-menu-btn" onclick="showCalc('istp')">
+                    <div class="calc-menu-icon istp">🏠</div>
+                    <div class="calc-menu-text">
+                        <h4>ISTP</h4>
+                        <p>Traslación de Dominio</p>
                     </div>
-                    <div class="calc-result-row total">
-                        <span>TOTAL</span>
-                        <span id="resTotal">$0.00</span>
+                </div>
+                <div class="calc-menu-btn" onclick="showCalc('iva')">
+                    <div class="calc-menu-icon iva">🧾</div>
+                    <div class="calc-menu-text">
+                        <h4>IVA</h4>
+                        <p>Impuesto al Valor Agregado</p>
                     </div>
                 </div>
             </div>
+            
+            <!-- Calculadora ISR -->
+            <div id="calc-isr" class="calc-panel" style="display:none;">
+                <button class="calc-back" onclick="showCalcMenu()">← Volver</button>
+                <div class="calc-card">
+                    <h3>💰 Calculadora ISR por Enajenación</h3>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Fecha Venta</label>
+                            <input type="date" id="isrFechaVenta" value="2024-12-31">
+                        </div>
+                        <div class="calc-field">
+                            <label>Fecha Compra</label>
+                            <input type="date" id="isrFechaCompra" value="2015-06-12">
+                        </div>
+                    </div>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>Precio Venta $</label>
+                            <input type="number" id="isrPrecioVenta" value="3000000">
+                        </div>
+                        <div class="calc-field">
+                            <label>Precio Compra $</label>
+                            <input type="number" id="isrPrecioCompra" value="950000">
+                        </div>
+                    </div>
+                    <div class="calc-grid">
+                        <div class="calc-field">
+                            <label>% Terreno</label>
+                            <input type="number" id="isrPctTerreno" value="20">
+                        </div>
+                        <div class="calc-field">
+                            <label>% Construcción</label>
+                            <input type="number" id="isrPctConst" value="80">
+                        </div>
+                    </div>
+                    <div class="calc-checks">
+                        <label><input type="checkbox" id="isrExtranjero"> Extranjero (sin RFC)</label>
+                        <label><input type="checkbox" id="isrCasa"> Casa Habitación</label>
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="calcularISR()">Calcular ISR</button>
+                    <div id="isrResultado" class="calc-result" style="display:none;"></div>
+                </div>
+            </div>
+            
+            <!-- Calculadora ISTP -->
+            <div id="calc-istp" class="calc-panel" style="display:none;">
+                <button class="calc-back" onclick="showCalcMenu()">← Volver</button>
+                <div class="calc-card">
+                    <h3>🏠 Calculadora ISTP</h3>
+                    <div class="calc-field">
+                        <label>Estado</label>
+                        <select id="istpEstado">
+                            <option value="jalisco">Jalisco (3%)</option>
+                            <option value="nayarit">Nayarit (2%)</option>
+                            <option value="cdmx">CDMX (5%)</option>
+                            <option value="nuevo_leon">Nuevo León (3%)</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label>Valor de Operación $</label>
+                        <input type="number" id="istpValor" value="3000000">
+                    </div>
+                    <div class="calc-checks">
+                        <label><input type="checkbox" id="istpVivienda"> Vivienda interés social</label>
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="calcularISTP()">Calcular ISTP</button>
+                    <div id="istpResultado" class="calc-result" style="display:none;"></div>
+                </div>
+            </div>
+            
+            <!-- Calculadora IVA -->
+            <div id="calc-iva" class="calc-panel" style="display:none;">
+                <button class="calc-back" onclick="showCalcMenu()">← Volver</button>
+                <div class="calc-card">
+                    <h3>🧾 Calculadora IVA</h3>
+                    <div class="calc-field">
+                        <label>Tipo de Operación</label>
+                        <select id="ivaOperacion">
+                            <option value="local">Local Comercial</option>
+                            <option value="terreno">Terreno Comercial</option>
+                            <option value="arrendamiento">Arrendamiento</option>
+                            <option value="construccion">Construcción</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label>Valor de la Operación $</label>
+                        <input type="number" id="ivaValor" value="1000000">
+                    </div>
+                    <div class="calc-field">
+                        <label>Tasa</label>
+                        <select id="ivaTasa">
+                            <option value="16">16% General</option>
+                            <option value="8">8% Frontera</option>
+                            <option value="0">0% Exento</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="calcularIVA()">Calcular IVA</button>
+                    <div id="ivaResultado" class="calc-result" style="display:none;"></div>
+                </div>
+            </div>
         </div>
-        
+
         <!-- CHAT -->
         <div id="panel-chat" class="panel">
             <div class="panel-header">
@@ -853,6 +1023,143 @@
             document.getElementById('resIVA').textContent = '$' + iva.toLocaleString('es-MX', {minimumFractionDigits: 2});
             document.getElementById('resTotal').textContent = '$' + total.toLocaleString('es-MX', {minimumFractionDigits: 2});
         }
+    
+        // Calculadoras
+        function showCalc(tipo) {
+            document.getElementById('calc-menu').style.display = 'none';
+            document.getElementById('calc-isr').style.display = 'none';
+            document.getElementById('calc-istp').style.display = 'none';
+            document.getElementById('calc-iva').style.display = 'none';
+            document.getElementById('calc-' + tipo).style.display = 'block';
+        }
+        
+        function showCalcMenu() {
+            document.getElementById('calc-isr').style.display = 'none';
+            document.getElementById('calc-istp').style.display = 'none';
+            document.getElementById('calc-iva').style.display = 'none';
+            document.getElementById('calc-menu').style.display = 'flex';
+        }
+        
+        // INPC simplificado
+        const INPC = {
+            '2015': 87.5, '2016': 90.4, '2017': 94.5, '2018': 98.0, '2019': 101.5,
+            '2020': 104.5, '2021': 109.5, '2022': 117.5, '2023': 124.0, '2024': 131.0, '2025': 141.0
+        };
+        
+        const TABLAS_ISR = [
+            { lim: 0, cuota: 0, tasa: 1.92 },
+            { lim: 8952.50, cuota: 171.88, tasa: 6.40 },
+            { lim: 75984.56, cuota: 4461.94, tasa: 10.88 },
+            { lim: 133536.08, cuota: 10723.55, tasa: 16.00 },
+            { lim: 155229.81, cuota: 14194.54, tasa: 17.92 },
+            { lim: 185852.58, cuota: 19682.13, tasa: 21.36 },
+            { lim: 374837.89, cuota: 60049.40, tasa: 23.52 },
+            { lim: 590796.00, cuota: 110842.74, tasa: 30.00 },
+            { lim: 1127926.85, cuota: 271981.99, tasa: 32.00 },
+            { lim: 1503902.47, cuota: 392294.17, tasa: 34.00 },
+            { lim: 4511707.38, cuota: 1414947.85, tasa: 35.00 }
+        ];
+        
+        function fmt(n) { return '$' + n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+        
+        function calcISRTabla(util) {
+            if (util <= 0) return 0;
+            for (let i = TABLAS_ISR.length - 1; i >= 0; i--) {
+                if (util >= TABLAS_ISR[i].lim) {
+                    return TABLAS_ISR[i].cuota + ((util - TABLAS_ISR[i].lim) * TABLAS_ISR[i].tasa / 100);
+                }
+            }
+            return 0;
+        }
+        
+        function calcularISR() {
+            const fV = new Date(document.getElementById('isrFechaVenta').value);
+            const fC = new Date(document.getElementById('isrFechaCompra').value);
+            const pV = parseFloat(document.getElementById('isrPrecioVenta').value) || 0;
+            const pC = parseFloat(document.getElementById('isrPrecioCompra').value) || 0;
+            const pctT = parseFloat(document.getElementById('isrPctTerreno').value) / 100;
+            const pctCo = parseFloat(document.getElementById('isrPctConst').value) / 100;
+            const esExt = document.getElementById('isrExtranjero').checked;
+            const esCasa = document.getElementById('isrCasa').checked;
+            
+            let anios = Math.floor((fV - fC) / (365.25 * 24 * 60 * 60 * 1000));
+            anios = Math.max(1, Math.min(anios, 20));
+            
+            const inpcV = INPC[fV.getFullYear()] || 141;
+            const inpcC = INPC[fC.getFullYear()] || 87.5;
+            const factor = inpcV / inpcC;
+            
+            const terrenoAct = pC * pctT * factor;
+            const pctDep = Math.min(anios * 3, 80) / 100;
+            const constAct = pC * pctCo * (1 - pctDep) * factor;
+            const deduc = terrenoAct + constAct;
+            
+            let exen = 0;
+            if (esCasa && !esExt) exen = Math.min(5925000, pV - deduc);
+            
+            let util = Math.max(0, pV - deduc - exen);
+            let isr = 0, mejor = '';
+            
+            if (util > 0) {
+                if (esExt) {
+                    const isr35 = util * 0.35;
+                    const isrTab = calcISRTabla(util / anios) * anios;
+                    if (isr35 <= isrTab) { isr = isr35; mejor = '35% Flat'; }
+                    else { isr = isrTab; mejor = 'Tablas'; }
+                } else {
+                    isr = calcISRTabla(util / anios) * anios;
+                }
+            }
+            
+            const isrEst = esExt ? 0 : Math.min(util * 0.05, isr);
+            const isrFed = isr - isrEst;
+            
+            document.getElementById('isrResultado').style.display = 'block';
+            document.getElementById('isrResultado').innerHTML = `
+                <div class="calc-result-row"><span>Factor INPC</span><span>${factor.toFixed(4)}</span></div>
+                <div class="calc-result-row"><span>Años</span><span>${anios}</span></div>
+                <div class="calc-result-row"><span>Deducciones</span><span>${fmt(deduc)}</span></div>
+                ${exen > 0 ? '<div class="calc-result-row"><span>Exención</span><span>' + fmt(exen) + '</span></div>' : ''}
+                <div class="calc-result-row"><span>Utilidad Gravable</span><span>${fmt(util)}</span></div>
+                ${esExt && util > 0 ? '<div class="calc-result-row" style="background:#D1FAE5;margin:0.5rem -1rem;padding:0.5rem 1rem;border-radius:8px;"><span>✅ Mejor: ' + mejor + '</span><span>' + fmt(isr) + '</span></div>' : ''}
+                <div class="calc-result-row"><span>ISR Estado</span><span>${fmt(isrEst)}</span></div>
+                <div class="calc-result-row"><span>ISR Federación</span><span>${fmt(isrFed)}</span></div>
+                <div class="calc-result-row total"><span>💰 TOTAL ISR</span><span>${fmt(isr)}</span></div>
+            `;
+        }
+        
+        function calcularISTP() {
+            const estado = document.getElementById('istpEstado').value;
+            const valor = parseFloat(document.getElementById('istpValor').value) || 0;
+            const esViv = document.getElementById('istpVivienda').checked;
+            
+            const tasas = {jalisco:{n:3,r:1.5}, nayarit:{n:2,r:1}, cdmx:{n:5,r:3}, nuevo_leon:{n:3,r:2}};
+            const t = tasas[estado] || {n:3,r:1.5};
+            const tasa = esViv ? t.r : t.n;
+            const istp = valor * (tasa / 100);
+            
+            document.getElementById('istpResultado').style.display = 'block';
+            document.getElementById('istpResultado').innerHTML = `
+                <div class="calc-result-row"><span>Base</span><span>${fmt(valor)}</span></div>
+                <div class="calc-result-row"><span>Tasa</span><span>${tasa}%</span></div>
+                <div class="calc-result-row total"><span>🏠 TOTAL ISTP</span><span>${fmt(istp)}</span></div>
+            `;
+        }
+        
+        function calcularIVA() {
+            const valor = parseFloat(document.getElementById('ivaValor').value) || 0;
+            const tasa = parseFloat(document.getElementById('ivaTasa').value);
+            const iva = valor * (tasa / 100);
+            
+            document.getElementById('ivaResultado').style.display = 'block';
+            document.getElementById('ivaResultado').innerHTML = `
+                <div class="calc-result-row"><span>Base</span><span>${fmt(valor)}</span></div>
+                <div class="calc-result-row"><span>Tasa</span><span>${tasa}%</span></div>
+                <div class="calc-result-row"><span>IVA</span><span>${fmt(iva)}</span></div>
+                <div class="calc-result-row total"><span>🧾 TOTAL</span><span>${fmt(valor + iva)}</span></div>
+            `;
+        }
+
     </script>
 </body>
 </html>
