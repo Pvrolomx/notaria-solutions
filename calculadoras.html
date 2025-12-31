@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadoras - Notarial Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1E3A5F;
+            --primary-light: #2D5A8B;
+            --accent: #C9A227;
+            --bg: #F5F7FA;
+            --white: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #E1E5EB;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .container { max-width: 500px; margin: 0 auto; padding: 1rem; }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+        .header h1 { font-size: 1.25rem; color: var(--primary); margin-bottom: 0.25rem; }
+        .header p { font-size: 0.8rem; color: var(--text-light); }
+        
+        /* Menu Principal */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .menu-btn {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+        .menu-btn:active { transform: scale(0.98); }
+        .menu-btn-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+        }
+        .menu-btn-icon.isr { background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%); }
+        .menu-btn-icon.istp { background: linear-gradient(135deg, #059669 0%, #34D399 100%); }
+        .menu-btn-icon.iva { background: linear-gradient(135deg, #D97706 0%, #FBBF24 100%); }
+        .menu-btn-content h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .menu-btn-content p { font-size: 0.8rem; color: var(--text-light); }
+        
+        /* Panels */
+        .panel { display: none; }
+        .panel.active { display: block; }
+        
+        /* Back Button */
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        .back-btn:hover { background: var(--bg); }
+        
+        /* Card */
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Fields */
+        .field { margin-bottom: 1rem; }
+        .field label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+        .field input, .field select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .field input:focus, .field select:focus { border-color: var(--primary); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        
+        /* Checkbox */
+        .checkbox-group { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem; }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+        
+        /* Buttons */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--primary); color: var(--white); }
+        .btn-primary:hover { background: var(--primary-light); }
+        
+        /* Results */
+        .result-section {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .result-row:last-child { border-bottom: none; }
+        .result-row.total {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--primary);
+            border-top: 2px solid var(--primary);
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+        }
+        .result-row.highlight {
+            background: #D1FAE5;
+            margin: 0.5rem -1rem;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: none;
+        }
+        .result-row .label { color: var(--text-light); }
+        .result-row .value { font-weight: 500; }
+        
+        /* Tabs */
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .tab {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            background: var(--bg);
+            border: 1px solid var(--border);
+        }
+        .tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        .hidden { display: none !important; }
+        
+        /* Info box */
+        .info-box {
+            background: #FEF3C7;
+            border-left: 4px solid var(--warning);
+            padding: 0.75rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🧮 Calculadoras</h1>
+        <p>Herramientas de cálculo notarial</p>
+    </header>
+
+    <div class="container">
+        <!-- MENU PRINCIPAL -->
+        <div id="panel-menu" class="panel active">
+            <div class="menu-grid">
+                <div class="menu-btn" onclick="showPanel('isr')">
+                    <div class="menu-btn-icon isr">💰</div>
+                    <div class="menu-btn-content">
+                        <h3>ISR</h3>
+                        <p>Impuesto Sobre la Renta por enajenación de inmuebles</p>
+                    </div>
+                </div>
+                <div class="menu-btn" onclick="showPanel('istp')">
+                    <div class="menu-btn-icon istp">🏠</div>
+                    <div class="menu-btn-content">
+                        <h3>ISTP</h3>
+                        <p>Impuesto Sobre Traslación de Dominio (adquisición)</p>
+                    </div>
+                </div>
+                <div class="menu-btn" onclick="showPanel('iva')">
+                    <div class="menu-btn-icon iva">🧾</div>
+                    <div class="menu-btn-content">
+                        <h3>IVA</h3>
+                        <p>Impuesto al Valor Agregado en operaciones</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALCULADORA ISR -->
+        <div id="panel-isr" class="panel">
+            <button class="back-btn" onclick="showPanel('menu')">← Volver al menú</button>
+            
+            <div class="card">
+                <h2>💰 Calculadora ISR</h2>
+                <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:1rem;">Impuesto por venta de inmuebles</p>
+                
+                <div class="grid-2">
+                    <div class="field">
+                        <label>Fecha de Venta</label>
+                        <input type="date" id="isrFechaVenta" value="2024-12-31">
+                    </div>
+                    <div class="field">
+                        <label>Fecha de Compra</label>
+                        <input type="date" id="isrFechaCompra" value="2015-06-12">
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="field">
+                        <label>Precio Venta $</label>
+                        <input type="number" id="isrPrecioVenta" value="3000000">
+                    </div>
+                    <div class="field">
+                        <label>Precio Compra $</label>
+                        <input type="number" id="isrPrecioCompra" value="950000">
+                    </div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="setTipoISR('mixto', this)">Terreno + Construcción</div>
+                    <div class="tab" onclick="setTipoISR('terreno', this)">Solo Terreno</div>
+                </div>
+                
+                <div id="isrSplitSection" class="grid-2">
+                    <div class="field">
+                        <label>% Terreno</label>
+                        <input type="number" id="isrPctTerreno" value="20">
+                    </div>
+                    <div class="field">
+                        <label>% Construcción</label>
+                        <input type="number" id="isrPctConstruccion" value="80">
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="isrExtranjero">
+                        <span>Enajenante Extranjero (sin RFC)</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="isrCasaHabitacion">
+                        <span>Casa Habitación (exención)</span>
+                    </label>
+                </div>
+                
+                <button class="btn btn-primary" onclick="calcularISR()">🧮 Calcular ISR</button>
+                
+                <div id="isrResultados" class="result-section hidden">
+                    <div class="result-row">
+                        <span class="label">Factor INPC</span>
+                        <span class="value" id="isrResFactor">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">Años Transcurridos</span>
+                        <span class="value" id="isrResAnios">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">Total Deducciones</span>
+                        <span class="value" id="isrResDeduc">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">Utilidad Gravable</span>
+                        <span class="value" id="isrResUtilidad">-</span>
+                    </div>
+                    <div id="isrRowExtranjero" class="result-row highlight hidden">
+                        <span class="label">✅ Mejor Opción Extranjero</span>
+                        <span class="value" id="isrResMejor">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">ISR Estado (máx 5%)</span>
+                        <span class="value" id="isrResEstado">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">ISR Federación</span>
+                        <span class="value" id="isrResFed">-</span>
+                    </div>
+                    <div class="result-row total">
+                        <span class="label">💰 TOTAL ISR</span>
+                        <span class="value" id="isrResTotal">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALCULADORA ISTP -->
+        <div id="panel-istp" class="panel">
+            <button class="back-btn" onclick="showPanel('menu')">← Volver al menú</button>
+            
+            <div class="card">
+                <h2>🏠 Calculadora ISTP</h2>
+                <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:1rem;">Impuesto por adquisición de inmuebles</p>
+                
+                <div class="field">
+                    <label>Estado</label>
+                    <select id="istpEstado">
+                        <option value="jalisco">Jalisco</option>
+                        <option value="nayarit">Nayarit</option>
+                        <option value="cdmx">Ciudad de México</option>
+                        <option value="nuevo_leon">Nuevo León</option>
+                        <option value="otro">Otro (tasa genérica)</option>
+                    </select>
+                </div>
+                
+                <div class="field">
+                    <label>Valor de Operación (el mayor entre avalúo, catastral y operación) $</label>
+                    <input type="number" id="istpValor" value="3000000">
+                </div>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="istpVivienda">
+                        <span>Vivienda de interés social (tasa reducida)</span>
+                    </label>
+                </div>
+                
+                <button class="btn btn-primary" onclick="calcularISTP()">🧮 Calcular ISTP</button>
+                
+                <div id="istpResultados" class="result-section hidden">
+                    <div class="result-row">
+                        <span class="label">Base Gravable</span>
+                        <span class="value" id="istpResBase">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">Tasa Aplicable</span>
+                        <span class="value" id="istpResTasa">-</span>
+                    </div>
+                    <div class="result-row total">
+                        <span class="label">🏠 TOTAL ISTP</span>
+                        <span class="value" id="istpResTotal">-</span>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    ⚠️ Las tasas varían por estado y pueden cambiar. Verificar con la ley local vigente.
+                </div>
+            </div>
+        </div>
+
+        <!-- CALCULADORA IVA -->
+        <div id="panel-iva" class="panel">
+            <button class="back-btn" onclick="showPanel('menu')">← Volver al menú</button>
+            
+            <div class="card">
+                <h2>🧾 Calculadora IVA</h2>
+                <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:1rem;">IVA en operaciones inmobiliarias</p>
+                
+                <div class="field">
+                    <label>Tipo de Operación</label>
+                    <select id="ivaOperacion" onchange="updateIvaInfo()">
+                        <option value="local">Venta de Local Comercial</option>
+                        <option value="terreno_comercial">Venta de Terreno Comercial</option>
+                        <option value="arrendamiento">Arrendamiento Comercial</option>
+                        <option value="construccion">Servicios de Construcción</option>
+                    </select>
+                </div>
+                
+                <div class="field">
+                    <label>Valor de la Operación $</label>
+                    <input type="number" id="ivaValor" value="1000000">
+                </div>
+                
+                <div class="field">
+                    <label>Tasa IVA</label>
+                    <select id="ivaTasa">
+                        <option value="16">16% (General)</option>
+                        <option value="8">8% (Frontera)</option>
+                        <option value="0">0% (Exento/Tasa 0)</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" onclick="calcularIVA()">🧮 Calcular IVA</button>
+                
+                <div id="ivaResultados" class="result-section hidden">
+                    <div class="result-row">
+                        <span class="label">Base Gravable</span>
+                        <span class="value" id="ivaResBase">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">Tasa Aplicada</span>
+                        <span class="value" id="ivaResTasa">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">IVA</span>
+                        <span class="value" id="ivaResIva">-</span>
+                    </div>
+                    <div class="result-row total">
+                        <span class="label">🧾 TOTAL CON IVA</span>
+                        <span class="value" id="ivaResTotal">-</span>
+                    </div>
+                </div>
+                
+                <div id="ivaInfo" class="info-box">
+                    ℹ️ La venta de casa habitación está exenta de IVA. Solo aplica en operaciones comerciales.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // INPC Tabla
+        const INPC = {
+            '2015-01': 87.6360, '2015-06': 87.1131, '2015-12': 88.6110,
+            '2016-06': 89.1830, '2016-12': 91.7970,
+            '2017-06': 93.5920, '2017-12': 96.6120,
+            '2018-06': 97.2540, '2018-12': 100.2530,
+            '2019-06': 100.5240, '2019-12': 102.6780,
+            '2020-06': 103.2340, '2020-12': 105.8510,
+            '2021-06': 108.7790, '2021-12': 112.9250,
+            '2022-06': 117.0420, '2022-12': 120.8450,
+            '2023-06': 122.5860, '2023-12': 126.1890,
+            '2024-06': 128.5200, '2024-12': 137.9770,
+            '2025-06': 140.5190, '2025-12': 143.1000
+        };
+        
+        // Tablas ISR 2025
+        const TABLAS_ISR = [
+            { limiteInf: 0.01, limiteSup: 8952.49, cuotaFija: 0, tasa: 1.92 },
+            { limiteInf: 8952.50, limiteSup: 75984.55, cuotaFija: 171.88, tasa: 6.40 },
+            { limiteInf: 75984.56, limiteSup: 133536.07, cuotaFija: 4461.94, tasa: 10.88 },
+            { limiteInf: 133536.08, limiteSup: 155229.80, cuotaFija: 10723.55, tasa: 16.00 },
+            { limiteInf: 155229.81, limiteSup: 185852.57, cuotaFija: 14194.54, tasa: 17.92 },
+            { limiteInf: 185852.58, limiteSup: 374837.88, cuotaFija: 19682.13, tasa: 21.36 },
+            { limiteInf: 374837.89, limiteSup: 590795.99, cuotaFija: 60049.40, tasa: 23.52 },
+            { limiteInf: 590796.00, limiteSup: 1127926.84, cuotaFija: 110842.74, tasa: 30.00 },
+            { limiteInf: 1127926.85, limiteSup: 1503902.46, cuotaFija: 271981.99, tasa: 32.00 },
+            { limiteInf: 1503902.47, limiteSup: 4511707.37, cuotaFija: 392294.17, tasa: 34.00 },
+            { limiteInf: 4511707.38, limiteSup: Infinity, cuotaFija: 1414947.85, tasa: 35.00 }
+        ];
+        
+        // Tasas ISTP por estado
+        const TASAS_ISTP = {
+            jalisco: { normal: 3.0, reducida: 1.5 },
+            nayarit: { normal: 2.0, reducida: 1.0 },
+            cdmx: { normal: 5.0, reducida: 3.0 },
+            nuevo_leon: { normal: 3.0, reducida: 2.0 },
+            otro: { normal: 2.5, reducida: 1.5 }
+        };
+        
+        const VALOR_UDI = 8.465213;
+        const EXENCION_UDIS = 700000;
+        
+        let tipoISR = 'mixto';
+        
+        function showPanel(id) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel-' + id).classList.add('active');
+        }
+        
+        function setTipoISR(tipo, el) {
+            tipoISR = tipo;
+            document.querySelectorAll('#panel-isr .tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            
+            if (tipo === 'terreno') {
+                document.getElementById('isrSplitSection').classList.add('hidden');
+                document.getElementById('isrPctTerreno').value = 100;
+                document.getElementById('isrPctConstruccion').value = 0;
+            } else {
+                document.getElementById('isrSplitSection').classList.remove('hidden');
+                document.getElementById('isrPctTerreno').value = 20;
+                document.getElementById('isrPctConstruccion').value = 80;
+            }
+        }
+        
+        function getINPC(fecha) {
+            const d = new Date(fecha);
+            const year = d.getFullYear();
+            const month = d.getMonth() + 1;
+            const key = `${year}-${String(month).padStart(2, '0')}`;
+            
+            // Buscar exacto o aproximado
+            if (INPC[key]) return INPC[key];
+            
+            // Buscar semestre más cercano
+            const sem = month <= 6 ? '06' : '12';
+            const keyAprox = `${year}-${sem}`;
+            return INPC[keyAprox] || 143.1;
+        }
+        
+        function calcularISRTablas(utilidadAnual) {
+            if (utilidadAnual <= 0) return 0;
+            for (const r of TABLAS_ISR) {
+                if (utilidadAnual >= r.limiteInf && utilidadAnual <= r.limiteSup) {
+                    return r.cuotaFija + ((utilidadAnual - r.limiteInf) * r.tasa / 100);
+                }
+            }
+            return 0;
+        }
+        
+        function fmt(n) {
+            return '$' + n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        
+        function calcularISR() {
+            const fechaVenta = document.getElementById('isrFechaVenta').value;
+            const fechaCompra = document.getElementById('isrFechaCompra').value;
+            const precioVenta = parseFloat(document.getElementById('isrPrecioVenta').value) || 0;
+            const precioCompra = parseFloat(document.getElementById('isrPrecioCompra').value) || 0;
+            const pctTerreno = parseFloat(document.getElementById('isrPctTerreno').value) / 100;
+            const pctConst = parseFloat(document.getElementById('isrPctConstruccion').value) / 100;
+            const esExtranjero = document.getElementById('isrExtranjero').checked;
+            const esCasa = document.getElementById('isrCasaHabitacion').checked;
+            
+            // Años
+            const dV = new Date(fechaVenta), dC = new Date(fechaCompra);
+            let anios = Math.floor((dV - dC) / (365.25 * 24 * 60 * 60 * 1000));
+            anios = Math.max(1, Math.min(anios, 20));
+            
+            // INPC
+            const inpcV = getINPC(fechaVenta), inpcC = getINPC(fechaCompra);
+            const factor = inpcV / inpcC;
+            
+            // Deducciones
+            const terrenoAct = precioCompra * pctTerreno * factor;
+            const pctDeprec = Math.min(anios * 3, 80) / 100;
+            const constAct = precioCompra * pctConst * (1 - pctDeprec) * factor;
+            const totalDeduc = terrenoAct + constAct;
+            
+            // Exención
+            let exencion = 0;
+            if (esCasa && !esExtranjero) {
+                exencion = Math.min(EXENCION_UDIS * VALOR_UDI, precioVenta - totalDeduc);
+            }
+            
+            // Utilidad
+            let utilidad = Math.max(0, precioVenta - totalDeduc - exencion);
+            
+            // ISR
+            let isrTotal = 0, isrEstado = 0, isrFed = 0, mejorOpcion = '';
+            
+            if (utilidad > 0) {
+                if (esExtranjero) {
+                    const isr35 = utilidad * 0.35;
+                    const utilAnual = utilidad / anios;
+                    const isrTablas = calcularISRTablas(utilAnual) * anios;
+                    
+                    if (isr35 <= isrTablas) {
+                        isrTotal = isr35;
+                        mejorOpcion = '35% Flat';
+                    } else {
+                        isrTotal = isrTablas;
+                        mejorOpcion = 'Con Tablas';
+                    }
+                    isrFed = isrTotal;
+                } else {
+                    const utilAnual = utilidad / anios;
+                    isrTotal = calcularISRTablas(utilAnual) * anios;
+                    isrEstado = Math.min(utilidad * 0.05, isrTotal);
+                    isrFed = isrTotal - isrEstado;
+                }
+            }
+            
+            // Mostrar
+            document.getElementById('isrResultados').classList.remove('hidden');
+            document.getElementById('isrResFactor').textContent = factor.toFixed(4);
+            document.getElementById('isrResAnios').textContent = anios;
+            document.getElementById('isrResDeduc').textContent = fmt(totalDeduc);
+            document.getElementById('isrResUtilidad').textContent = fmt(utilidad);
+            document.getElementById('isrResEstado').textContent = fmt(isrEstado);
+            document.getElementById('isrResFed').textContent = fmt(isrFed);
+            document.getElementById('isrResTotal').textContent = fmt(isrTotal);
+            
+            if (esExtranjero && utilidad > 0) {
+                document.getElementById('isrRowExtranjero').classList.remove('hidden');
+                document.getElementById('isrResMejor').textContent = mejorOpcion + ' - ' + fmt(isrTotal);
+            } else {
+                document.getElementById('isrRowExtranjero').classList.add('hidden');
+            }
+        }
+        
+        function calcularISTP() {
+            const estado = document.getElementById('istpEstado').value;
+            const valor = parseFloat(document.getElementById('istpValor').value) || 0;
+            const esVivienda = document.getElementById('istpVivienda').checked;
+            
+            const tasas = TASAS_ISTP[estado];
+            const tasa = esVivienda ? tasas.reducida : tasas.normal;
+            const istp = valor * (tasa / 100);
+            
+            document.getElementById('istpResultados').classList.remove('hidden');
+            document.getElementById('istpResBase').textContent = fmt(valor);
+            document.getElementById('istpResTasa').textContent = tasa + '%';
+            document.getElementById('istpResTotal').textContent = fmt(istp);
+        }
+        
+        function calcularIVA() {
+            const valor = parseFloat(document.getElementById('ivaValor').value) || 0;
+            const tasa = parseFloat(document.getElementById('ivaTasa').value);
+            const iva = valor * (tasa / 100);
+            const total = valor + iva;
+            
+            document.getElementById('ivaResultados').classList.remove('hidden');
+            document.getElementById('ivaResBase').textContent = fmt(valor);
+            document.getElementById('ivaResTasa').textContent = tasa + '%';
+            document.getElementById('ivaResIva').textContent = fmt(iva);
+            document.getElementById('ivaResTotal').textContent = fmt(total);
+        }
+        
+        function updateIvaInfo() {
+            const op = document.getElementById('ivaOperacion').value;
+            const info = document.getElementById('ivaInfo');
+            
+            const msgs = {
+                local: 'ℹ️ La venta de local comercial genera IVA al 16%. Casa habitación está exenta.',
+                terreno_comercial: 'ℹ️ Terrenos para uso comercial generan IVA. Terrenos para vivienda están exentos.',
+                arrendamiento: 'ℹ️ El arrendamiento de inmuebles comerciales genera IVA. Casa habitación está exento.',
+                construccion: 'ℹ️ Los servicios de construcción generan IVA al 16%.'
+            };
+            
+            info.textContent = msgs[op];
+        }
+    </script>
+</body>
+</html>
