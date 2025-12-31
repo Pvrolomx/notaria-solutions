@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notaría Solutions</title>
+    <title>Notarial Solutions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -27,12 +27,7 @@
             color: var(--text);
             min-height: 100vh;
         }
-        
-        /* Layout */
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-        }
+        .app-container { display: flex; min-height: 100vh; }
         
         /* Sidebar */
         .sidebar {
@@ -55,24 +50,25 @@
             gap: 0.75rem;
         }
         .sidebar-logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             background: var(--accent);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
         }
         .sidebar-logo-text h1 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .sidebar-logo-text p {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             opacity: 0.7;
+            letter-spacing: 0.5px;
         }
-        
         .sidebar-nav {
             flex: 1;
             padding: 1rem 0;
@@ -82,10 +78,10 @@
             margin-bottom: 1.5rem;
         }
         .nav-section-title {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.5;
+            letter-spacing: 1.5px;
+            opacity: 0.4;
             padding: 0 1.5rem;
             margin-bottom: 0.5rem;
         }
@@ -93,7 +89,7 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.75rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             color: rgba(255,255,255,0.7);
             text-decoration: none;
             font-size: 0.9rem;
@@ -110,32 +106,24 @@
             color: var(--white);
             border-left-color: var(--accent);
         }
-        .nav-item-icon {
-            width: 20px;
-            text-align: center;
-        }
+        .nav-item-icon { width: 22px; text-align: center; font-size: 1.1rem; }
         .nav-item-badge {
             margin-left: auto;
             background: var(--accent);
             color: var(--primary);
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
             padding: 0.15rem 0.5rem;
             border-radius: 10px;
         }
-        
         .sidebar-footer {
             padding: 1rem 1.5rem;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
+        .user-info { display: flex; align-items: center; gap: 0.75rem; }
         .user-avatar {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             background: var(--accent);
             border-radius: 50%;
             display: flex;
@@ -145,23 +133,15 @@
             font-size: 0.85rem;
             color: var(--primary);
         }
-        .user-details h4 {
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-        .user-details p {
-            font-size: 0.7rem;
-            opacity: 0.7;
-        }
+        .user-details h4 { font-size: 0.85rem; font-weight: 500; }
+        .user-details p { font-size: 0.7rem; opacity: 0.7; }
         
-        /* Main Content */
+        /* Main */
         .main-content {
             flex: 1;
             margin-left: 260px;
             min-height: 100vh;
         }
-        
-        /* Header */
         .header {
             background: var(--white);
             padding: 1rem 2rem;
@@ -173,19 +153,9 @@
             top: 0;
             z-index: 50;
         }
-        .header-left h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-        .header-left p {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+        .header-left h2 { font-size: 1.25rem; font-weight: 600; }
+        .header-left p { font-size: 0.8rem; color: var(--text-light); }
+        .header-right { display: flex; align-items: center; gap: 1rem; }
         .header-search {
             display: flex;
             align-items: center;
@@ -212,6 +182,7 @@
             justify-content: center;
             cursor: pointer;
             position: relative;
+            font-size: 1.1rem;
         }
         .header-btn-badge {
             position: absolute;
@@ -221,77 +192,49 @@
             height: 18px;
             background: var(--danger);
             color: white;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+        .page-content { padding: 2rem; }
+        .panel { display: none; }
+        .panel.active { display: block; }
         
-        /* Page Content */
-        .page-content {
-            padding: 2rem;
-        }
-        
-        /* Panel - Modulo Base */
-        .panel {
-            display: none;
-        }
-        .panel.active {
-            display: block;
-        }
-        
-        /* Cards Grid */
+        /* Stats */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
             margin-bottom: 2rem;
         }
         .stat-card {
             background: var(--white);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .stat-card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1rem;
         }
         .stat-card-icon {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
         }
         .stat-card-icon.blue { background: #EBF5FF; }
         .stat-card-icon.green { background: #ECFDF5; }
         .stat-card-icon.yellow { background: #FFFBEB; }
         .stat-card-icon.purple { background: #F5F3FF; }
-        .stat-card-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .stat-card-label {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            margin-top: 0.25rem;
-        }
-        .stat-card-change {
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            margin-top: 0.5rem;
-        }
-        .stat-card-change.up { color: var(--success); }
-        .stat-card-change.down { color: var(--danger); }
+        .stat-card-value { font-size: 1.75rem; font-weight: 700; color: var(--primary); }
+        .stat-card-label { font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem; }
         
         /* Tables */
         .data-table-container {
@@ -299,6 +242,7 @@
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             overflow: hidden;
+            margin-bottom: 1.5rem;
         }
         .data-table-header {
             padding: 1.25rem 1.5rem;
@@ -307,18 +251,12 @@
             justify-content: space-between;
             align-items: center;
         }
-        .data-table-header h3 {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .data-table-header h3 { font-size: 1rem; font-weight: 600; }
+        .data-table { width: 100%; border-collapse: collapse; }
         .data-table th {
             text-align: left;
-            padding: 1rem 1.5rem;
-            font-size: 0.75rem;
+            padding: 0.9rem 1.5rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-light);
@@ -328,23 +266,19 @@
         .data-table td {
             padding: 1rem 1.5rem;
             border-bottom: 1px solid var(--border);
-            font-size: 0.9rem;
+            font-size: 0.875rem;
         }
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-        .data-table tr:hover {
-            background: var(--bg);
-        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover { background: var(--bg); }
         
-        /* Status Badges */
+        /* Status */
         .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.35rem;
-            padding: 0.35rem 0.75rem;
+            padding: 0.3rem 0.7rem;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 500;
         }
         .status-badge.pending { background: #FEF3C7; color: #92400E; }
@@ -365,26 +299,16 @@
             transition: all 0.2s;
             border: none;
         }
-        .btn-primary {
-            background: var(--primary);
-            color: var(--white);
-        }
-        .btn-primary:hover {
-            background: var(--primary-light);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-        }
-        .btn-outline:hover {
-            background: var(--bg);
-        }
+        .btn-primary { background: var(--primary); color: var(--white); }
+        .btn-primary:hover { background: var(--primary-light); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline:hover { background: var(--bg); }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
         
-        /* Quick Actions Grid */
+        /* Quick Actions */
         .quick-actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
@@ -404,23 +328,214 @@
             box-shadow: 0 4px 12px rgba(30, 58, 95, 0.1);
         }
         .quick-action-icon {
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 10px;
             background: var(--bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
         }
-        .quick-action-text h4 {
+        .quick-action-text h4 { font-size: 0.85rem; font-weight: 500; }
+        .quick-action-text p { font-size: 0.7rem; color: var(--text-light); }
+        
+        /* Chat */
+        .chat-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 1.5rem;
+            height: calc(100vh - 180px);
+        }
+        .chat-sidebar {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+        .chat-list { flex: 1; overflow-y: auto; }
+        .chat-item {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+        }
+        .chat-item:hover { background: var(--bg); }
+        .chat-item.active { background: #EBF5FF; }
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .chat-item-info { flex: 1; }
+        .chat-item-name { font-weight: 500; font-size: 0.9rem; }
+        .chat-item-preview { font-size: 0.75rem; color: var(--text-light); }
+        .chat-main {
+            background: var(--white);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .message {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
             font-size: 0.9rem;
-            font-weight: 500;
         }
-        .quick-action-text p {
-            font-size: 0.75rem;
+        .message.sent {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .message.received {
+            background: var(--bg);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .message-time {
+            font-size: 0.65rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+        .chat-input {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .chat-input input:focus { border-color: var(--primary); }
+        
+        /* Calculadora */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        .calc-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .calc-card h3 {
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .calc-field { margin-bottom: 1rem; }
+        .calc-field label {
+            display: block;
+            font-size: 0.8rem;
             color: var(--text-light);
+            margin-bottom: 0.4rem;
         }
+        .calc-field input, .calc-field select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .calc-field input:focus, .calc-field select:focus { border-color: var(--primary); }
+        .calc-result {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        .calc-result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+        }
+        .calc-result-row.total {
+            border-top: 1px solid var(--border);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        /* Call */
+        .call-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 200px);
+        }
+        .call-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .call-name { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .call-status { color: var(--text-light); margin-bottom: 2rem; }
+        .call-actions { display: flex; gap: 1rem; }
+        .call-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.2s;
+        }
+        .call-btn.mute { background: var(--bg); }
+        .call-btn.video { background: var(--bg); }
+        .call-btn.end { background: var(--danger); color: white; }
+        .call-btn:hover { transform: scale(1.1); }
         
         /* Responsive */
         @media (max-width: 768px) {
@@ -430,18 +545,19 @@
             .main-content { margin-left: 70px; }
             .header { padding: 1rem; }
             .page-content { padding: 1rem; }
+            .chat-container { grid-template-columns: 1fr; }
+            .chat-sidebar { display: none; }
         }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
                     <div class="sidebar-logo-icon">⚖️</div>
                     <div class="sidebar-logo-text">
-                        <h1>Notaría Solutions</h1>
+                        <h1>Notarial Solutions</h1>
                         <p>Sistema Integral</p>
                     </div>
                 </div>
@@ -449,47 +565,36 @@
             
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <div class="nav-section-title">Principal</div>
-                    <a class="nav-item active" data-panel="dashboard">
-                        <span class="nav-item-icon">📊</span>
-                        <span>Dashboard</span>
-                    </a>
-                    <a class="nav-item" data-panel="tramites">
-                        <span class="nav-item-icon">📋</span>
-                        <span>Trámites</span>
-                        <span class="nav-item-badge">12</span>
-                    </a>
-                    <a class="nav-item" data-panel="clientes">
+                    <div class="nav-section-title">Gestión</div>
+                    <a class="nav-item active" data-panel="clientes">
                         <span class="nav-item-icon">👥</span>
                         <span>Clientes</span>
                     </a>
-                </div>
-                
-                <div class="nav-section">
-                    <div class="nav-section-title">Gestión</div>
-                    <a class="nav-item" data-panel="documentos">
-                        <span class="nav-item-icon">📄</span>
-                        <span>Documentos</span>
+                    <a class="nav-item" data-panel="expedientes">
+                        <span class="nav-item-icon">📁</span>
+                        <span>Expedientes</span>
+                        <span class="nav-item-badge">24</span>
                     </a>
-                    <a class="nav-item" data-panel="calendario">
+                    <a class="nav-item" data-panel="agenda">
                         <span class="nav-item-icon">📅</span>
-                        <span>Calendario</span>
+                        <span>Agenda</span>
                     </a>
-                    <a class="nav-item" data-panel="firmas">
-                        <span class="nav-item-icon">✍️</span>
-                        <span>Firmas</span>
+                    <a class="nav-item" data-panel="calculadoras">
+                        <span class="nav-item-icon">🧮</span>
+                        <span>Calculadoras</span>
                     </a>
                 </div>
                 
                 <div class="nav-section">
-                    <div class="nav-section-title">Administración</div>
-                    <a class="nav-item" data-panel="reportes">
-                        <span class="nav-item-icon">📈</span>
-                        <span>Reportes</span>
+                    <div class="nav-section-title">Comunicación</div>
+                    <a class="nav-item" data-panel="chat">
+                        <span class="nav-item-icon">💬</span>
+                        <span>Chat</span>
+                        <span class="nav-item-badge">3</span>
                     </a>
-                    <a class="nav-item" data-panel="configuracion">
-                        <span class="nav-item-icon">⚙️</span>
-                        <span>Configuración</span>
+                    <a class="nav-item" data-panel="llamadas">
+                        <span class="nav-item-icon">📞</span>
+                        <span>Llamadas</span>
                     </a>
                 </div>
             </nav>
@@ -505,17 +610,16 @@
             </div>
         </aside>
         
-        <!-- Main Content -->
         <main class="main-content">
             <header class="header">
                 <div class="header-left">
-                    <h2 id="pageTitle">Dashboard</h2>
-                    <p id="pageSubtitle">Vista general de la notaría</p>
+                    <h2 id="pageTitle">Clientes</h2>
+                    <p id="pageSubtitle">Directorio de clientes</p>
                 </div>
                 <div class="header-right">
                     <div class="header-search">
                         <span>🔍</span>
-                        <input type="text" placeholder="Buscar trámite, cliente...">
+                        <input type="text" placeholder="Buscar...">
                     </div>
                     <button class="header-btn">
                         <span>🔔</span>
@@ -525,173 +629,38 @@
             </header>
             
             <div class="page-content">
-                <!-- Panel: Dashboard -->
-                <div id="panel-dashboard" class="panel active">
+                <!-- CLIENTES -->
+                <div id="panel-clientes" class="panel active">
                     <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div>
-                                    <div class="stat-card-value">47</div>
-                                    <div class="stat-card-label">Trámites Activos</div>
-                                </div>
-                                <div class="stat-card-icon blue">📋</div>
-                            </div>
-                            <div class="stat-card-change up">↑ 12% vs mes anterior</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-header">
-                                <div>
-                                    <div class="stat-card-value">8</div>
-                                    <div class="stat-card-label">Firmas Pendientes</div>
-                                </div>
-                                <div class="stat-card-icon yellow">✍️</div>
-                            </div>
-                            <div class="stat-card-change down">↓ 3 completadas hoy</div>
-                        </div>
                         <div class="stat-card">
                             <div class="stat-card-header">
                                 <div>
                                     <div class="stat-card-value">156</div>
                                     <div class="stat-card-label">Clientes Totales</div>
                                 </div>
-                                <div class="stat-card-icon green">👥</div>
+                                <div class="stat-card-icon blue">👥</div>
                             </div>
-                            <div class="stat-card-change up">↑ 5 nuevos esta semana</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-card-header">
                                 <div>
-                                    <div class="stat-card-value">$847K</div>
-                                    <div class="stat-card-label">Ingresos del Mes</div>
+                                    <div class="stat-card-value">12</div>
+                                    <div class="stat-card-label">Nuevos este mes</div>
                                 </div>
-                                <div class="stat-card-icon purple">💰</div>
-                            </div>
-                            <div class="stat-card-change up">↑ 8% vs mes anterior</div>
-                        </div>
-                    </div>
-                    
-                    <div class="quick-actions">
-                        <div class="quick-action-card">
-                            <div class="quick-action-icon">📝</div>
-                            <div class="quick-action-text">
-                                <h4>Nuevo Trámite</h4>
-                                <p>Iniciar escritura</p>
+                                <div class="stat-card-icon green">📈</div>
                             </div>
                         </div>
-                        <div class="quick-action-card">
-                            <div class="quick-action-icon">👤</div>
-                            <div class="quick-action-text">
-                                <h4>Nuevo Cliente</h4>
-                                <p>Registrar persona</p>
-                            </div>
-                        </div>
-                        <div class="quick-action-card">
-                            <div class="quick-action-icon">📅</div>
-                            <div class="quick-action-text">
-                                <h4>Agendar Cita</h4>
-                                <p>Programar firma</p>
-                            </div>
-                        </div>
-                        <div class="quick-action-card">
-                            <div class="quick-action-icon">📤</div>
-                            <div class="quick-action-text">
-                                <h4>Subir Documento</h4>
-                                <p>Anexar archivo</p>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div>
+                                    <div class="stat-card-value">89</div>
+                                    <div class="stat-card-label">Con expedientes activos</div>
+                                </div>
+                                <div class="stat-card-icon yellow">📁</div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="data-table-container">
-                        <div class="data-table-header">
-                            <h3>Trámites Recientes</h3>
-                            <button class="btn btn-outline">Ver todos</button>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Folio</th>
-                                    <th>Tipo</th>
-                                    <th>Cliente</th>
-                                    <th>Estado</th>
-                                    <th>Fecha</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>ESC-2024-0847</strong></td>
-                                    <td>Compraventa</td>
-                                    <td>María García López</td>
-                                    <td><span class="status-badge progress">● En proceso</span></td>
-                                    <td>31 Dic 2024</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>ESC-2024-0846</strong></td>
-                                    <td>Poder Notarial</td>
-                                    <td>Carlos Mendoza R.</td>
-                                    <td><span class="status-badge pending">● Pendiente firma</span></td>
-                                    <td>30 Dic 2024</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>ESC-2024-0845</strong></td>
-                                    <td>Testamento</td>
-                                    <td>Ana Sofía Ruiz</td>
-                                    <td><span class="status-badge complete">● Completado</span></td>
-                                    <td>29 Dic 2024</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>ESC-2024-0844</strong></td>
-                                    <td>Constitución SA</td>
-                                    <td>Grupo Industrial MX</td>
-                                    <td><span class="status-badge urgent">● Urgente</span></td>
-                                    <td>28 Dic 2024</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- Panel: Trámites -->
-                <div id="panel-tramites" class="panel">
-                    <div class="data-table-container">
-                        <div class="data-table-header">
-                            <h3>Todos los Trámites</h3>
-                            <button class="btn btn-primary">+ Nuevo Trámite</button>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Folio</th>
-                                    <th>Tipo</th>
-                                    <th>Cliente</th>
-                                    <th>Asignado</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>ESC-2024-0847</strong></td>
-                                    <td>Compraventa Inmueble</td>
-                                    <td>María García López</td>
-                                    <td>Lic. Rodríguez</td>
-                                    <td><span class="status-badge progress">● En proceso</span></td>
-                                    <td><button class="btn btn-outline">Ver</button></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>ESC-2024-0846</strong></td>
-                                    <td>Poder Notarial</td>
-                                    <td>Carlos Mendoza R.</td>
-                                    <td>Asistente Ana</td>
-                                    <td><span class="status-badge pending">● Pendiente</span></td>
-                                    <td><button class="btn btn-outline">Ver</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- Panel: Clientes -->
-                <div id="panel-clientes" class="panel">
                     <div class="data-table-container">
                         <div class="data-table-header">
                             <h3>Directorio de Clientes</h3>
@@ -700,11 +669,12 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
+                                    <th>Cliente</th>
                                     <th>RFC</th>
                                     <th>Teléfono</th>
-                                    <th>Email</th>
-                                    <th>Trámites</th>
+                                    <th>Expedientes</th>
+                                    <th>Último Contacto</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -712,154 +682,341 @@
                                     <td><strong>María García López</strong></td>
                                     <td>GALM850215ABC</td>
                                     <td>+52 33 1234 5678</td>
-                                    <td>maria.garcia@email.com</td>
-                                    <td>3 activos</td>
+                                    <td><span class="status-badge progress">3 activos</span></td>
+                                    <td>Hoy</td>
+                                    <td><button class="btn btn-outline btn-sm">Ver</button></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Carlos Mendoza Ríos</strong></td>
                                     <td>MERC780930XYZ</td>
                                     <td>+52 33 9876 5432</td>
-                                    <td>carlos.mendoza@email.com</td>
-                                    <td>1 activo</td>
+                                    <td><span class="status-badge pending">1 activo</span></td>
+                                    <td>Ayer</td>
+                                    <td><button class="btn btn-outline btn-sm">Ver</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Grupo Industrial MX S.A.</strong></td>
+                                    <td>GIM201015XYZ</td>
+                                    <td>+52 33 5555 1234</td>
+                                    <td><span class="status-badge urgent">2 urgentes</span></td>
+                                    <td>Hace 2 días</td>
+                                    <td><button class="btn btn-outline btn-sm">Ver</button></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 
-                <!-- Panel: Documentos -->
-                <div id="panel-documentos" class="panel">
+                <!-- EXPEDIENTES -->
+                <div id="panel-expedientes" class="panel">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div>
+                                    <div class="stat-card-value">47</div>
+                                    <div class="stat-card-label">Expedientes Activos</div>
+                                </div>
+                                <div class="stat-card-icon blue">📁</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div>
+                                    <div class="stat-card-value">8</div>
+                                    <div class="stat-card-label">Pendientes de Firma</div>
+                                </div>
+                                <div class="stat-card-icon yellow">✍️</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div>
+                                    <div class="stat-card-value">3</div>
+                                    <div class="stat-card-label">Urgentes</div>
+                                </div>
+                                <div class="stat-card-icon purple">🚨</div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="quick-actions">
+                        <div class="quick-action-card">
+                            <div class="quick-action-icon">📝</div>
+                            <div class="quick-action-text">
+                                <h4>Nuevo Expediente</h4>
+                                <p>Compraventa, Poder, etc.</p>
+                            </div>
+                        </div>
                         <div class="quick-action-card">
                             <div class="quick-action-icon">📤</div>
                             <div class="quick-action-text">
                                 <h4>Subir Documento</h4>
-                                <p>PDF, Word, Imágenes</p>
+                                <p>Anexar a expediente</p>
                             </div>
                         </div>
                         <div class="quick-action-card">
-                            <div class="quick-action-icon">📁</div>
+                            <div class="quick-action-icon">✍️</div>
                             <div class="quick-action-text">
-                                <h4>Nueva Carpeta</h4>
-                                <p>Organizar archivos</p>
+                                <h4>Programar Firma</h4>
+                                <p>Agendar cita</p>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="data-table-container">
                         <div class="data-table-header">
-                            <h3>Documentos Recientes</h3>
+                            <h3>Expedientes Recientes</h3>
+                            <button class="btn btn-primary">+ Nuevo Expediente</button>
                         </div>
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Documento</th>
-                                    <th>Trámite</th>
+                                    <th>Folio</th>
                                     <th>Tipo</th>
-                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Estado</th>
+                                    <th>Próxima Acción</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>📄 Escritura_Compraventa_847.pdf</td>
-                                    <td>ESC-2024-0847</td>
-                                    <td>Escritura</td>
-                                    <td>31 Dic 2024</td>
+                                    <td><strong>EXP-2024-0847</strong></td>
+                                    <td>Compraventa</td>
+                                    <td>María García López</td>
+                                    <td><span class="status-badge progress">● En proceso</span></td>
+                                    <td>Firma - 3 Ene 10:00</td>
+                                    <td><button class="btn btn-outline btn-sm">Abrir</button></td>
                                 </tr>
                                 <tr>
-                                    <td>📄 INE_MariaGarcia.jpg</td>
-                                    <td>ESC-2024-0847</td>
-                                    <td>Identificación</td>
-                                    <td>31 Dic 2024</td>
+                                    <td><strong>EXP-2024-0846</strong></td>
+                                    <td>Poder Notarial</td>
+                                    <td>Carlos Mendoza R.</td>
+                                    <td><span class="status-badge pending">● Pendiente firma</span></td>
+                                    <td>Esperando documentos</td>
+                                    <td><button class="btn btn-outline btn-sm">Abrir</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>EXP-2024-0844</strong></td>
+                                    <td>Constitución SA</td>
+                                    <td>Grupo Industrial MX</td>
+                                    <td><span class="status-badge urgent">● Urgente</span></td>
+                                    <td>Revisión legal</td>
+                                    <td><button class="btn btn-outline btn-sm">Abrir</button></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 
-                <!-- Panel: Calendario -->
-                <div id="panel-calendario" class="panel">
-                    <div class="stat-card" style="margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem;">📅 Citas de Hoy - 31 Diciembre 2024</h3>
-                        <div style="display: flex; flex-direction: column; gap: 1rem;">
-                            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg); border-radius: 8px;">
-                                <div style="font-weight: 600; color: var(--primary);">10:00 AM</div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 500;">Firma de Escritura - María García</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-light);">ESC-2024-0847 • Compraventa</div>
+                <!-- AGENDA -->
+                <div id="panel-agenda" class="panel">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div>
+                                    <div class="stat-card-value">4</div>
+                                    <div class="stat-card-label">Citas Hoy</div>
                                 </div>
-                                <span class="status-badge pending">Confirmada</span>
+                                <div class="stat-card-icon blue">📅</div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg); border-radius: 8px;">
-                                <div style="font-weight: 600; color: var(--primary);">12:30 PM</div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 500;">Consulta Inicial - Nuevo Cliente</div>
-                                    <div style="font-size: 0.8rem; color: var(--text-light);">Testamento • Primera visita</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div>
+                                    <div class="stat-card-value">12</div>
+                                    <div class="stat-card-label">Esta Semana</div>
                                 </div>
-                                <span class="status-badge progress">Por confirmar</span>
+                                <div class="stat-card-icon green">📆</div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Panel: Firmas -->
-                <div id="panel-firmas" class="panel">
+                    
                     <div class="data-table-container">
                         <div class="data-table-header">
-                            <h3>Firmas Pendientes</h3>
+                            <h3>📅 Citas de Hoy - 31 Diciembre 2024</h3>
+                            <button class="btn btn-primary">+ Nueva Cita</button>
                         </div>
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Trámite</th>
-                                    <th>Firmantes</th>
-                                    <th>Fecha Programada</th>
+                                    <th>Hora</th>
+                                    <th>Cliente</th>
+                                    <th>Expediente</th>
+                                    <th>Tipo</th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><strong>ESC-2024-0847</strong></td>
-                                    <td>María García, Juan Pérez</td>
-                                    <td>31 Dic 2024, 10:00 AM</td>
-                                    <td><span class="status-badge pending">● Pendiente</span></td>
+                                    <td><strong>10:00 AM</strong></td>
+                                    <td>María García</td>
+                                    <td>EXP-2024-0847</td>
+                                    <td>Firma de Escritura</td>
+                                    <td><span class="status-badge complete">Confirmada</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>12:30 PM</strong></td>
+                                    <td>Nuevo Cliente</td>
+                                    <td>-</td>
+                                    <td>Consulta Inicial</td>
+                                    <td><span class="status-badge pending">Por confirmar</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>4:00 PM</strong></td>
+                                    <td>Carlos Mendoza</td>
+                                    <td>EXP-2024-0846</td>
+                                    <td>Entrega Documentos</td>
+                                    <td><span class="status-badge complete">Confirmada</span></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 
-                <!-- Panel: Reportes -->
-                <div id="panel-reportes" class="panel">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <h4>📊 Trámites por Mes</h4>
-                            <p style="color: var(--text-light); margin-top: 0.5rem;">Módulo de reportes en desarrollo</p>
+                <!-- CALCULADORAS -->
+                <div id="panel-calculadoras" class="panel">
+                    <div class="calc-grid">
+                        <div class="calc-card">
+                            <h3>🧮 Honorarios Notariales</h3>
+                            <div class="calc-field">
+                                <label>Tipo de Operación</label>
+                                <select id="calcTipo">
+                                    <option value="compraventa">Compraventa</option>
+                                    <option value="hipoteca">Hipoteca</option>
+                                    <option value="poder">Poder Notarial</option>
+                                    <option value="testamento">Testamento</option>
+                                    <option value="constitucion">Constitución de Sociedad</option>
+                                </select>
+                            </div>
+                            <div class="calc-field">
+                                <label>Valor de la Operación ($)</label>
+                                <input type="number" id="calcValor" placeholder="0.00" oninput="calcularHonorarios()">
+                            </div>
+                            <div class="calc-result">
+                                <div class="calc-result-row">
+                                    <span>Honorarios Base</span>
+                                    <span id="resHonorarios">$0.00</span>
+                                </div>
+                                <div class="calc-result-row">
+                                    <span>IVA (16%)</span>
+                                    <span id="resIVA">$0.00</span>
+                                </div>
+                                <div class="calc-result-row">
+                                    <span>Derechos Registro</span>
+                                    <span id="resRegistro">$0.00</span>
+                                </div>
+                                <div class="calc-result-row total">
+                                    <span>TOTAL ESTIMADO</span>
+                                    <span id="resTotal">$0.00</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="stat-card">
-                            <h4>💰 Ingresos Mensuales</h4>
-                            <p style="color: var(--text-light); margin-top: 0.5rem;">Módulo de reportes en desarrollo</p>
+                        
+                        <div class="calc-card">
+                            <h3>📊 ISR por Enajenación</h3>
+                            <div class="calc-field">
+                                <label>Valor de Venta ($)</label>
+                                <input type="number" id="isrVenta" placeholder="0.00" oninput="calcularISR()">
+                            </div>
+                            <div class="calc-field">
+                                <label>Valor de Adquisición ($)</label>
+                                <input type="number" id="isrAdquisicion" placeholder="0.00" oninput="calcularISR()">
+                            </div>
+                            <div class="calc-field">
+                                <label>Años de Propiedad</label>
+                                <input type="number" id="isrAnios" placeholder="0" oninput="calcularISR()">
+                            </div>
+                            <div class="calc-result">
+                                <div class="calc-result-row">
+                                    <span>Ganancia</span>
+                                    <span id="isrGanancia">$0.00</span>
+                                </div>
+                                <div class="calc-result-row total">
+                                    <span>ISR ESTIMADO</span>
+                                    <span id="isrTotal">$0.00</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Panel: Configuración -->
-                <div id="panel-configuracion" class="panel">
-                    <div class="stat-card" style="max-width: 600px;">
-                        <h3 style="margin-bottom: 1.5rem;">⚙️ Configuración del Sistema</h3>
-                        <div style="display: flex; flex-direction: column; gap: 1rem;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg); border-radius: 8px;">
-                                <span>Datos de la Notaría</span>
-                                <button class="btn btn-outline">Editar</button>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg); border-radius: 8px;">
-                                <span>Usuarios y Permisos</span>
-                                <button class="btn btn-outline">Gestionar</button>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg); border-radius: 8px;">
-                                <span>Plantillas de Documentos</span>
-                                <button class="btn btn-outline">Configurar</button>
+                <!-- CHAT -->
+                <div id="panel-chat" class="panel">
+                    <div class="chat-container">
+                        <div class="chat-sidebar">
+                            <div class="chat-sidebar-header">💬 Conversaciones</div>
+                            <div class="chat-list">
+                                <div class="chat-item active">
+                                    <div class="chat-avatar">AS</div>
+                                    <div class="chat-item-info">
+                                        <div class="chat-item-name">Ana - Asistente</div>
+                                        <div class="chat-item-preview">Ok, ya lo reviso</div>
+                                    </div>
+                                </div>
+                                <div class="chat-item">
+                                    <div class="chat-avatar">MG</div>
+                                    <div class="chat-item-info">
+                                        <div class="chat-item-name">María García</div>
+                                        <div class="chat-item-preview">Gracias por la info</div>
+                                    </div>
+                                </div>
+                                <div class="chat-item">
+                                    <div class="chat-avatar">CM</div>
+                                    <div class="chat-item-info">
+                                        <div class="chat-item-name">Carlos Mendoza</div>
+                                        <div class="chat-item-preview">¿A qué hora es la cita?</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="chat-main">
+                            <div class="chat-header">
+                                <div style="display:flex;align-items:center;gap:0.75rem;">
+                                    <div class="chat-avatar">AS</div>
+                                    <div>
+                                        <div style="font-weight:500;">Ana - Asistente</div>
+                                        <div style="font-size:0.75rem;color:var(--text-light);">En línea</div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline" onclick="showPanel('llamadas')">📞 Llamar</button>
+                            </div>
+                            <div class="chat-messages">
+                                <div class="message received">
+                                    Lic., ya llegaron los documentos del expediente 0847
+                                    <div class="message-time">10:30 AM</div>
+                                </div>
+                                <div class="message sent">
+                                    Perfecto, revisa que estén completos y me avisas
+                                    <div class="message-time">10:32 AM</div>
+                                </div>
+                                <div class="message received">
+                                    Ok, ya lo reviso
+                                    <div class="message-time">10:33 AM</div>
+                                </div>
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" placeholder="Escribe un mensaje...">
+                                <button class="btn btn-primary">Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- LLAMADAS -->
+                <div id="panel-llamadas" class="panel">
+                    <div class="call-container">
+                        <div class="call-avatar">AS</div>
+                        <div class="call-name">Ana - Asistente</div>
+                        <div class="call-status">Listo para llamar</div>
+                        <div class="call-actions">
+                            <button class="call-btn mute">🎤</button>
+                            <button class="call-btn video">📹</button>
+                            <button class="call-btn end" style="background:var(--success);">📞</button>
+                        </div>
+                        <p style="margin-top:3rem;color:var(--text-light);font-size:0.85rem;">
+                            Selecciona un contacto del Chat o Clientes para iniciar llamada
+                        </p>
                     </div>
                 </div>
             </div>
@@ -867,41 +1024,70 @@
     </div>
     
     <script>
-        // Navegación modular
+        // Navegación
         const navItems = document.querySelectorAll('.nav-item');
         const panels = document.querySelectorAll('.panel');
         const pageTitle = document.getElementById('pageTitle');
         const pageSubtitle = document.getElementById('pageSubtitle');
         
         const panelInfo = {
-            dashboard: { title: 'Dashboard', subtitle: 'Vista general de la notaría' },
-            tramites: { title: 'Trámites', subtitle: 'Gestión de escrituras y procedimientos' },
             clientes: { title: 'Clientes', subtitle: 'Directorio de clientes' },
-            documentos: { title: 'Documentos', subtitle: 'Gestión documental' },
-            calendario: { title: 'Calendario', subtitle: 'Agenda de citas y firmas' },
-            firmas: { title: 'Firmas', subtitle: 'Control de firmas pendientes' },
-            reportes: { title: 'Reportes', subtitle: 'Análisis y estadísticas' },
-            configuracion: { title: 'Configuración', subtitle: 'Ajustes del sistema' }
+            expedientes: { title: 'Expedientes', subtitle: 'Gestión de expedientes activos' },
+            agenda: { title: 'Agenda', subtitle: 'Calendario de citas y firmas' },
+            calculadoras: { title: 'Calculadoras', subtitle: 'Herramientas de cálculo' },
+            chat: { title: 'Chat', subtitle: 'Mensajería interna' },
+            llamadas: { title: 'Llamadas', subtitle: 'Comunicación por voz y video' }
         };
         
+        function showPanel(panelId) {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            document.querySelector(`[data-panel="${panelId}"]`)?.classList.add('active');
+            panels.forEach(panel => panel.classList.remove('active'));
+            document.getElementById(`panel-${panelId}`).classList.add('active');
+            pageTitle.textContent = panelInfo[panelId].title;
+            pageSubtitle.textContent = panelInfo[panelId].subtitle;
+        }
+        
         navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const panelId = item.dataset.panel;
-                
-                // Update nav
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
-                
-                // Update panels
-                panels.forEach(panel => panel.classList.remove('active'));
-                document.getElementById(`panel-${panelId}`).classList.add('active');
-                
-                // Update header
-                pageTitle.textContent = panelInfo[panelId].title;
-                pageSubtitle.textContent = panelInfo[panelId].subtitle;
-            });
+            item.addEventListener('click', () => showPanel(item.dataset.panel));
         });
+        
+        // Calculadora Honorarios
+        function calcularHonorarios() {
+            const valor = parseFloat(document.getElementById('calcValor').value) || 0;
+            const tipo = document.getElementById('calcTipo').value;
+            
+            let tasaBase = 0.005; // 0.5% por defecto
+            if (tipo === 'poder') tasaBase = 0;
+            if (tipo === 'testamento') tasaBase = 0;
+            if (tipo === 'constitucion') tasaBase = 0.003;
+            
+            let honorariosBase = tipo === 'poder' ? 3500 : tipo === 'testamento' ? 5000 : valor * tasaBase;
+            if (honorariosBase < 5000 && tipo !== 'poder' && tipo !== 'testamento') honorariosBase = 5000;
+            
+            const iva = honorariosBase * 0.16;
+            const registro = valor * 0.01;
+            const total = honorariosBase + iva + registro;
+            
+            document.getElementById('resHonorarios').textContent = '$' + honorariosBase.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById('resIVA').textContent = '$' + iva.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById('resRegistro').textContent = '$' + registro.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById('resTotal').textContent = '$' + total.toLocaleString('es-MX', {minimumFractionDigits: 2});
+        }
+        
+        // Calculadora ISR
+        function calcularISR() {
+            const venta = parseFloat(document.getElementById('isrVenta').value) || 0;
+            const adquisicion = parseFloat(document.getElementById('isrAdquisicion').value) || 0;
+            const anios = parseInt(document.getElementById('isrAnios').value) || 1;
+            
+            const ganancia = venta - adquisicion;
+            const gananciaAnual = ganancia / Math.min(anios, 20);
+            const isr = gananciaAnual > 0 ? gananciaAnual * 0.35 * Math.min(anios, 20) : 0;
+            
+            document.getElementById('isrGanancia').textContent = '$' + ganancia.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById('isrTotal').textContent = '$' + isr.toLocaleString('es-MX', {minimumFractionDigits: 2});
+        }
     </script>
 </body>
 </html>
-<!-- Trigger deploy -->
