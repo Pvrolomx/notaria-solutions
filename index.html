@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notaría Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1E3A5F;
+            --primary-light: #2D5A8B;
+            --accent: #C9A227;
+            --bg: #F5F7FA;
+            --white: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #E1E5EB;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--primary);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .sidebar-logo-text h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .sidebar-logo-text p {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto;
+        }
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+        .nav-section-title {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+            padding: 0 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+        }
+        .nav-item.active {
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+            border-left-color: var(--accent);
+        }
+        .nav-item-icon {
+            width: 20px;
+            text-align: center;
+        }
+        .nav-item-badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+        }
+        
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--primary);
+        }
+        .user-details h4 {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .user-details p {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .header-left h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .header-left p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .header-search {
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            gap: 0.5rem;
+        }
+        .header-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 0.85rem;
+            width: 200px;
+        }
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .header-btn-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.65rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Page Content */
+        .page-content {
+            padding: 2rem;
+        }
+        
+        /* Panel - Modulo Base */
+        .panel {
+            display: none;
+        }
+        .panel.active {
+            display: block;
+        }
+        
+        /* Cards Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .stat-card-icon.blue { background: #EBF5FF; }
+        .stat-card-icon.green { background: #ECFDF5; }
+        .stat-card-icon.yellow { background: #FFFBEB; }
+        .stat-card-icon.purple { background: #F5F3FF; }
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-card-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+        .stat-card-change {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+        .stat-card-change.up { color: var(--success); }
+        .stat-card-change.down { color: var(--danger); }
+        
+        /* Tables */
+        .data-table-container {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .data-table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .data-table-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+            background: var(--bg);
+            font-weight: 500;
+        }
+        .data-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        .data-table tr:hover {
+            background: var(--bg);
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .status-badge.pending { background: #FEF3C7; color: #92400E; }
+        .status-badge.progress { background: #DBEAFE; color: #1E40AF; }
+        .status-badge.complete { background: #D1FAE5; color: #065F46; }
+        .status-badge.urgent { background: #FEE2E2; color: #991B1B; }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+        .btn-primary:hover {
+            background: var(--primary-light);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover {
+            background: var(--bg);
+        }
+        
+        /* Quick Actions Grid */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .quick-action-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+        }
+        .quick-action-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.1);
+        }
+        .quick-action-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        .quick-action-text h4 {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .quick-action-text p {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { width: 70px; }
+            .sidebar-logo-text, .nav-section-title, .nav-item span:not(.nav-item-icon), .user-details { display: none; }
+            .nav-item { justify-content: center; padding: 1rem; }
+            .main-content { margin-left: 70px; }
+            .header { padding: 1rem; }
+            .page-content { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="sidebar-logo-icon">⚖️</div>
+                    <div class="sidebar-logo-text">
+                        <h1>Notaría Solutions</h1>
+                        <p>Sistema Integral</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a class="nav-item active" data-panel="dashboard">
+                        <span class="nav-item-icon">📊</span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-item" data-panel="tramites">
+                        <span class="nav-item-icon">📋</span>
+                        <span>Trámites</span>
+                        <span class="nav-item-badge">12</span>
+                    </a>
+                    <a class="nav-item" data-panel="clientes">
+                        <span class="nav-item-icon">👥</span>
+                        <span>Clientes</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Gestión</div>
+                    <a class="nav-item" data-panel="documentos">
+                        <span class="nav-item-icon">📄</span>
+                        <span>Documentos</span>
+                    </a>
+                    <a class="nav-item" data-panel="calendario">
+                        <span class="nav-item-icon">📅</span>
+                        <span>Calendario</span>
+                    </a>
+                    <a class="nav-item" data-panel="firmas">
+                        <span class="nav-item-icon">✍️</span>
+                        <span>Firmas</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Administración</div>
+                    <a class="nav-item" data-panel="reportes">
+                        <span class="nav-item-icon">📈</span>
+                        <span>Reportes</span>
+                    </a>
+                    <a class="nav-item" data-panel="configuracion">
+                        <span class="nav-item-icon">⚙️</span>
+                        <span>Configuración</span>
+                    </a>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">LR</div>
+                    <div class="user-details">
+                        <h4>Lic. Rodríguez</h4>
+                        <p>Notario Público #42</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left">
+                    <h2 id="pageTitle">Dashboard</h2>
+                    <p id="pageSubtitle">Vista general de la notaría</p>
+                </div>
+                <div class="header-right">
+                    <div class="header-search">
+                        <span>🔍</span>
+                        <input type="text" placeholder="Buscar trámite, cliente...">
+                    </div>
+                    <button class="header-btn">
+                        <span>🔔</span>
+                        <span class="header-btn-badge">3</span>
+                    </button>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <!-- Panel: Dashboard -->
+                <div id="panel-dashboard" class="panel active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div>
+                                    <div class="stat-card-value">47</div>
+                                    <div class="stat-card-label">Trámites Activos</div>
+                                </div>
+                                <div class="stat-card-icon blue">📋</div>
+                            </div>
+                            <div class="stat-card-change up">↑ 12% vs mes anterior</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div>
+                                    <div class="stat-card-value">8</div>
+                                    <div class="stat-card-label">Firmas Pendientes</div>
+                                </div>
+                                <div class="stat-card-icon yellow">✍️</div>
+                            </div>
+                            <div class="stat-card-change down">↓ 3 completadas hoy</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div>
+                                    <div class="stat-card-value">156</div>
+                                    <div class="stat-card-label">Clientes Totales</div>
+                                </div>
+                                <div class="stat-card-icon green">👥</div>
+                            </div>
+                            <div class="stat-card-change up">↑ 5 nuevos esta semana</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div>
+                                    <div class="stat-card-value">$847K</div>
+                                    <div class="stat-card-label">Ingresos del Mes</div>
+                                </div>
+                                <div class="stat-card-icon purple">💰</div>
+                            </div>
+                            <div class="stat-card-change up">↑ 8% vs mes anterior</div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <div class="quick-action-card">
+                            <div class="quick-action-icon">📝</div>
+                            <div class="quick-action-text">
+                                <h4>Nuevo Trámite</h4>
+                                <p>Iniciar escritura</p>
+                            </div>
+                        </div>
+                        <div class="quick-action-card">
+                            <div class="quick-action-icon">👤</div>
+                            <div class="quick-action-text">
+                                <h4>Nuevo Cliente</h4>
+                                <p>Registrar persona</p>
+                            </div>
+                        </div>
+                        <div class="quick-action-card">
+                            <div class="quick-action-icon">📅</div>
+                            <div class="quick-action-text">
+                                <h4>Agendar Cita</h4>
+                                <p>Programar firma</p>
+                            </div>
+                        </div>
+                        <div class="quick-action-card">
+                            <div class="quick-action-icon">📤</div>
+                            <div class="quick-action-text">
+                                <h4>Subir Documento</h4>
+                                <p>Anexar archivo</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="data-table-container">
+                        <div class="data-table-header">
+                            <h3>Trámites Recientes</h3>
+                            <button class="btn btn-outline">Ver todos</button>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Tipo</th>
+                                    <th>Cliente</th>
+                                    <th>Estado</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>ESC-2024-0847</strong></td>
+                                    <td>Compraventa</td>
+                                    <td>María García López</td>
+                                    <td><span class="status-badge progress">● En proceso</span></td>
+                                    <td>31 Dic 2024</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ESC-2024-0846</strong></td>
+                                    <td>Poder Notarial</td>
+                                    <td>Carlos Mendoza R.</td>
+                                    <td><span class="status-badge pending">● Pendiente firma</span></td>
+                                    <td>30 Dic 2024</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ESC-2024-0845</strong></td>
+                                    <td>Testamento</td>
+                                    <td>Ana Sofía Ruiz</td>
+                                    <td><span class="status-badge complete">● Completado</span></td>
+                                    <td>29 Dic 2024</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ESC-2024-0844</strong></td>
+                                    <td>Constitución SA</td>
+                                    <td>Grupo Industrial MX</td>
+                                    <td><span class="status-badge urgent">● Urgente</span></td>
+                                    <td>28 Dic 2024</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Panel: Trámites -->
+                <div id="panel-tramites" class="panel">
+                    <div class="data-table-container">
+                        <div class="data-table-header">
+                            <h3>Todos los Trámites</h3>
+                            <button class="btn btn-primary">+ Nuevo Trámite</button>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Tipo</th>
+                                    <th>Cliente</th>
+                                    <th>Asignado</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>ESC-2024-0847</strong></td>
+                                    <td>Compraventa Inmueble</td>
+                                    <td>María García López</td>
+                                    <td>Lic. Rodríguez</td>
+                                    <td><span class="status-badge progress">● En proceso</span></td>
+                                    <td><button class="btn btn-outline">Ver</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ESC-2024-0846</strong></td>
+                                    <td>Poder Notarial</td>
+                                    <td>Carlos Mendoza R.</td>
+                                    <td>Asistente Ana</td>
+                                    <td><span class="status-badge pending">● Pendiente</span></td>
+                                    <td><button class="btn btn-outline">Ver</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Panel: Clientes -->
+                <div id="panel-clientes" class="panel">
+                    <div class="data-table-container">
+                        <div class="data-table-header">
+                            <h3>Directorio de Clientes</h3>
+                            <button class="btn btn-primary">+ Nuevo Cliente</button>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>RFC</th>
+                                    <th>Teléfono</th>
+                                    <th>Email</th>
+                                    <th>Trámites</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>María García López</strong></td>
+                                    <td>GALM850215ABC</td>
+                                    <td>+52 33 1234 5678</td>
+                                    <td>maria.garcia@email.com</td>
+                                    <td>3 activos</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Carlos Mendoza Ríos</strong></td>
+                                    <td>MERC780930XYZ</td>
+                                    <td>+52 33 9876 5432</td>
+                                    <td>carlos.mendoza@email.com</td>
+                                    <td>1 activo</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Panel: Documentos -->
+                <div id="panel-documentos" class="panel">
+                    <div class="quick-actions">
+                        <div class="quick-action-card">
+                            <div class="quick-action-icon">📤</div>
+                            <div class="quick-action-text">
+                                <h4>Subir Documento</h4>
+                                <p>PDF, Word, Imágenes</p>
+                            </div>
+                        </div>
+                        <div class="quick-action-card">
+                            <div class="quick-action-icon">📁</div>
+                            <div class="quick-action-text">
+                                <h4>Nueva Carpeta</h4>
+                                <p>Organizar archivos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="data-table-container">
+                        <div class="data-table-header">
+                            <h3>Documentos Recientes</h3>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Documento</th>
+                                    <th>Trámite</th>
+                                    <th>Tipo</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>📄 Escritura_Compraventa_847.pdf</td>
+                                    <td>ESC-2024-0847</td>
+                                    <td>Escritura</td>
+                                    <td>31 Dic 2024</td>
+                                </tr>
+                                <tr>
+                                    <td>📄 INE_MariaGarcia.jpg</td>
+                                    <td>ESC-2024-0847</td>
+                                    <td>Identificación</td>
+                                    <td>31 Dic 2024</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Panel: Calendario -->
+                <div id="panel-calendario" class="panel">
+                    <div class="stat-card" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">📅 Citas de Hoy - 31 Diciembre 2024</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg); border-radius: 8px;">
+                                <div style="font-weight: 600; color: var(--primary);">10:00 AM</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500;">Firma de Escritura - María García</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">ESC-2024-0847 • Compraventa</div>
+                                </div>
+                                <span class="status-badge pending">Confirmada</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg); border-radius: 8px;">
+                                <div style="font-weight: 600; color: var(--primary);">12:30 PM</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500;">Consulta Inicial - Nuevo Cliente</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-light);">Testamento • Primera visita</div>
+                                </div>
+                                <span class="status-badge progress">Por confirmar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panel: Firmas -->
+                <div id="panel-firmas" class="panel">
+                    <div class="data-table-container">
+                        <div class="data-table-header">
+                            <h3>Firmas Pendientes</h3>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Trámite</th>
+                                    <th>Firmantes</th>
+                                    <th>Fecha Programada</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>ESC-2024-0847</strong></td>
+                                    <td>María García, Juan Pérez</td>
+                                    <td>31 Dic 2024, 10:00 AM</td>
+                                    <td><span class="status-badge pending">● Pendiente</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Panel: Reportes -->
+                <div id="panel-reportes" class="panel">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4>📊 Trámites por Mes</h4>
+                            <p style="color: var(--text-light); margin-top: 0.5rem;">Módulo de reportes en desarrollo</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>💰 Ingresos Mensuales</h4>
+                            <p style="color: var(--text-light); margin-top: 0.5rem;">Módulo de reportes en desarrollo</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panel: Configuración -->
+                <div id="panel-configuracion" class="panel">
+                    <div class="stat-card" style="max-width: 600px;">
+                        <h3 style="margin-bottom: 1.5rem;">⚙️ Configuración del Sistema</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg); border-radius: 8px;">
+                                <span>Datos de la Notaría</span>
+                                <button class="btn btn-outline">Editar</button>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg); border-radius: 8px;">
+                                <span>Usuarios y Permisos</span>
+                                <button class="btn btn-outline">Gestionar</button>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg); border-radius: 8px;">
+                                <span>Plantillas de Documentos</span>
+                                <button class="btn btn-outline">Configurar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Navegación modular
+        const navItems = document.querySelectorAll('.nav-item');
+        const panels = document.querySelectorAll('.panel');
+        const pageTitle = document.getElementById('pageTitle');
+        const pageSubtitle = document.getElementById('pageSubtitle');
+        
+        const panelInfo = {
+            dashboard: { title: 'Dashboard', subtitle: 'Vista general de la notaría' },
+            tramites: { title: 'Trámites', subtitle: 'Gestión de escrituras y procedimientos' },
+            clientes: { title: 'Clientes', subtitle: 'Directorio de clientes' },
+            documentos: { title: 'Documentos', subtitle: 'Gestión documental' },
+            calendario: { title: 'Calendario', subtitle: 'Agenda de citas y firmas' },
+            firmas: { title: 'Firmas', subtitle: 'Control de firmas pendientes' },
+            reportes: { title: 'Reportes', subtitle: 'Análisis y estadísticas' },
+            configuracion: { title: 'Configuración', subtitle: 'Ajustes del sistema' }
+        };
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const panelId = item.dataset.panel;
+                
+                // Update nav
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Update panels
+                panels.forEach(panel => panel.classList.remove('active'));
+                document.getElementById(`panel-${panelId}`).classList.add('active');
+                
+                // Update header
+                pageTitle.textContent = panelInfo[panelId].title;
+                pageSubtitle.textContent = panelInfo[panelId].subtitle;
+            });
+        });
+    </script>
+</body>
+</html>
