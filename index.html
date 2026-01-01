@@ -593,6 +593,65 @@
 
         
         /* Calc Tabs */
+        
+        /* Guardar en Expediente */
+        .expediente-selector {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px dashed var(--border);
+        }
+        .expediente-selector h4 {
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .expediente-selector select {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+        .expediente-nuevo {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .expediente-nuevo input {
+            flex: 1;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        .btn-guardar-exp {
+            background: var(--success);
+            color: white;
+        }
+        .btn-guardar-exp:hover {
+            background: #1DAA54;
+        }
+        .guardado-ok {
+            background: #D1FAE5;
+            color: #065F46;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .expedientes-guardados {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
         .calc-tabs {
             display: flex;
             gap: 0.5rem;
@@ -1466,7 +1525,29 @@
             `;
             
             document.getElementById('isrResultado').style.display = 'block';
-            document.getElementById('isrResultado').innerHTML = resultHTML + '<button class="btn btn-export-pdf btn-full" onclick="exportarPDF()">📄 Exportar PDF</button>';
+            document.getElementById('isrResultado').innerHTML = resultHTML + '<button class="btn btn-export-pdf btn-full" onclick="exportarPDF()">📄 Exportar PDF</button>
+                <div class="expediente-selector">
+                    <h4>📁 Guardar en Expediente</h4>
+                    <select id="expedienteSelect" onchange="toggleNuevoExpediente()">
+                        <option value="">-- Seleccionar expediente --</option>
+                        <option value="EXP-2024-0047">EXP-2024-0047 - García López (Compraventa)</option>
+                        <option value="EXP-2024-0046">EXP-2024-0046 - Martínez Ruiz (Poder)</option>
+                        <option value="EXP-2024-0045">EXP-2024-0045 - Fernández (Testamento)</option>
+                        <option value="nuevo">+ Crear nuevo expediente</option>
+                    </select>
+                    <div id="nuevoExpedienteDiv" style="display:none;" class="expediente-nuevo">
+                        <input type="text" id="nuevoExpedienteNombre" placeholder="Nombre del cliente">
+                        <select id="nuevoExpedienteTipo" style="width:auto;">
+                            <option value="Compraventa">Compraventa</option>
+                            <option value="Hipoteca">Hipoteca</option>
+                            <option value="Donación">Donación</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-guardar-exp btn-full" onclick="guardarEnExpediente()">💾 Guardar Cálculo</button>
+                    <div id="guardadoOk" class="guardado-ok" style="display:none;">
+                        ✅ Cálculo guardado en expediente
+                    </div>
+                </div>';
         }
 
 
@@ -1559,6 +1640,136 @@
             
             html2pdf().set(opt).from(pdfContent).save();
         }
+
+        
+        // Expedientes (simulado - en producción sería localStorage o API)
+        let expedientesGuardados = JSON.parse(localStorage.getItem('expedientesISR') || '{}');
+        
+        function toggleNuevoExpediente() {
+            const select = document.getElementById('expedienteSelect');
+            const nuevoDiv = document.getElementById('nuevoExpedienteDiv');
+            nuevoDiv.style.display = select.value === 'nuevo' ? 'flex' : 'none';
+        }
+        
+        function generarFolio() {
+            const year = new Date().getFullYear();
+            const num = Object.keys(expedientesGuardados).length + 48;
+            return `EXP-${year}-${String(num).padStart(4, '0')}`;
+        }
+        
+        function guardarEnExpediente() {
+            const select = document.getElementById('expedienteSelect');
+            let folio = select.value;
+            let nombre = '';
+            let tipo = '';
+            
+            if (!folio) {
+                alert('Selecciona un expediente');
+                return;
+            }
+            
+            if (folio === 'nuevo') {
+                nombre = document.getElementById('nuevoExpedienteNombre').value;
+                tipo = document.getElementById('nuevoExpedienteTipo').value;
+                if (!nombre) {
+                    alert('Ingresa el nombre del cliente');
+                    return;
+                }
+                folio = generarFolio();
+            } else {
+                // Extraer nombre del option
+                const option = select.options[select.selectedIndex];
+                const parts = option.text.split(' - ');
+                nombre = parts[1] ? parts[1].split(' (')[0] : 'Cliente';
+                tipo = parts[1] ? parts[1].match(/\(([^)]+)\)/)?.[1] || 'Compraventa' : 'Compraventa';
+            }
+            
+            // Obtener datos del cálculo
+            const calculo = {
+                fecha: new Date().toISOString(),
+                tipoCalculo: tipoCalculo,
+                fechaVenta: document.getElementById('isrFechaVenta')?.value || document.getElementById('isrFechaVentaExc')?.value,
+                fechaCompra: document.getElementById('isrFechaCompra')?.value,
+                precioVenta: document.getElementById('isrPrecioVenta').value,
+                precioCompra: document.getElementById('isrPrecioCompra').value,
+                pctTerreno: document.getElementById('isrPctTerreno').value,
+                pctConstruccion: document.getElementById('isrPctConst').value,
+                enajenantes: [],
+                resultadoHTML: document.getElementById('isrResultado').innerHTML
+            };
+            
+            // Obtener enajenantes
+            document.querySelectorAll('.enajenante-row').forEach(row => {
+                calculo.enajenantes.push({
+                    nombre: row.querySelector('.enajenante-nombre').value,
+                    porcentaje: row.querySelector('.enajenante-pct').value,
+                    tipo: row.querySelector('.enajenante-tipo').value,
+                    casaHabitacion: row.querySelector('.enajenante-casa-check').checked
+                });
+            });
+            
+            // Guardar
+            if (!expedientesGuardados[folio]) {
+                expedientesGuardados[folio] = {
+                    folio: folio,
+                    nombre: nombre,
+                    tipo: tipo,
+                    fechaCreacion: new Date().toISOString(),
+                    calculos: []
+                };
+            }
+            
+            expedientesGuardados[folio].calculos.push(calculo);
+            localStorage.setItem('expedientesISR', JSON.stringify(expedientesGuardados));
+            
+            // Mostrar confirmación
+            document.getElementById('guardadoOk').style.display = 'flex';
+            document.getElementById('guardadoOk').innerHTML = `✅ Guardado en <strong>${folio}</strong> - ${nombre}`;
+            
+            // Actualizar select si era nuevo
+            if (select.value === 'nuevo') {
+                const newOption = document.createElement('option');
+                newOption.value = folio;
+                newOption.text = `${folio} - ${nombre} (${tipo})`;
+                select.insertBefore(newOption, select.options[select.options.length - 1]);
+                select.value = folio;
+                document.getElementById('nuevoExpedienteDiv').style.display = 'none';
+            }
+            
+            // Actualizar panel de expedientes si existe
+            if (typeof actualizarListaExpedientes === 'function') {
+                actualizarListaExpedientes();
+            }
+            
+            setTimeout(() => {
+                document.getElementById('guardadoOk').style.display = 'none';
+            }, 3000);
+        }
+        
+        // Cargar expedientes guardados en el select
+        function cargarExpedientesEnSelect() {
+            const select = document.getElementById('expedienteSelect');
+            if (!select) return;
+            
+            // Limpiar opciones existentes (excepto las primeras y la última)
+            while (select.options.length > 4) {
+                select.remove(1);
+            }
+            
+            // Agregar expedientes guardados
+            Object.values(expedientesGuardados).forEach(exp => {
+                const exists = Array.from(select.options).some(opt => opt.value === exp.folio);
+                if (!exists) {
+                    const option = document.createElement('option');
+                    option.value = exp.folio;
+                    option.text = `${exp.folio} - ${exp.nombre} (${exp.tipo})`;
+                    select.insertBefore(option, select.options[select.options.length - 1]);
+                }
+            });
+        }
+        
+        // Cargar al iniciar
+        document.addEventListener('DOMContentLoaded', cargarExpedientesEnSelect);
 
         function calcularISTP() {
             const estado = document.getElementById('istpEstado').value;
