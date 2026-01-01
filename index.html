@@ -1310,6 +1310,46 @@
             '2020': 104.5, '2021': 109.5, '2022': 117.5, '2023': 124.0, '2024': 131.0, '2025': 141.0
         };
         
+        var INPC_MENSUAL = {};
+        var INPC_CARGADO = false;
+        
+        // Cargar INPC desde API al inicio
+        function cargarINPC() {
+            fetch('/api/inpc')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.anual) {
+                        INPC = data.anual;
+                        INPC_CARGADO = true;
+                        console.log('INPC cargado desde API:', data.fuente);
+                    }
+                    if (data.mensual) {
+                        INPC_MENSUAL = data.mensual;
+                    }
+                })
+                .catch(function(err) {
+                    console.log('Usando INPC hardcodeado (fallback)');
+                });
+        }
+        
+        // Obtener INPC por fecha (intenta mensual primero, luego anual)
+        function getINPC(fecha) {
+            var d = new Date(fecha);
+            var year = d.getFullYear();
+            var month = String(d.getMonth() + 1).padStart(2, '0');
+            var key = year + '-' + month;
+            
+            // Intentar mensual primero
+            if (INPC_MENSUAL[key]) {
+                return INPC_MENSUAL[key];
+            }
+            // Fallback a anual
+            return INPC[year] || 141;
+        }
+        
+        // Cargar al inicio
+        document.addEventListener('DOMContentLoaded', cargarINPC);
+        
         var TABLAS_ISR = [
             { lim: 0, cuota: 0, tasa: 1.92 },
             { lim: 8952.50, cuota: 171.88, tasa: 6.40 },
@@ -1428,9 +1468,9 @@
             aniosConst = Math.floor((fV - fCConst) / (365.25 * 24 * 60 * 60 * 1000));
             aniosConst = Math.max(1, Math.min(aniosConst, 20));
             
-            var inpcV = INPC[fV.getFullYear()] || 141;
-            var inpcCTerreno = INPC[fCTerreno.getFullYear()] || 87.5;
-            var inpcCConst = INPC[fCConst.getFullYear()] || 87.5;
+            var inpcV = getINPC(fV);
+            var inpcCTerreno = getINPC(fCTerreno);
+            var inpcCConst = getINPC(fCConst);
             
             factorTerreno = inpcV / inpcCTerreno;
             factorConst = inpcV / inpcCConst;
