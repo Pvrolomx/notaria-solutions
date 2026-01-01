@@ -1545,10 +1545,30 @@
                 var precioVentaEn = pV * pct;
                 var deducEn = deduc * pct;
                 
+                // METODOLOGÍA NUVIGANT: Exención sobre INGRESO, no sobre ganancia
                 var exen = 0;
-                if (esCasa && !esExt) exen = Math.min(EXENCION_PESOS * pct, precioVentaEn - deducEn);
+                var pctGravado = 1.0;
                 
-                var util = Math.max(0, precioVentaEn - deducEn - exen);
+                if (esCasa && !esExt) {
+                    // Calcular exención total (cada enajenante con casa hab. aporta 700k UDIs)
+                    var exencionEnajenante = EXENCION_PESOS; // 700k UDIs en pesos
+                    
+                    // Si precio venta <= exención, 100% exento
+                    if (precioVentaEn <= exencionEnajenante) {
+                        pctGravado = 0;
+                        exen = precioVentaEn;
+                    } else {
+                        // Calcular porción gravada
+                        pctGravado = (precioVentaEn - exencionEnajenante) / precioVentaEn;
+                        exen = exencionEnajenante;
+                    }
+                }
+                
+                // Aplicar % gravado a precio y deducciones
+                var precioGravado = precioVentaEn * pctGravado;
+                var deducGravado = deducEn * pctGravado;
+                
+                var util = Math.max(0, precioGravado - deducGravado);
                 var isr = 0, mejor = '';
                 
                 if (util > 0) {
