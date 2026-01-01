@@ -781,6 +781,7 @@
             <img src="logo.jpeg" alt="Notarial Solutions" class="app-logo-img">
             <div class="app-logo-text">
                 <h1>Notarial Solutions</h1>
+        <div id="indicadores-tc" style="display:flex;gap:1rem;font-size:0.75rem;color:#6B7280;margin-top:0.25rem;flex-wrap:wrap;"><span>USD: <strong id="tcValor">--</strong></span><span>UDI: <strong id="udiValor">--</strong></span><span>Exencion: <strong id="exencionValor">--</strong></span></div>
                 <p>Sistema Integral</p>
             </div>
         </div>
@@ -1386,6 +1387,31 @@
         
         // === TIPO CALCULO ISR ===
         var tipoCalculo = 'normal';
+        // Tipo de Cambio y UDI - Banxico
+        var TC_USD = 20.50;
+        var VALOR_UDI = 8.46;
+        var EXENCION_PESOS = 5922000;
+        
+        function cargarTipoCambio() {
+            fetch('/api/tipocambio')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        TC_USD = data.tipoCambio.valor;
+                        VALOR_UDI = data.udi.valor;
+                        EXENCION_PESOS = data.exencionCasaHabitacion.pesos;
+                        var tcEl = document.getElementById('tcValor');
+                        var udiEl = document.getElementById('udiValor');
+                        var exEl = document.getElementById('exencionValor');
+                        if (tcEl) tcEl.textContent = '$' + TC_USD.toFixed(2);
+                        if (udiEl) udiEl.textContent = '$' + VALOR_UDI.toFixed(4);
+                        if (exEl) exEl.textContent = '$' + (EXENCION_PESOS/1000000).toFixed(2) + 'M';
+                    }
+                })
+                .catch(function(e) { console.log('TC fallback'); });
+        }
+        cargarTipoCambio();
+
         
         function setTipoCalculo(tipo, btn) {
             tipoCalculo = tipo;
@@ -1520,7 +1546,7 @@
                 var deducEn = deduc * pct;
                 
                 var exen = 0;
-                if (esCasa && !esExt) exen = Math.min(5925000 * pct, precioVentaEn - deducEn);
+                if (esCasa && !esExt) exen = Math.min(EXENCION_PESOS * pct, precioVentaEn - deducEn);
                 
                 var util = Math.max(0, precioVentaEn - deducEn - exen);
                 var isr = 0, mejor = '';
