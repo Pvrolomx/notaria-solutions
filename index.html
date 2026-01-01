@@ -1260,32 +1260,29 @@
         </div>
     </main>
     
-    <script>
+        <script>
+        // === NAVEGACION ===
         function showPanel(panelId) {
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(`panel-${panelId}`).classList.add('active');
+            var panels = document.querySelectorAll('.panel');
+            for (var i = 0; i < panels.length; i++) {
+                panels[i].classList.remove('active');
+            }
+            var target = document.getElementById('panel-' + panelId);
+            if (target) {
+                target.classList.add('active');
+            }
         }
         
-        function calcularHonorarios() {
-            const valor = parseFloat(document.getElementById('calcValor').value) || 0;
-            const tipo = document.getElementById('calcTipo').value;
-            
-            let honorarios = tipo === 'poder' ? 3500 : tipo === 'testamento' ? 5000 : Math.max(valor * 0.005, 5000);
-            const iva = honorarios * 0.16;
-            const total = honorarios + iva;
-            
-            document.getElementById('resHonorarios').textContent = '$' + honorarios.toLocaleString('es-MX', {minimumFractionDigits: 2});
-            document.getElementById('resIVA').textContent = '$' + iva.toLocaleString('es-MX', {minimumFractionDigits: 2});
-            document.getElementById('resTotal').textContent = '$' + total.toLocaleString('es-MX', {minimumFractionDigits: 2});
-        }
-    
-        // Calculadoras
+        // === CALCULADORAS MENU ===
         function showCalc(tipo) {
             document.getElementById('calc-menu').style.display = 'none';
             document.getElementById('calc-isr').style.display = 'none';
             document.getElementById('calc-istp').style.display = 'none';
             document.getElementById('calc-iva').style.display = 'none';
-            document.getElementById('calc-' + tipo).style.display = 'block';
+            var target = document.getElementById('calc-' + tipo);
+            if (target) {
+                target.style.display = 'block';
+            }
         }
         
         function showCalcMenu() {
@@ -1295,13 +1292,25 @@
             document.getElementById('calc-menu').style.display = 'flex';
         }
         
-        // INPC simplificado
-        const INPC = {
+        // === HONORARIOS ===
+        function calcularHonorarios() {
+            var valor = parseFloat(document.getElementById('calcValor').value) || 0;
+            var tipo = document.getElementById('calcTipo').value;
+            var honorarios = tipo === 'poder' ? 3500 : tipo === 'testamento' ? 5000 : Math.max(valor * 0.005, 5000);
+            var iva = honorarios * 0.16;
+            var total = honorarios + iva;
+            document.getElementById('resHonorarios').textContent = '$' + honorarios.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById('resIVA').textContent = '$' + iva.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById('resTotal').textContent = '$' + total.toLocaleString('es-MX', {minimumFractionDigits: 2});
+        }
+        
+        // === DATOS ISR ===
+        var INPC = {
             '2015': 87.5, '2016': 90.4, '2017': 94.5, '2018': 98.0, '2019': 101.5,
             '2020': 104.5, '2021': 109.5, '2022': 117.5, '2023': 124.0, '2024': 131.0, '2025': 141.0
         };
         
-        const TABLAS_ISR = [
+        var TABLAS_ISR = [
             { lim: 0, cuota: 0, tasa: 1.92 },
             { lim: 8952.50, cuota: 171.88, tasa: 6.40 },
             { lim: 75984.56, cuota: 4461.94, tasa: 10.88 },
@@ -1315,11 +1324,13 @@
             { lim: 4511707.38, cuota: 1414947.85, tasa: 35.00 }
         ];
         
-        function fmt(n) { return '$' + n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+        function fmt(n) { 
+            return '$' + n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2}); 
+        }
         
         function calcISRTabla(util) {
             if (util <= 0) return 0;
-            for (let i = TABLAS_ISR.length - 1; i >= 0; i--) {
+            for (var i = TABLAS_ISR.length - 1; i >= 0; i--) {
                 if (util >= TABLAS_ISR[i].lim) {
                     return TABLAS_ISR[i].cuota + ((util - TABLAS_ISR[i].lim) * TABLAS_ISR[i].tasa / 100);
                 }
@@ -1327,25 +1338,38 @@
             return 0;
         }
         
+        // === TIPO CALCULO ISR ===
+        var tipoCalculo = 'normal';
         
-        // Enajenantes
-        let enajenanteIndex = 1;
+        function setTipoCalculo(tipo, btn) {
+            tipoCalculo = tipo;
+            var tabs = document.querySelectorAll('.calc-tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            btn.classList.add('active');
+            
+            if (tipo === 'normal') {
+                document.getElementById('fechasNormal').style.display = 'block';
+                document.getElementById('fechasExcedente').style.display = 'none';
+            } else {
+                document.getElementById('fechasNormal').style.display = 'none';
+                document.getElementById('fechasExcedente').style.display = 'block';
+            }
+        }
+        
+        // === ENAJENANTES ===
+        var enajenanteIndex = 1;
         
         function agregarEnajenante() {
-            const container = document.getElementById('enajenantesContainer');
-            const div = document.createElement('div');
+            var container = document.getElementById('enajenantesContainer');
+            var div = document.createElement('div');
             div.className = 'enajenante-row';
-            div.dataset.index = enajenanteIndex;
-            div.innerHTML = `
-                <input type="text" placeholder="Nombre" class="enajenante-nombre" value="Enajenante ${enajenanteIndex + 1}">
-                <input type="number" placeholder="%" class="enajenante-pct" value="0" min="0" max="100" onchange="actualizarTotalPct()">
-                <select class="enajenante-tipo">
-                    <option value="residente">Residente</option>
-                    <option value="extranjero">Extranjero</option>
-                </select>
-                <label class="enajenante-casa"><input type="checkbox" class="enajenante-casa-check"> Casa Hab.</label>
-                <button type="button" class="btn-remove-enajenante" onclick="quitarEnajenante(this)">✕</button>
-            `;
+            div.innerHTML = '<input type="text" placeholder="Nombre" class="enajenante-nombre" value="Enajenante ' + (enajenanteIndex + 1) + '">' +
+                '<input type="number" placeholder="%" class="enajenante-pct" value="0" min="0" max="100" onchange="actualizarTotalPct()">' +
+                '<select class="enajenante-tipo"><option value="residente">Residente</option><option value="extranjero">Extranjero</option></select>' +
+                '<label class="enajenante-casa"><input type="checkbox" class="enajenante-casa-check"> Casa</label>' +
+                '<button type="button" class="btn-remove-enajenante" onclick="quitarEnajenante(this)">X</button>';
             container.appendChild(div);
             enajenanteIndex++;
             actualizarBotonesRemove();
@@ -1359,51 +1383,34 @@
         }
         
         function actualizarBotonesRemove() {
-            const rows = document.querySelectorAll('.enajenante-row');
-            rows.forEach((row, i) => {
-                const btn = row.querySelector('.btn-remove-enajenante');
+            var rows = document.querySelectorAll('.enajenante-row');
+            for (var i = 0; i < rows.length; i++) {
+                var btn = rows[i].querySelector('.btn-remove-enajenante');
                 if (btn) btn.style.display = rows.length > 1 ? 'block' : 'none';
-            });
+            }
         }
         
         function actualizarTotalPct() {
-            const inputs = document.querySelectorAll('.enajenante-pct');
-            let total = 0;
-            inputs.forEach(inp => total += parseFloat(inp.value) || 0);
-            document.getElementById('totalPorcentaje').textContent = total;
-            document.getElementById('totalPorcentaje').style.color = total === 100 ? 'var(--success)' : 'var(--danger)';
-        }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.enajenante-pct').forEach(inp => {
-                inp.addEventListener('change', actualizarTotalPct);
-            });
-        });
-
-        
-        let tipoCalculo = 'normal';
-        
-        function setTipoCalculo(tipo, btn) {
-            tipoCalculo = tipo;
-            document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-            
-            if (tipo === 'normal') {
-                document.getElementById('fechasNormal').style.display = 'block';
-                document.getElementById('fechasExcedente').style.display = 'none';
-            } else {
-                document.getElementById('fechasNormal').style.display = 'none';
-                document.getElementById('fechasExcedente').style.display = 'block';
+            var inputs = document.querySelectorAll('.enajenante-pct');
+            var total = 0;
+            for (var i = 0; i < inputs.length; i++) {
+                total += parseFloat(inputs[i].value) || 0;
+            }
+            var el = document.getElementById('totalPorcentaje');
+            if (el) {
+                el.textContent = total;
+                el.style.color = total === 100 ? '#22C55E' : '#EF4444';
             }
         }
-
+        
+        // === CALCULAR ISR ===
         function calcularISR() {
-            let fV, fCTerreno, fCConst, aniosTerreno, aniosConst, factorTerreno, factorConst;
+            var fV, fCTerreno, fCConst, aniosTerreno, aniosConst, factorTerreno, factorConst;
             
-            const pV = parseFloat(document.getElementById('isrPrecioVenta').value) || 0;
-            const pC = parseFloat(document.getElementById('isrPrecioCompra').value) || 0;
-            const pctT = parseFloat(document.getElementById('isrPctTerreno').value) / 100;
-            const pctCo = parseFloat(document.getElementById('isrPctConst').value) / 100;
+            var pV = parseFloat(document.getElementById('isrPrecioVenta').value) || 0;
+            var pC = parseFloat(document.getElementById('isrPrecioCompra').value) || 0;
+            var pctT = parseFloat(document.getElementById('isrPctTerreno').value) / 100;
+            var pctCo = parseFloat(document.getElementById('isrPctConst').value) / 100;
             
             if (tipoCalculo === 'normal') {
                 fV = new Date(document.getElementById('isrFechaVenta').value);
@@ -1415,81 +1422,67 @@
                 fCConst = new Date(document.getElementById('isrFechaConstruccion').value);
             }
             
-            // Años para terreno
             aniosTerreno = Math.floor((fV - fCTerreno) / (365.25 * 24 * 60 * 60 * 1000));
             aniosTerreno = Math.max(1, Math.min(aniosTerreno, 20));
             
-            // Años para construcción
             aniosConst = Math.floor((fV - fCConst) / (365.25 * 24 * 60 * 60 * 1000));
             aniosConst = Math.max(1, Math.min(aniosConst, 20));
             
-            // INPC
-            const inpcV = INPC[fV.getFullYear()] || 141;
-            const inpcCTerreno = INPC[fCTerreno.getFullYear()] || 87.5;
-            const inpcCConst = INPC[fCConst.getFullYear()] || 87.5;
+            var inpcV = INPC[fV.getFullYear()] || 141;
+            var inpcCTerreno = INPC[fCTerreno.getFullYear()] || 87.5;
+            var inpcCConst = INPC[fCConst.getFullYear()] || 87.5;
             
             factorTerreno = inpcV / inpcCTerreno;
             factorConst = inpcV / inpcCConst;
             
-            // Terreno actualizado
-            const terrenoAct = pC * pctT * factorTerreno;
+            var terrenoAct = pC * pctT * factorTerreno;
+            var pctDep = Math.min(aniosConst * 3, 80) / 100;
+            var constAct = pC * pctCo * (1 - pctDep) * factorConst;
+            var deduc = terrenoAct + constAct;
+            var anios = Math.max(aniosTerreno, aniosConst);
             
-            // Construcción: depreciación + actualización
-            const pctDep = Math.min(aniosConst * 3, 80) / 100;
-            const constAct = pC * pctCo * (1 - pctDep) * factorConst;
-            
-            const deduc = terrenoAct + constAct;
-            
-            // Años para ISR (usar el mayor)
-            const anios = Math.max(aniosTerreno, aniosConst);
-            
-            // Obtener enajenantes
-            const rows = document.querySelectorAll('.enajenante-row');
-            let resultHTML = '';
+            var rows = document.querySelectorAll('.enajenante-row');
+            var resultHTML = '';
             
             if (tipoCalculo === 'excedente') {
-                resultHTML += `
-                    <div style="background:#EBF5FF;padding:0.75rem;border-radius:8px;margin-bottom:0.75rem;font-size:0.8rem;">
-                        <strong>📊 Excedente de Terreno</strong><br>
-                        Terreno: ${aniosTerreno} años, Factor ${factorTerreno.toFixed(4)}<br>
-                        Construcción: ${aniosConst} años, Factor ${factorConst.toFixed(4)}
-                    </div>
-                `;
+                resultHTML += '<div style="background:#EBF5FF;padding:0.75rem;border-radius:8px;margin-bottom:0.75rem;font-size:0.8rem;">' +
+                    '<strong>Excedente de Terreno</strong><br>' +
+                    'Terreno: ' + aniosTerreno + ' años, Factor ' + factorTerreno.toFixed(4) + '<br>' +
+                    'Construccion: ' + aniosConst + ' años, Factor ' + factorConst.toFixed(4) + '</div>';
             }
             
-            resultHTML += `
-                <div class="calc-result-row"><span>Factor INPC ${tipoCalculo === 'excedente' ? '(prom)' : ''}</span><span>${((factorTerreno + factorConst) / 2).toFixed(4)}</span></div>
-                <div class="calc-result-row"><span>Años (mayor)</span><span>${anios}</span></div>
-                <div class="calc-result-row"><span>Terreno Actualizado</span><span>${fmt(terrenoAct)}</span></div>
-                <div class="calc-result-row"><span>Construcción Actualizada</span><span>${fmt(constAct)}</span></div>
-                <div class="calc-result-row"><span>Deducciones Totales</span><span>${fmt(deduc)}</span></div>
-                <hr style="margin:0.75rem 0;border:none;border-top:1px solid var(--border);">
-            `;
+            resultHTML += '<div class="calc-result-row"><span>Factor INPC</span><span>' + ((factorTerreno + factorConst) / 2).toFixed(4) + '</span></div>' +
+                '<div class="calc-result-row"><span>Anos</span><span>' + anios + '</span></div>' +
+                '<div class="calc-result-row"><span>Terreno Act.</span><span>' + fmt(terrenoAct) + '</span></div>' +
+                '<div class="calc-result-row"><span>Const. Act.</span><span>' + fmt(constAct) + '</span></div>' +
+                '<div class="calc-result-row"><span>Deducciones</span><span>' + fmt(deduc) + '</span></div>' +
+                '<hr style="margin:0.75rem 0;border:none;border-top:1px solid #E1E5EB;">';
             
-            let isrTotalGlobal = 0;
-            let isrEstadoGlobal = 0;
-            let isrFedGlobal = 0;
+            var isrTotalGlobal = 0;
+            var isrEstadoGlobal = 0;
+            var isrFedGlobal = 0;
             
-            rows.forEach((row, i) => {
-                const nombre = row.querySelector('.enajenante-nombre').value;
-                const pct = parseFloat(row.querySelector('.enajenante-pct').value) / 100;
-                const tipo = row.querySelector('.enajenante-tipo').value;
-                const esCasa = row.querySelector('.enajenante-casa-check').checked;
-                const esExt = tipo === 'extranjero';
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var nombre = row.querySelector('.enajenante-nombre').value;
+                var pct = parseFloat(row.querySelector('.enajenante-pct').value) / 100;
+                var tipo = row.querySelector('.enajenante-tipo').value;
+                var esCasa = row.querySelector('.enajenante-casa-check').checked;
+                var esExt = tipo === 'extranjero';
                 
-                const precioVentaEn = pV * pct;
-                const deducEn = deduc * pct;
+                var precioVentaEn = pV * pct;
+                var deducEn = deduc * pct;
                 
-                let exen = 0;
+                var exen = 0;
                 if (esCasa && !esExt) exen = Math.min(5925000 * pct, precioVentaEn - deducEn);
                 
-                let util = Math.max(0, precioVentaEn - deducEn - exen);
-                let isr = 0, mejor = '';
+                var util = Math.max(0, precioVentaEn - deducEn - exen);
+                var isr = 0, mejor = '';
                 
                 if (util > 0) {
                     if (esExt) {
-                        const isr35 = util * 0.35;
-                        const isrTab = calcISRTabla(util / anios) * anios;
+                        var isr35 = util * 0.35;
+                        var isrTab = calcISRTabla(util / anios) * anios;
                         if (isr35 <= isrTab) { isr = isr35; mejor = '35%'; }
                         else { isr = isrTab; mejor = 'Tablas'; }
                     } else {
@@ -1497,312 +1490,101 @@
                     }
                 }
                 
-                const isrEst = esExt ? 0 : Math.min(util * 0.05, isr);
-                const isrFed = isr - isrEst;
+                var isrEst = esExt ? 0 : Math.min(util * 0.05, isr);
+                var isrFed = isr - isrEst;
                 
                 isrTotalGlobal += isr;
                 isrEstadoGlobal += isrEst;
                 isrFedGlobal += isrFed;
                 
-                resultHTML += `
-                    <div style="background:${esExt ? '#FEF3C7' : '#DBEAFE'};margin:0.5rem -1rem;padding:0.75rem 1rem;border-radius:8px;">
-                        <div style="font-weight:600;margin-bottom:0.5rem;">${nombre} (${(pct*100).toFixed(0)}%) ${esExt ? '🌎' : '🇲🇽'}</div>
-                        <div class="calc-result-row"><span>Utilidad Gravable</span><span>${fmt(util)}</span></div>
-                        ${exen > 0 ? '<div class="calc-result-row"><span>Exención</span><span>-' + fmt(exen) + '</span></div>' : ''}
-                        ${esExt && util > 0 ? '<div class="calc-result-row"><span>Mejor opción</span><span>' + mejor + '</span></div>' : ''}
-                        <div class="calc-result-row"><span>ISR Estado</span><span>${fmt(isrEst)}</span></div>
-                        <div class="calc-result-row"><span>ISR Fed</span><span>${fmt(isrFed)}</span></div>
-                        <div class="calc-result-row" style="font-weight:600;"><span>ISR Total</span><span>${fmt(isr)}</span></div>
-                    </div>
-                `;
-            });
+                var bgColor = esExt ? '#FEF3C7' : '#DBEAFE';
+                var icon = esExt ? '🌎' : '🇲🇽';
+                
+                resultHTML += '<div style="background:' + bgColor + ';margin:0.5rem -1rem;padding:0.75rem 1rem;border-radius:8px;">' +
+                    '<div style="font-weight:600;margin-bottom:0.5rem;">' + nombre + ' (' + (pct*100).toFixed(0) + '%) ' + icon + '</div>' +
+                    '<div class="calc-result-row"><span>Utilidad</span><span>' + fmt(util) + '</span></div>';
+                
+                if (exen > 0) {
+                    resultHTML += '<div class="calc-result-row"><span>Exencion</span><span>-' + fmt(exen) + '</span></div>';
+                }
+                if (esExt && util > 0) {
+                    resultHTML += '<div class="calc-result-row"><span>Mejor</span><span>' + mejor + '</span></div>';
+                }
+                
+                resultHTML += '<div class="calc-result-row"><span>ISR Est.</span><span>' + fmt(isrEst) + '</span></div>' +
+                    '<div class="calc-result-row"><span>ISR Fed.</span><span>' + fmt(isrFed) + '</span></div>' +
+                    '<div class="calc-result-row" style="font-weight:600;"><span>ISR Total</span><span>' + fmt(isr) + '</span></div></div>';
+            }
             
-            resultHTML += `
-                <hr style="margin:0.75rem 0;border:none;border-top:2px solid var(--primary);">
-                <div class="calc-result-row"><span>ISR Estado Total</span><span>${fmt(isrEstadoGlobal)}</span></div>
-                <div class="calc-result-row"><span>ISR Federación Total</span><span>${fmt(isrFedGlobal)}</span></div>
-                <div class="calc-result-row total"><span>💰 TOTAL ISR</span><span>${fmt(isrTotalGlobal)}</span></div>
-            `;
+            resultHTML += '<hr style="margin:0.75rem 0;border:none;border-top:2px solid #1E3A5F;">' +
+                '<div class="calc-result-row"><span>ISR Estado</span><span>' + fmt(isrEstadoGlobal) + '</span></div>' +
+                '<div class="calc-result-row"><span>ISR Fed.</span><span>' + fmt(isrFedGlobal) + '</span></div>' +
+                '<div class="calc-result-row total"><span>TOTAL ISR</span><span>' + fmt(isrTotalGlobal) + '</span></div>' +
+                '<button class="btn btn-export-pdf btn-full" onclick="exportarPDF()">PDF</button>';
             
             document.getElementById('isrResultado').style.display = 'block';
-            document.getElementById('isrResultado').innerHTML = resultHTML + '<button class="btn btn-export-pdf btn-full" onclick="exportarPDF()">📄 Exportar PDF</button>
-                <div class="expediente-selector">
-                    <h4>📁 Guardar en Expediente</h4>
-                    <select id="expedienteSelect" onchange="toggleNuevoExpediente()">
-                        <option value="">-- Seleccionar expediente --</option>
-                        <option value="EXP-2024-0047">EXP-2024-0047 - García López (Compraventa)</option>
-                        <option value="EXP-2024-0046">EXP-2024-0046 - Martínez Ruiz (Poder)</option>
-                        <option value="EXP-2024-0045">EXP-2024-0045 - Fernández (Testamento)</option>
-                        <option value="nuevo">+ Crear nuevo expediente</option>
-                    </select>
-                    <div id="nuevoExpedienteDiv" style="display:none;" class="expediente-nuevo">
-                        <input type="text" id="nuevoExpedienteNombre" placeholder="Nombre del cliente">
-                        <select id="nuevoExpedienteTipo" style="width:auto;">
-                            <option value="Compraventa">Compraventa</option>
-                            <option value="Hipoteca">Hipoteca</option>
-                            <option value="Donación">Donación</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-guardar-exp btn-full" onclick="guardarEnExpediente()">💾 Guardar Cálculo</button>
-                    <div id="guardadoOk" class="guardado-ok" style="display:none;">
-                        ✅ Cálculo guardado en expediente
-                    </div>
-                </div>';
+            document.getElementById('isrResultado').innerHTML = resultHTML;
         }
-
-
         
-        
+        // === EXPORTAR PDF ===
         function exportarPDF() {
-            const resultado = document.getElementById('isrResultado');
+            var resultado = document.getElementById('isrResultado');
             if (!resultado || resultado.style.display === 'none') {
                 alert('Primero calcula el ISR');
                 return;
             }
             
-            // Crear contenedor para PDF
-            const pdfContent = document.createElement('div');
+            var pdfContent = document.createElement('div');
             pdfContent.style.padding = '20px';
             pdfContent.style.fontFamily = 'Inter, sans-serif';
-            pdfContent.style.maxWidth = '800px';
-            pdfContent.style.margin = '0 auto';
             
-            // Header
-            const header = document.createElement('div');
-            header.innerHTML = `
-                <div style="text-align:center;padding:1rem;border-bottom:2px solid #1E3A5F;margin-bottom:1rem;">
-                    <h2 style="color:#1E3A5F;font-size:1.5rem;margin:0;">📋 Notarial Solutions</h2>
-                    <p style="color:#666;font-size:0.9rem;margin:0.5rem 0 0;">Cálculo de ISR por Enajenación de Inmuebles</p>
-                </div>
-            `;
-            pdfContent.appendChild(header);
+            pdfContent.innerHTML = '<div style="text-align:center;padding:1rem;border-bottom:2px solid #1E3A5F;margin-bottom:1rem;">' +
+                '<h2 style="color:#1E3A5F;">Notarial Solutions - Calculo ISR</h2></div>' +
+                '<div style="background:#F5F7FA;padding:1rem;border-radius:8px;">' + resultado.innerHTML + '</div>' +
+                '<div style="text-align:center;margin-top:1rem;font-size:0.8rem;color:#666;">Generado: ' + new Date().toLocaleString('es-MX') + '</div>';
             
-            // Datos de la operación
-            const datos = document.createElement('div');
-            datos.innerHTML = `
-                <div style="background:#F5F7FA;padding:1rem;border-radius:8px;margin-bottom:1rem;">
-                    <h3 style="font-size:1rem;margin:0 0 0.75rem;color:#1E3A5F;">Datos de la Operación</h3>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;font-size:0.85rem;">
-                        <div><strong>Fecha Venta:</strong> ${document.getElementById('isrFechaVenta').value}</div>
-                        <div><strong>Fecha Compra:</strong> ${document.getElementById('isrFechaCompra').value}</div>
-                        <div><strong>Precio Venta:</strong> ${fmt(parseFloat(document.getElementById('isrPrecioVenta').value))}</div>
-                        <div><strong>Precio Compra:</strong> ${fmt(parseFloat(document.getElementById('isrPrecioCompra').value))}</div>
-                        <div><strong>% Terreno:</strong> ${document.getElementById('isrPctTerreno').value}%</div>
-                        <div><strong>% Construcción:</strong> ${document.getElementById('isrPctConst').value}%</div>
-                    </div>
-                </div>
-            `;
-            pdfContent.appendChild(datos);
-            
-            // Enajenantes
-            const enajenantes = document.createElement('div');
-            let enajenantesHTML = '<div style="background:#F5F7FA;padding:1rem;border-radius:8px;margin-bottom:1rem;"><h3 style="font-size:1rem;margin:0 0 0.75rem;color:#1E3A5F;">Enajenantes</h3><table style="width:100%;font-size:0.8rem;border-collapse:collapse;"><tr style="background:#1E3A5F;color:white;"><th style="padding:0.5rem;text-align:left;">Nombre</th><th style="padding:0.5rem;">%</th><th style="padding:0.5rem;">Tipo</th><th style="padding:0.5rem;">Casa Hab.</th></tr>';
-            
-            document.querySelectorAll('.enajenante-row').forEach(row => {
-                const nombre = row.querySelector('.enajenante-nombre').value;
-                const pct = row.querySelector('.enajenante-pct').value;
-                const tipo = row.querySelector('.enajenante-tipo').value;
-                const casa = row.querySelector('.enajenante-casa-check').checked ? 'Sí' : 'No';
-                enajenantesHTML += `<tr style="border-bottom:1px solid #E1E5EB;"><td style="padding:0.5rem;">${nombre}</td><td style="padding:0.5rem;text-align:center;">${pct}%</td><td style="padding:0.5rem;text-align:center;">${tipo === 'extranjero' ? 'Extranjero' : 'Residente'}</td><td style="padding:0.5rem;text-align:center;">${casa}</td></tr>`;
-            });
-            enajenantesHTML += '</table></div>';
-            enajenantes.innerHTML = enajenantesHTML;
-            pdfContent.appendChild(enajenantes);
-            
-            // Resultados (clonar)
-            const resultadosDiv = document.createElement('div');
-            resultadosDiv.innerHTML = '<h3 style="font-size:1rem;margin:0 0 0.75rem;color:#1E3A5F;">Resultados del Cálculo</h3>' + resultado.innerHTML;
-            resultadosDiv.style.background = '#F5F7FA';
-            resultadosDiv.style.padding = '1rem';
-            resultadosDiv.style.borderRadius = '8px';
-            pdfContent.appendChild(resultadosDiv);
-            
-            // Footer
-            const footer = document.createElement('div');
-            const fecha = new Date().toLocaleDateString('es-MX', {year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
-            footer.innerHTML = `
-                <div style="text-align:center;padding:1rem;border-top:1px solid #E1E5EB;margin-top:1rem;font-size:0.75rem;color:#666;">
-                    <p style="margin:0;">Documento generado el ${fecha}</p>
-                    <p style="margin:0.25rem 0 0;">Este cálculo es estimativo. El notario es responsable del cálculo final.</p>
-                    <p style="margin:0.25rem 0 0;font-weight:600;">Notarial Solutions - Sistema Integral</p>
-                </div>
-            `;
-            pdfContent.appendChild(footer);
-            
-            // Generar PDF
-            const opt = {
+            var opt = {
                 margin: 10,
-                filename: 'ISR_Calculo_' + new Date().toISOString().slice(0,10) + '.pdf',
+                filename: 'ISR_Calculo.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
+                html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
             
             html2pdf().set(opt).from(pdfContent).save();
         }
-
         
-        // Expedientes (simulado - en producción sería localStorage o API)
-        let expedientesGuardados = JSON.parse(localStorage.getItem('expedientesISR') || '{}');
-        
-        function toggleNuevoExpediente() {
-            const select = document.getElementById('expedienteSelect');
-            const nuevoDiv = document.getElementById('nuevoExpedienteDiv');
-            nuevoDiv.style.display = select.value === 'nuevo' ? 'flex' : 'none';
-        }
-        
-        function generarFolio() {
-            const year = new Date().getFullYear();
-            const num = Object.keys(expedientesGuardados).length + 48;
-            return `EXP-${year}-${String(num).padStart(4, '0')}`;
-        }
-        
-        function guardarEnExpediente() {
-            const select = document.getElementById('expedienteSelect');
-            let folio = select.value;
-            let nombre = '';
-            let tipo = '';
-            
-            if (!folio) {
-                alert('Selecciona un expediente');
-                return;
-            }
-            
-            if (folio === 'nuevo') {
-                nombre = document.getElementById('nuevoExpedienteNombre').value;
-                tipo = document.getElementById('nuevoExpedienteTipo').value;
-                if (!nombre) {
-                    alert('Ingresa el nombre del cliente');
-                    return;
-                }
-                folio = generarFolio();
-            } else {
-                // Extraer nombre del option
-                const option = select.options[select.selectedIndex];
-                const parts = option.text.split(' - ');
-                nombre = parts[1] ? parts[1].split(' (')[0] : 'Cliente';
-                tipo = parts[1] ? parts[1].match(/\(([^)]+)\)/)?.[1] || 'Compraventa' : 'Compraventa';
-            }
-            
-            // Obtener datos del cálculo
-            const calculo = {
-                fecha: new Date().toISOString(),
-                tipoCalculo: tipoCalculo,
-                fechaVenta: document.getElementById('isrFechaVenta')?.value || document.getElementById('isrFechaVentaExc')?.value,
-                fechaCompra: document.getElementById('isrFechaCompra')?.value,
-                precioVenta: document.getElementById('isrPrecioVenta').value,
-                precioCompra: document.getElementById('isrPrecioCompra').value,
-                pctTerreno: document.getElementById('isrPctTerreno').value,
-                pctConstruccion: document.getElementById('isrPctConst').value,
-                enajenantes: [],
-                resultadoHTML: document.getElementById('isrResultado').innerHTML
-            };
-            
-            // Obtener enajenantes
-            document.querySelectorAll('.enajenante-row').forEach(row => {
-                calculo.enajenantes.push({
-                    nombre: row.querySelector('.enajenante-nombre').value,
-                    porcentaje: row.querySelector('.enajenante-pct').value,
-                    tipo: row.querySelector('.enajenante-tipo').value,
-                    casaHabitacion: row.querySelector('.enajenante-casa-check').checked
-                });
-            });
-            
-            // Guardar
-            if (!expedientesGuardados[folio]) {
-                expedientesGuardados[folio] = {
-                    folio: folio,
-                    nombre: nombre,
-                    tipo: tipo,
-                    fechaCreacion: new Date().toISOString(),
-                    calculos: []
-                };
-            }
-            
-            expedientesGuardados[folio].calculos.push(calculo);
-            localStorage.setItem('expedientesISR', JSON.stringify(expedientesGuardados));
-            
-            // Mostrar confirmación
-            document.getElementById('guardadoOk').style.display = 'flex';
-            document.getElementById('guardadoOk').innerHTML = `✅ Guardado en <strong>${folio}</strong> - ${nombre}`;
-            
-            // Actualizar select si era nuevo
-            if (select.value === 'nuevo') {
-                const newOption = document.createElement('option');
-                newOption.value = folio;
-                newOption.text = `${folio} - ${nombre} (${tipo})`;
-                select.insertBefore(newOption, select.options[select.options.length - 1]);
-                select.value = folio;
-                document.getElementById('nuevoExpedienteDiv').style.display = 'none';
-            }
-            
-            // Actualizar panel de expedientes si existe
-            if (typeof actualizarListaExpedientes === 'function') {
-                actualizarListaExpedientes();
-            }
-            
-            setTimeout(() => {
-                document.getElementById('guardadoOk').style.display = 'none';
-            }, 3000);
-        }
-        
-        // Cargar expedientes guardados en el select
-        function cargarExpedientesEnSelect() {
-            const select = document.getElementById('expedienteSelect');
-            if (!select) return;
-            
-            // Limpiar opciones existentes (excepto las primeras y la última)
-            while (select.options.length > 4) {
-                select.remove(1);
-            }
-            
-            // Agregar expedientes guardados
-            Object.values(expedientesGuardados).forEach(exp => {
-                const exists = Array.from(select.options).some(opt => opt.value === exp.folio);
-                if (!exists) {
-                    const option = document.createElement('option');
-                    option.value = exp.folio;
-                    option.text = `${exp.folio} - ${exp.nombre} (${exp.tipo})`;
-                    select.insertBefore(option, select.options[select.options.length - 1]);
-                }
-            });
-        }
-        
-        // Cargar al iniciar
-        document.addEventListener('DOMContentLoaded', cargarExpedientesEnSelect);
-
+        // === ISTP ===
         function calcularISTP() {
-            const estado = document.getElementById('istpEstado').value;
-            const valor = parseFloat(document.getElementById('istpValor').value) || 0;
-            const esViv = document.getElementById('istpVivienda').checked;
+            var estado = document.getElementById('istpEstado').value;
+            var valor = parseFloat(document.getElementById('istpValor').value) || 0;
+            var esViv = document.getElementById('istpVivienda').checked;
             
-            const tasas = {jalisco:{n:3,r:1.5}, nayarit:{n:2,r:1}, cdmx:{n:5,r:3}, nuevo_leon:{n:3,r:2}};
-            const t = tasas[estado] || {n:3,r:1.5};
-            const tasa = esViv ? t.r : t.n;
-            const istp = valor * (tasa / 100);
+            var tasas = {jalisco:{n:3,r:1.5}, nayarit:{n:2,r:1}, cdmx:{n:5,r:3}, nuevo_leon:{n:3,r:2}};
+            var t = tasas[estado] || {n:3,r:1.5};
+            var tasa = esViv ? t.r : t.n;
+            var istp = valor * (tasa / 100);
             
             document.getElementById('istpResultado').style.display = 'block';
-            document.getElementById('istpResultado').innerHTML = `
-                <div class="calc-result-row"><span>Base</span><span>${fmt(valor)}</span></div>
-                <div class="calc-result-row"><span>Tasa</span><span>${tasa}%</span></div>
-                <div class="calc-result-row total"><span>🏠 TOTAL ISTP</span><span>${fmt(istp)}</span></div>
-            `;
+            document.getElementById('istpResultado').innerHTML = 
+                '<div class="calc-result-row"><span>Base</span><span>' + fmt(valor) + '</span></div>' +
+                '<div class="calc-result-row"><span>Tasa</span><span>' + tasa + '%</span></div>' +
+                '<div class="calc-result-row total"><span>TOTAL ISTP</span><span>' + fmt(istp) + '</span></div>';
         }
         
+        // === IVA ===
         function calcularIVA() {
-            const valor = parseFloat(document.getElementById('ivaValor').value) || 0;
-            const tasa = parseFloat(document.getElementById('ivaTasa').value);
-            const iva = valor * (tasa / 100);
+            var valor = parseFloat(document.getElementById('ivaValor').value) || 0;
+            var tasa = parseFloat(document.getElementById('ivaTasa').value);
+            var iva = valor * (tasa / 100);
             
             document.getElementById('ivaResultado').style.display = 'block';
-            document.getElementById('ivaResultado').innerHTML = `
-                <div class="calc-result-row"><span>Base</span><span>${fmt(valor)}</span></div>
-                <div class="calc-result-row"><span>Tasa</span><span>${tasa}%</span></div>
-                <div class="calc-result-row"><span>IVA</span><span>${fmt(iva)}</span></div>
-                <div class="calc-result-row total"><span>🧾 TOTAL</span><span>${fmt(valor + iva)}</span></div>
-            `;
+            document.getElementById('ivaResultado').innerHTML = 
+                '<div class="calc-result-row"><span>Base</span><span>' + fmt(valor) + '</span></div>' +
+                '<div class="calc-result-row"><span>Tasa</span><span>' + tasa + '%</span></div>' +
+                '<div class="calc-result-row"><span>IVA</span><span>' + fmt(iva) + '</span></div>' +
+                '<div class="calc-result-row total"><span>TOTAL</span><span>' + fmt(valor + iva) + '</span></div>';
         }
-
     </script>
 </body>
 </html>
