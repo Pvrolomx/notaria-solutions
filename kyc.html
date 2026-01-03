@@ -208,11 +208,30 @@
                     <img id="preview-comp" class="preview-img hidden">
                 </div>
             </div>
+            <div class="grid-2" style="margin-top:1.5rem">
+                <div>
+                    <h3 style="margin-bottom:0.5rem;color:#fff">Pasaporte (Extranjeros)</h3>
+                    <div class="upload-zone" id="zone-pass" onclick="document.getElementById('file-pass').click()">
+                        <div class="upload-icon">🛂</div>
+                        <p>Opcional - Solo extranjeros</p>
+                        <input type="file" id="file-pass" accept="image/*" onchange="handleFile(this, 'pass')">
+                    </div>
+                    <img id="preview-pass" class="preview-img hidden">
+                </div>
+                <div>
+                    <h3 style="margin-bottom:0.5rem;color:#fff">Constancia RFC / Cédula Fiscal</h3>
+                    <div class="upload-zone" id="zone-rfc" onclick="document.getElementById('file-rfc').click()">
+                        <div class="upload-icon">📑</div>
+                        <p>Opcional - Constancia SAT</p>
+                        <input type="file" id="file-rfc" accept="image/*,.pdf" onchange="handleFile(this, 'rfc')">
+                    </div>
+                </div>
+            </div>
             <div style="margin-top:1.5rem">
                 <h3 style="margin-bottom:0.5rem;color:#fff">Formulario a Llenar (PDF)</h3>
                 <div class="upload-zone" id="zone-form" onclick="document.getElementById('file-form').click()">
                     <div class="upload-icon">📋</div>
-                    <p>Sube el formulario KYC/Escrow</p>
+                    <p>Sube el formulario KYC/Escrow/Fideicomiso</p>
                     <input type="file" id="file-form" accept=".pdf" onchange="handleFile(this, 'form')">
                 </div>
             </div>
@@ -265,7 +284,7 @@
     <script>
         // Estado global
         const state = {
-            files: { ine: null, comp: null, form: null },
+            files: { ine: null, comp: null, form: null, pass: null, rfc: null },
             extracted: {},
             formFields: [],
             mapping: {},
@@ -370,16 +389,38 @@
                 apellidoPaterno: '',
                 apellidoMaterno: '',
                 curp: '',
+                rfc: '',
                 claveElector: '',
                 fechaNacimiento: '',
                 direccionINE: '',
                 seccion: '',
-                vigencia: ''
+                vigencia: '',
+                // Campos Extranjeros
+                pasaporte: '',
+                nacionalidad: '',
+                paisResidencia: '',
+                // Campos Fideicomiso/Escrow
+                fideicomiso: '',
+                bancoFiduciario: '',
+                numeroFideicomiso: ''
             };
             
             // Buscar CURP (18 caracteres alfanuméricos)
             const curpMatch = text.match(/[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z\d]\d/);
             if (curpMatch) data.curp = curpMatch[0];
+            
+            // Buscar RFC (13 caracteres: 4 letras + 6 dígitos + 3 homoclave)
+            const rfcMatch = text.match(/[A-Z]{4}\d{6}[A-Z0-9]{3}/);
+            if (rfcMatch) data.rfc = rfcMatch[0];
+            
+            // Si tenemos CURP pero no RFC, derivar RFC del CURP
+            if (data.curp && !data.rfc) {
+                data.rfc = data.curp.substring(0, 10) + 'XXX'; // Placeholder homoclave
+            }
+            
+            // Buscar número de pasaporte (para extranjeros)
+            const pasaporteMatch = text.match(/[A-Z]{1,2}\d{6,9}/);
+            if (pasaporteMatch && !data.curp) data.pasaporte = pasaporteMatch[0];
             
             // Buscar clave de elector
             const claveMatch = text.match(/[A-Z]{6}\d{8}[HM]\d{3}/);
