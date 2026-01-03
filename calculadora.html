@@ -367,11 +367,15 @@
             <div id="seccionExtranjero" class="result-section hidden">
                 <h3 style="font-size:0.85rem;margin-bottom:1rem;color:var(--primary);">ISR Extranjero (2 opciones)</h3>
                 <div class="result-row">
-                    <span class="label">Opción 1: 35% Flat</span>
+                    <span class="label">Opción 1: 25% s/Ingreso (sin deduc)</span>
+                    <span class="value" id="resIsr25">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">Opción 2: 35% s/Ganancia (con deduc)</span>
                     <span class="value" id="resIsr35">-</span>
                 </div>
                 <div class="result-row">
-                    <span class="label">Opción 2: Cálculo con Tablas</span>
+                    <span class="label">Opción 3: Tablas Art.152</span>
                     <span class="value" id="resIsrTablas">-</span>
                 </div>
                 <div class="result-row highlight">
@@ -516,8 +520,11 @@
             }
         }
         
-        function getINPC(fecha) {
+        function getINPC(fecha, usarMesAnterior = false) {
             const d = new Date(fecha);
+            if (usarMesAnterior) {
+                d.setMonth(d.getMonth() - 1);
+            }
             const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
             return INPC[key] || INPC['2024-12'];
         }
@@ -559,7 +566,7 @@
             anios = Math.max(1, Math.min(anios, 20)); // Entre 1 y 20
             
             // Obtener INPC
-            const inpcVenta = getINPC(fechaVenta);
+            const inpcVenta = getINPC(fechaVenta, true); // Mes ANTERIOR per Art.124 LISR
             const inpcCompra = getINPC(fechaCompra);
             const factorINPC = inpcVenta / inpcCompra;
             
@@ -576,7 +583,14 @@
             const construccionActualizada = construccionDepreciada * factorINPC;
             
             // Total deducciones
-            const totalDeducciones = terrenoActualizado + construccionActualizada + gastosMejoras + comision;
+            let totalDeducciones = terrenoActualizado + construccionActualizada + gastosMejoras + comision;
+            
+            // COSTO MINIMO 10% (Art.121 LISR)
+            const costoMinimo = precioVenta * 0.10;
+            const usaCostoMinimo = (terrenoActualizado + construccionActualizada) < costoMinimo;
+            if (usaCostoMinimo) {
+                totalDeducciones = costoMinimo + gastosMejoras + comision;
+            }
             
             // Exención casa habitación
             let exencion = 0;
@@ -600,21 +614,23 @@
             
             if (!hayPerdida) {
                 if (esExtranjero) {
-                    // Extranjero: calcular ambas opciones
-                    isr35 = utilidadGravable * 0.35;
+                    // Extranjero: calcular TRES opciones (Art.160 LISR)
+                    const isr25 = precioVenta * 0.25; // 25% sobre ingreso SIN deducciones
+                    isr35 = utilidadGravable * 0.35; // 35% sobre ganancia CON deducciones
                     
                     const utilidadAnual = utilidadGravable / anios;
                     const isrAnual = calcularISRTablas(utilidadAnual);
                     isrTablas = isrAnual * anios;
                     
-                    // Elegir la menor
-                    if (isr35 <= isrTablas) {
-                        isrTotal = isr35;
-                        mejorOpcion = '35% Flat';
-                    } else {
-                        isrTotal = isrTablas;
-                        mejorOpcion = 'Cálculo con Tablas';
-                    }
+                    // Elegir la menor de las TRES opciones
+                    const opciones = [
+                        { valor: isr25, nombre: '25% s/Ingreso (sin deduc)' },
+                        { valor: isr35, nombre: '35% s/Ganancia (con deduc)' },
+                        { valor: isrTablas, nombre: 'Tablas Art.152' }
+                    ];
+                    opciones.sort((a, b) => a.valor - b.valor);
+                    isrTotal = opciones[0].valor;
+                    mejorOpcion = opciones[0].nombre;
                     
                     // Extranjero: todo a federación
                     isrFederacion = isrTotal;
@@ -663,6 +679,7 @@
             if (esExtranjero) {
                 document.getElementById('seccionExtranjero').classList.remove('hidden');
                 document.getElementById('seccionResidente').classList.add('hidden');
+                document.getElementById('resIsr25').textContent = formatMoney(isr25);
                 document.getElementById('resIsr35').textContent = formatMoney(isr35);
                 document.getElementById('resIsrTablas').textContent = formatMoney(isrTablas);
                 document.getElementById('resMejorOpcion').textContent = mejorOpcion + ' - ' + formatMoney(isrTotal);
