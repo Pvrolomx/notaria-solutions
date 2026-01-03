@@ -777,17 +777,20 @@
 </head>
 <body>
     <header class="app-header">
-        <div class="app-logo">
-            <img src="logo.jpeg" alt="Notarial Solutions" class="app-logo-img">
-            <div class="app-logo-text">
-                <h1>Notarial Solutions</h1>
-        <div id="indicadores-tc" style="display:flex;gap:1rem;font-size:0.75rem;color:#6B7280;margin-top:0.25rem;flex-wrap:wrap;"><span>USD: <strong id="tcValor">--</strong></span><span>UDI: <strong id="udiValor">--</strong></span><span>Exencion: <strong id="exencionValor">--</strong></span></div>
-                <p>Sistema Integral</p>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%;">
+            <button onclick="alert('Salir')" style="background:none;border:1px solid var(--border);color:var(--danger);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-size:0.75rem;">Salir</button>
+            <div class="app-logo" style="flex-direction:column;text-align:center;">
+                <img src="logo.jpeg" alt="Notarial Solutions" class="app-logo-img" style="width:80px;height:80px;border-radius:16px;">
+                <div class="app-logo-text" style="margin-top:0.5rem;">
+                    <h1 style="font-size:1.1rem;">Castle</h1>
+                    <p style="font-size:0.9rem;color:var(--primary);font-weight:600;">Legal Solutions</p>
+                </div>
             </div>
+            <div style="width:60px;"></div>
         </div>
-        <div class="user-bar">
+        <div id="indicadores-tc" style="display:flex;gap:1rem;font-size:0.75rem;color:#6B7280;margin-top:0.75rem;flex-wrap:wrap;justify-content:center;"><span>USD: <strong id="tcValor">--</strong></span><span>UDI: <strong id="udiValor">--</strong></span><span>Exencion: <strong id="exencionValor">--</strong></span></div>
+        <div class="user-bar" style="margin-top:0.5rem;">
             <span>Lic. Rodríguez • Notario #42</span>
-            <button>Salir</button>
         </div>
     </header>
     
