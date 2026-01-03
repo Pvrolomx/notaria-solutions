@@ -211,6 +211,13 @@
         }
         .hidden { display: none; }
     </style>
+    <!-- PWA Meta Tags -->
+    <link rel=" manifest href=/manifest.json>
+ <meta name=	heme-color content=#d4af37>
+ <meta name=pple-mobile-web-app-capable content=yes>
+ <meta name=pple-mobile-web-app-status-bar-style content=black-translucent>
+ <meta name=pple-mobile-web-app-title content=NotariaSol>
+ <link rel=pple-touch-icon href=/icon-192.png>
 </head>
 <body>
     <div class="container">
@@ -800,5 +807,15 @@
             }
         }
     </script>
+    <!-- PWA Service Worker -->
+    <script>
+    if (" serviceWorker in navigator) {
+ window.addEventListener(oad, () => {
+ navigator.serviceWorker.register(/sw.js)
+ .then(reg => console.log(SW registrado, reg.scope))
+ .catch(err => console.log(SW error, err));
+ });
+ }
+ </script>
 </body>
 </html>
