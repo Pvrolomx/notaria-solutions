@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KYC AutoFill - Notarial Solutions</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #e4e4e7;
+        }
+        .header {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .header h1 { color: #4ade80; font-size: 1.5rem; }
+        .header span { color: #888; font-size: 0.9rem; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+        .step.active { color: #4ade80; }
+        .step.done { color: #22c55e; }
+        .step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .step.active .step-num { background: #4ade80; color: #1a1a2e; }
+        .step.done .step-num { background: #22c55e; color: #fff; }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card h2 {
+            color: #4ade80;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .upload-zone {
+            border: 2px dashed #444;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-zone:hover { border-color: #4ade80; background: rgba(74,222,128,0.05); }
+        .upload-zone.has-file { border-color: #22c55e; background: rgba(34,197,94,0.1); }
+        .upload-zone input { display: none; }
+        .upload-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .btn {
+            background: #4ade80;
+            color: #1a1a2e;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover { background: #22c55e; transform: translateY(-2px); }
+        .btn:disabled { background: #444; color: #888; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: #333; color: #fff; }
+        .btn-secondary:hover { background: #444; }
+        .extracted-data {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+        .data-row:last-child { border-bottom: none; }
+        .data-label { color: #888; }
+        .data-value { color: #4ade80; text-align: right; }
+        .progress-bar {
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #4ade80;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .status { text-align: center; margin-top: 0.5rem; color: #888; font-size: 0.9rem; }
+        .preview-img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        .mapping-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .mapping-row select, .mapping-row input {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 0.5rem;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .arrow { color: #4ade80; font-size: 1.2rem; }
+        .hidden { display: none; }
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .step-indicator { flex-wrap: wrap; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 KYC AutoFill</h1>
+        <span>Notarial Solutions</span>
+    </div>
+
+    <div class="container">
+        <div class="step-indicator">
+            <div class="step active" id="step1-ind">
+                <div class="step-num">1</div>
+                <span>Subir Documentos</span>
+            </div>
+            <div class="step" id="step2-ind">
+                <div class="step-num">2</div>
+                <span>Extraer Datos</span>
+            </div>
+            <div class="step" id="step3-ind">
+                <div class="step-num">3</div>
+                <span>Mapear Campos</span>
+            </div>
+            <div class="step" id="step4-ind">
+                <div class="step-num">4</div>
+                <span>Exportar PDF</span>
+            </div>
+        </div>
+
+        <!-- PASO 1: Subir Documentos -->
+        <div id="step1" class="card">
+            <h2>📤 Paso 1: Subir Documentos</h2>
+            <div class="grid-2">
+                <div>
+                    <h3 style="margin-bottom:0.5rem;color:#fff">INE (Frente)</h3>
+                    <div class="upload-zone" id="zone-ine" onclick="document.getElementById('file-ine').click()">
+                        <div class="upload-icon">🪪</div>
+                        <p>Click o arrastra tu INE</p>
+                        <input type="file" id="file-ine" accept="image/*" onchange="handleFile(this, 'ine')">
+                    </div>
+                    <img id="preview-ine" class="preview-img hidden">
+                </div>
+                <div>
+                    <h3 style="margin-bottom:0.5rem;color:#fff">Comprobante Domicilio</h3>
+                    <div class="upload-zone" id="zone-comp" onclick="document.getElementById('file-comp').click()">
+                        <div class="upload-icon">📄</div>
+                        <p>CFE, Telmex, Agua...</p>
+                        <input type="file" id="file-comp" accept="image/*,.pdf" onchange="handleFile(this, 'comp')">
+                    </div>
+                    <img id="preview-comp" class="preview-img hidden">
+                </div>
+            </div>
+            <div style="margin-top:1.5rem">
+                <h3 style="margin-bottom:0.5rem;color:#fff">Formulario a Llenar (PDF)</h3>
+                <div class="upload-zone" id="zone-form" onclick="document.getElementById('file-form').click()">
+                    <div class="upload-icon">📋</div>
+                    <p>Sube el formulario KYC/Escrow</p>
+                    <input type="file" id="file-form" accept=".pdf" onchange="handleFile(this, 'form')">
+                </div>
+            </div>
+            <div style="margin-top:1.5rem;text-align:right">
+                <button class="btn" id="btn-extract" onclick="startExtraction()" disabled>
+                    Extraer Datos →
+                </button>
+            </div>
+        </div>
+
+        <!-- PASO 2: Extracción -->
+        <div id="step2" class="card hidden">
+            <h2>🔍 Paso 2: Extrayendo Datos...</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <div class="status" id="status">Iniciando OCR...</div>
+            <div class="extracted-data" id="extracted-data"></div>
+            <div style="margin-top:1.5rem;text-align:right">
+                <button class="btn" id="btn-mapping" onclick="showMapping()" disabled>
+                    Mapear Campos →
+                </button>
+            </div>
+        </div>
+
+        <!-- PASO 3: Mapeo -->
+        <div id="step3" class="card hidden">
+            <h2>🔗 Paso 3: Mapear Campos</h2>
+            <p style="color:#888;margin-bottom:1rem">Conecta los datos extraídos con los campos del formulario</p>
+            <div id="mapping-container"></div>
+            <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:flex-end">
+                <button class="btn btn-secondary" onclick="saveTemplate()">💾 Guardar Template</button>
+                <button class="btn" onclick="fillPDF()">Generar PDF →</button>
+            </div>
+        </div>
+
+        <!-- PASO 4: Resultado -->
+        <div id="step4" class="card hidden">
+            <h2>✅ Paso 4: PDF Listo</h2>
+            <p style="color:#888;margin-bottom:1rem">Tu formulario ha sido llenado automáticamente</p>
+            <div style="text-align:center;padding:2rem">
+                <div style="font-size:4rem;margin-bottom:1rem">📄</div>
+                <button class="btn" id="btn-download" onclick="downloadPDF()">
+                    ⬇️ Descargar PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado global
+        const state = {
+            files: { ine: null, comp: null, form: null },
+            extracted: {},
+            formFields: [],
+            mapping: {},
+            filledPdf: null
+        };
+
+        // Manejar archivos
+        function handleFile(input, type) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            state.files[type] = file;
+            const zone = document.getElementById('zone-' + type);
+            zone.classList.add('has-file');
+            zone.querySelector('p').textContent = file.name;
+            
+            // Preview para imágenes
+            if (file.type.startsWith('image/')) {
+                const preview = document.getElementById('preview-' + type);
+                if (preview) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.classList.remove('hidden');
+                }
+            }
+            
+            // Habilitar botón si tenemos INE y formulario
+            if (state.files.ine && state.files.form) {
+                document.getElementById('btn-extract').disabled = false;
+            }
+        }
+
+        // Iniciar extracción
+        async function startExtraction() {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            document.getElementById('step1-ind').classList.remove('active');
+            document.getElementById('step1-ind').classList.add('done');
+            document.getElementById('step2-ind').classList.add('active');
+            
+            const progress = document.getElementById('progress');
+            const status = document.getElementById('status');
+            
+            try {
+                // OCR de INE
+                status.textContent = 'Procesando INE...';
+                progress.style.width = '20%';
+                
+                const ineText = await doOCR(state.files.ine);
+                progress.style.width = '50%';
+                
+                // Parsear datos de INE
+                state.extracted = parseINE(ineText);
+                
+                // OCR de comprobante si existe
+                if (state.files.comp) {
+                    status.textContent = 'Procesando comprobante...';
+                    progress.style.width = '70%';
+                    const compText = await doOCR(state.files.comp);
+                    const compData = parseComprobante(compText);
+                    state.extracted = { ...state.extracted, ...compData };
+                }
+                
+                progress.style.width = '90%';
+                status.textContent = 'Analizando formulario PDF...';
+                
+                // Analizar campos del PDF
+                await analyzePDF();
+                
+                progress.style.width = '100%';
+                status.textContent = '¡Extracción completada!';
+                
+                // Mostrar datos extraídos
+                showExtractedData();
+                document.getElementById('btn-mapping').disabled = false;
+                
+            } catch (error) {
+                status.textContent = 'Error: ' + error.message;
+                console.error(error);
+            }
+        }
+
+        // OCR con Tesseract
+        async function doOCR(file) {
+            const result = await Tesseract.recognize(file, 'spa', {
+                logger: m => {
+                    if (m.status === 'recognizing text') {
+                        const pct = Math.round(m.progress * 100);
+                        document.getElementById('status').textContent = 
+                            'Reconociendo texto... ' + pct + '%';
+                    }
+                }
+            });
+            return result.data.text;
+        }
+
+        // Parsear INE
+        function parseINE(text) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+            const data = {
+                nombreCompleto: '',
+                nombre: '',
+                apellidoPaterno: '',
+                apellidoMaterno: '',
+                curp: '',
+                claveElector: '',
+                fechaNacimiento: '',
+                direccionINE: '',
+                seccion: '',
+                vigencia: ''
+            };
+            
+            // Buscar CURP (18 caracteres alfanuméricos)
+            const curpMatch = text.match(/[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z\d]\d/);
+            if (curpMatch) data.curp = curpMatch[0];
+            
+            // Buscar clave de elector
+            const claveMatch = text.match(/[A-Z]{6}\d{8}[HM]\d{3}/);
+            if (claveMatch) data.claveElector = claveMatch[0];
+            
+            // Buscar nombre (generalmente después de "NOMBRE")
+            const nombreIdx = lines.findIndex(l => l.includes('NOMBRE'));
+            if (nombreIdx >= 0 && lines[nombreIdx + 1]) {
+                const partes = lines[nombreIdx + 1].split(/\s+/);
+                if (partes.length >= 3) {
+                    data.apellidoPaterno = partes[0];
+                    data.apellidoMaterno = partes[1];
+                    data.nombre = partes.slice(2).join(' ');
+                } else if (partes.length === 2) {
+                    data.apellidoPaterno = partes[0];
+                    data.nombre = partes[1];
+                }
+                data.nombreCompleto = lines[nombreIdx + 1];
+            }
+            
+            // Buscar dirección
+            const domIdx = lines.findIndex(l => l.includes('DOMICILIO'));
+            if (domIdx >= 0) {
+                data.direccionINE = lines.slice(domIdx + 1, domIdx + 3).join(' ');
+            }
+            
+            // Buscar fecha nacimiento del CURP
+            if (data.curp) {
+                const yy = data.curp.substring(4, 6);
+                const mm = data.curp.substring(6, 8);
+                const dd = data.curp.substring(8, 10);
+                const year = parseInt(yy) > 30 ? '19' + yy : '20' + yy;
+                data.fechaNacimiento = year + '-' + mm + '-' + dd;
+            }
+            
+            return data;
+        }
+
+        // Parsear comprobante
+        function parseComprobante(text) {
+            const data = {
+                direccionComprobante: '',
+                tipoComprobante: 'Desconocido',
+                titular: ''
+            };
+            
+            if (text.includes('CFE') || text.includes('COMISION FEDERAL')) {
+                data.tipoComprobante = 'CFE';
+            } else if (text.includes('TELMEX') || text.includes('TELÉFONOS')) {
+                data.tipoComprobante = 'TELMEX';
+            } else if (text.includes('AGUA') || text.includes('SIAPA')) {
+                data.tipoComprobante = 'AGUA';
+            }
+            
+            // Buscar dirección (heurística simple)
+            const lines = text.split('\n').filter(l => l.trim());
+            const dirLine = lines.find(l => 
+                l.includes('CALLE') || l.includes('AV.') || l.includes('COL.') ||
+                l.match(/\d{5}/) // Código postal
+            );
+            if (dirLine) data.direccionComprobante = dirLine.trim();
+            
+            return data;
+        }
+
+        // Analizar PDF
+        async function analyzePDF() {
+            const arrayBuffer = await state.files.form.arrayBuffer();
+            const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+            const form = pdfDoc.getForm();
+            
+            state.formFields = form.getFields().map(f => ({
+                name: f.getName(),
+                type: f.constructor.name
+            }));
+        }
+
+        // Mostrar datos extraídos
+        function showExtractedData() {
+            const container = document.getElementById('extracted-data');
+            let html = '';
+            for (const [key, value] of Object.entries(state.extracted)) {
+                if (value) {
+                    html += `<div class="data-row">
+                        <span class="data-label">${key}</span>
+                        <span class="data-value">${value}</span>
+                    </div>`;
+                }
+            }
+            container.innerHTML = html || '<p style="color:#888">No se encontraron datos</p>';
+        }
+
+        // Mostrar mapeo
+        function showMapping() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+            document.getElementById('step2-ind').classList.remove('active');
+            document.getElementById('step2-ind').classList.add('done');
+            document.getElementById('step3-ind').classList.add('active');
+            
+            const container = document.getElementById('mapping-container');
+            let html = '';
+            
+            // Crear opciones de datos extraídos
+            const dataOptions = Object.keys(state.extracted)
+                .filter(k => state.extracted[k])
+                .map(k => `<option value="${k}">${k}: ${state.extracted[k].substring(0,30)}...</option>`)
+                .join('');
+            
+            // Crear filas de mapeo para cada campo del PDF
+            state.formFields.forEach((field, idx) => {
+                html += `<div class="mapping-row">
+                    <input type="text" value="${field.name}" readonly>
+                    <span class="arrow">→</span>
+                    <select id="map-${idx}" onchange="updateMapping('${field.name}', this.value)">
+                        <option value="">-- Seleccionar dato --</option>
+                        ${dataOptions}
+                    </select>
+                </div>`;
+            });
+            
+            if (!state.formFields.length) {
+                html = '<p style="color:#888">No se detectaron campos en el PDF. El formulario podría no ser editable.</p>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Actualizar mapeo
+        function updateMapping(fieldName, dataKey) {
+            state.mapping[fieldName] = dataKey;
+        }
+
+        // Guardar template
+        function saveTemplate() {
+            const template = {
+                name: prompt('Nombre del template:', 'Formulario_KYC'),
+                mapping: state.mapping,
+                created: new Date().toISOString()
+            };
+            
+            // Guardar en localStorage
+            const templates = JSON.parse(localStorage.getItem('kyc-templates') || '[]');
+            templates.push(template);
+            localStorage.setItem('kyc-templates', JSON.stringify(templates));
+            
+            alert('Template guardado: ' + template.name);
+        }
+
+        // Llenar PDF
+        async function fillPDF() {
+            try {
+                const arrayBuffer = await state.files.form.arrayBuffer();
+                const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+                const form = pdfDoc.getForm();
+                
+                // Llenar campos según mapeo
+                for (const [fieldName, dataKey] of Object.entries(state.mapping)) {
+                    if (dataKey && state.extracted[dataKey]) {
+                        try {
+                            const field = form.getTextField(fieldName);
+                            field.setText(state.extracted[dataKey]);
+                        } catch (e) {
+                            console.warn('No se pudo llenar:', fieldName);
+                        }
+                    }
+                }
+                
+                // Guardar PDF
+                state.filledPdf = await pdfDoc.save();
+                
+                // Mostrar paso 4
+                document.getElementById('step3').classList.add('hidden');
+                document.getElementById('step4').classList.remove('hidden');
+                document.getElementById('step3-ind').classList.remove('active');
+                document.getElementById('step3-ind').classList.add('done');
+                document.getElementById('step4-ind').classList.add('active');
+                document.getElementById('step4-ind').classList.add('done');
+                
+            } catch (error) {
+                alert('Error al llenar PDF: ' + error.message);
+                console.error(error);
+            }
+        }
+
+        // Descargar PDF
+        function downloadPDF() {
+            if (!state.filledPdf) return;
+            
+            const blob = new Blob([state.filledPdf], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'KYC_Llenado_' + new Date().toISOString().split('T')[0] + '.pdf';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
