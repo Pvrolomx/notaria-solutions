@@ -246,6 +246,16 @@
                     <span>Local Comercial (genera IVA)</span>
                 </label>
             </div>
+            <div class="grid-2" id="enajenantesSection">
+                <div class="field">
+                    <label>Número de Enajenantes</label>
+                    <input type="number" id="numEnajenantes" value="1" min="1" max="10">
+                </div>
+                <div class="field">
+                    <label>¿Cuántos aplican exención?</label>
+                    <input type="number" id="numExentan" value="1" min="0" max="10">
+                </div>
+            </div>
         </div>
 
         <!-- VALORES -->
@@ -357,6 +367,10 @@
                 <div id="rowExencion" class="result-row hidden">
                     <span class="label">(-) Exención Casa Habitación</span>
                     <span class="value" id="resExencion">-</span>
+                </div>
+                <div id="rowPctGravable" class="result-row hidden">
+                    <span class="label">% Gravable (después exención)</span>
+                    <span class="value" id="resPctGravable">-</span>
                 </div>
                 <div class="result-row" style="font-weight:600;">
                     <span class="label">UTILIDAD GRAVABLE</span>
@@ -641,15 +655,35 @@
                 totalDeducciones = costoMinimo + gastosMejoras + comision;
             }
             
-            // Exención casa habitación
-            let exencion = 0;
-            if (esCasaHabitacion && !esExtranjero) {
-                exencion = EXENCION_UDIS * VALOR_UDI; // ~5.9M pesos
-                exencion = Math.min(exencion, precioVenta - totalDeducciones); // No mayor a utilidad
+            // Exención casa habitación - METODOLOGIA NUVIGANT
+            const numEnajenantes = parseInt(document.getElementById('numEnajenantes').value) || 1;
+            const numExentan = parseInt(document.getElementById('numExentan').value) || 0;
+            
+            let exencionTotal = 0;
+            let pctGravable = 1; // 100% gravable por defecto
+            let precioGravable = precioVenta;
+            let deduccionesGravables = totalDeducciones;
+            
+            if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
+                // Exencion = 700k UDIs × numero de enajenantes que exentan
+                exencionTotal = EXENCION_UDIS * VALOR_UDI * numExentan;
+                
+                if (precioVenta > exencionTotal) {
+                    // Porcentaje gravable = excedente / precio total
+                    pctGravable = (precioVenta - exencionTotal) / precioVenta;
+                    // Aplicar % a precio Y deducciones (metodologia Nuvigant)
+                    precioGravable = precioVenta * pctGravable;
+                    deduccionesGravables = totalDeducciones * pctGravable;
+                } else {
+                    // Todo exento
+                    pctGravable = 0;
+                    precioGravable = 0;
+                    deduccionesGravables = 0;
+                }
             }
             
-            // Utilidad gravable
-            let utilidadGravable = precioVenta - totalDeducciones - exencion;
+            // Utilidad gravable = precio gravable - deducciones gravables
+            let utilidadGravable = precioGravable - deduccionesGravables;
             const hayPerdida = utilidadGravable <= 0;
             utilidadGravable = Math.max(0, utilidadGravable);
             
@@ -716,13 +750,19 @@
             document.getElementById('resPrecioVenta').textContent = formatMoney(precioVenta);
             document.getElementById('resMenosDeduc').textContent = formatMoney(totalDeducciones);
             
-            if (esCasaHabitacion && !esExtranjero) {
+            if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
                 document.getElementById('rowExencion').classList.remove('hidden');
-                document.getElementById('resExencion').textContent = formatMoney(exencion);
+                document.getElementById('resExencion').textContent = formatMoney(exencionTotal) + ' (' + ((1-pctGravable)*100).toFixed(2) + '% exento)';
             } else {
                 document.getElementById('rowExencion').classList.add('hidden');
             }
             
+            if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
+                document.getElementById('rowPctGravable').classList.remove('hidden');
+                document.getElementById('resPctGravable').textContent = (pctGravable * 100).toFixed(2) + '%';
+            } else {
+                document.getElementById('rowPctGravable').classList.add('hidden');
+            }
             document.getElementById('resUtilidad').textContent = formatMoney(utilidadGravable);
             
             if (esExtranjero) {
