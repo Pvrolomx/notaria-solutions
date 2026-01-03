@@ -528,6 +528,55 @@
             const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
             return INPC[key] || INPC['2024-12'];
         }
+        // Función para consultar API INPC
+        async function fetchINPC(year, month) {
+            try {
+                const response = await fetch(`/api/inpc?year=${year}&month=${month}`);
+                const data = await response.json();
+                if (data.success && data.valor) {
+                    console.log(`INPC API: ${year}-${month} = ${data.valor}`);
+                    return data.valor;
+                }
+            } catch (e) {
+                console.log('API INPC no disponible, usando tabla local');
+            }
+            return null;
+        }
+        
+        // Cache para INPC consultados
+        const inpcCache = {};
+        
+        // getINPC ahora es async y usa API primero
+        async function getINPCAsync(fecha, usarMesAnterior = false) {
+            const d = new Date(fecha);
+            if (usarMesAnterior) {
+                d.setMonth(d.getMonth() - 1);
+            }
+            const year = d.getFullYear();
+            const month = d.getMonth() + 1;
+            const key = `${year}-${String(month).padStart(2, '0')}`;
+            
+            // Revisar cache
+            if (inpcCache[key]) {
+                return inpcCache[key];
+            }
+            
+            // Intentar API primero
+            const apiValue = await fetchINPC(year, month);
+            if (apiValue) {
+                inpcCache[key] = apiValue;
+                return apiValue;
+            }
+            
+            // Fallback a tabla local
+            const fallback = INPC[key] || INPC['2024-12'];
+            inpcCache[key] = fallback;
+            return fallback;
+        }
+
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            return INPC[key] || INPC['2024-12'];
+        }
         
         function calcularISRTablas(utilidadAnual) {
             if (utilidadAnual <= 0) return 0;
@@ -545,7 +594,7 @@
             return '$' + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
         
-        function calcularISR() {
+        async function calcularISR() {
             // Obtener valores
             const fechaVenta = document.getElementById('fechaVenta').value;
             const fechaCompra = document.getElementById('fechaCompra').value;
@@ -566,8 +615,8 @@
             anios = Math.max(1, Math.min(anios, 20)); // Entre 1 y 20
             
             // Obtener INPC
-            const inpcVenta = getINPC(fechaVenta, true); // Mes ANTERIOR per Art.124 LISR
-            const inpcCompra = getINPC(fechaCompra);
+            const inpcVenta = await getINPCAsync(fechaVenta, true); // Mes ANTERIOR per Art.124 LISR // Mes ANTERIOR per Art.124 LISR
+            const inpcCompra = await getINPCAsync(fechaCompra);
             const factorINPC = inpcVenta / inpcCompra;
             
             // Calcular valores actualizados
