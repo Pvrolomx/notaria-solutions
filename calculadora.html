@@ -303,6 +303,10 @@
                 <input type="number" id="gastosMejoras" placeholder="0" value="0">
             </div>
             <div class="field">
+                <label>Fecha de Mejoras (si aplica)</label>
+                <input type="date" id="fechaMejoras">
+            </div>
+            <div class="field">
                 <label>Comisión Inmobiliaria (opcional) $</label>
                 <input type="number" id="comision" placeholder="0" value="0">
             </div>
@@ -766,6 +770,7 @@
             const pctTerreno = parseFloat(document.getElementById('pctTerreno').value) / 100;
             const pctConstruccion = parseFloat(document.getElementById('pctConstruccion').value) / 100;
             const gastosMejoras = parseFloat(document.getElementById('gastosMejoras').value) || 0;
+            const fechaMejoras = document.getElementById('fechaMejoras').value;
             const comision = parseFloat(document.getElementById('comision').value) || 0;
             const esExtranjero = document.getElementById('esExtranjero').checked;
             const esCasaHabitacion = document.getElementById('esCasaHabitacion').checked;
@@ -794,14 +799,22 @@
             const construccionDepreciada = precioConstruccionCompra * (1 - pctDepreciacion);
             const construccionActualizada = construccionDepreciada * factorINPC;
             
+            // Mejoras actualizadas con INPC (si hay fecha)
+            let mejorasActualizadas = gastosMejoras;
+            if (gastosMejoras > 0 && fechaMejoras) {
+                const inpcMejoras = await getINPCAsync(fechaMejoras);
+                const factorMejoras = inpcVenta / inpcMejoras;
+                mejorasActualizadas = gastosMejoras * factorMejoras;
+            }
+            
             // Total deducciones
-            let totalDeducciones = terrenoActualizado + construccionActualizada + gastosMejoras + comision;
+            let totalDeducciones = terrenoActualizado + construccionActualizada + mejorasActualizadas + comision;
             
             // COSTO MINIMO 10% (Art.121 LISR)
             const costoMinimo = precioVenta * 0.10;
             const usaCostoMinimo = (terrenoActualizado + construccionActualizada) < costoMinimo;
             if (usaCostoMinimo) {
-                totalDeducciones = costoMinimo + gastosMejoras + comision;
+                totalDeducciones = costoMinimo + mejorasActualizadas + comision;
             }
             
             // Exención casa habitación - METODOLOGIA NUVIGANT
@@ -900,7 +913,7 @@
             
             document.getElementById('resTerrenoAct').textContent = formatMoney(terrenoActualizado);
             document.getElementById('resConstruccionAct').textContent = formatMoney(construccionActualizada);
-            document.getElementById('resGastos').textContent = formatMoney(gastosMejoras);
+            document.getElementById('resGastos').textContent = formatMoney(mejorasActualizadas);
             document.getElementById('resComision').textContent = formatMoney(comision);
             document.getElementById('resTotalDeduc').textContent = formatMoney(totalDeducciones);
             
