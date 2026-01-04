@@ -500,24 +500,8 @@
             '2025-09': 141.8500, '2025-10': 142.2100, '2025-11': 142.6450, '2025-12': 143.1000
         };
         
-                // TABLAS ISR POR AÑO (Art. 152 LISR - Anexo 8 RMF)
-        // Tabla 2019-2022 (sin ajuste por inflación <10%)
-        const TABLA_ISR_2020 = [
-            { limiteInf: 0.01, limiteSup: 6942.20, cuotaFija: 0.00, tasa: 1.92 },
-            { limiteInf: 6942.21, limiteSup: 58922.16, cuotaFija: 133.28, tasa: 6.40 },
-            { limiteInf: 58922.17, limiteSup: 103550.44, cuotaFija: 3460.01, tasa: 10.88 },
-            { limiteInf: 103550.45, limiteSup: 120372.83, cuotaFija: 8315.57, tasa: 16.00 },
-            { limiteInf: 120372.84, limiteSup: 144119.23, cuotaFija: 11007.14, tasa: 17.92 },
-            { limiteInf: 144119.24, limiteSup: 290667.75, cuotaFija: 15262.49, tasa: 21.36 },
-            { limiteInf: 290667.76, limiteSup: 458132.29, cuotaFija: 46565.26, tasa: 23.52 },
-            { limiteInf: 458132.30, limiteSup: 874650.00, cuotaFija: 85952.92, tasa: 30.00 },
-            { limiteInf: 874650.01, limiteSup: 1166200.00, cuotaFija: 210908.23, tasa: 32.00 },
-            { limiteInf: 1166200.01, limiteSup: 3498600.00, cuotaFija: 304204.21, tasa: 34.00 },
-            { limiteInf: 3498600.01, limiteSup: Infinity, cuotaFija: 1097220.21, tasa: 35.00 }
-        ];
-        
-        // Tabla 2023-2025 (ajustada por inflación >10% en 2022)
-        const TABLA_ISR_2023 = [
+        // TABLAS ISR 2025 (Art. 152 LISR) - Anual
+        const TABLAS_ISR = [
             { limiteInf: 0.01, limiteSup: 8952.49, cuotaFija: 0, tasa: 1.92 },
             { limiteInf: 8952.50, limiteSup: 75984.55, cuotaFija: 171.88, tasa: 6.40 },
             { limiteInf: 75984.56, limiteSup: 133536.07, cuotaFija: 4461.94, tasa: 10.88 },
@@ -530,92 +514,10 @@
             { limiteInf: 1503902.47, limiteSup: 4511707.37, cuotaFija: 392294.17, tasa: 34.00 },
             { limiteInf: 4511707.38, limiteSup: Infinity, cuotaFija: 1414947.85, tasa: 35.00 }
         ];
-
-        // Tabla 2026+ (nueva actualización por inflación)
-        const TABLA_ISR_2026 = [
-            { limiteInf: 0.01, limiteSup: 10135.11, cuotaFija: 0, tasa: 1.92 },
-            { limiteInf: 10135.12, limiteSup: 86015.21, cuotaFija: 194.59, tasa: 6.40 },
-            { limiteInf: 86015.22, limiteSup: 151171.32, cuotaFija: 5050.95, tasa: 10.88 },
-            { limiteInf: 151171.33, limiteSup: 175729.53, cuotaFija: 12138.78, tasa: 16.00 },
-            { limiteInf: 175729.54, limiteSup: 210394.93, cuotaFija: 16068.10, tasa: 17.92 },
-            { limiteInf: 210394.94, limiteSup: 424319.74, cuotaFija: 22280.25, tasa: 21.36 },
-            { limiteInf: 424319.75, limiteSup: 668859.54, cuotaFija: 67949.21, tasa: 23.52 },
-            { limiteInf: 668859.55, limiteSup: 1276729.11, cuotaFija: 125458.11, tasa: 30.00 },
-            { limiteInf: 1276729.12, limiteSup: 1702305.47, cuotaFija: 307819.18, tasa: 32.00 },
-            { limiteInf: 1702305.48, limiteSup: 5106916.42, cuotaFija: 443998.60, tasa: 34.00 },
-            { limiteInf: 5106916.43, limiteSup: Infinity, cuotaFija: 1601546.35, tasa: 35.00 }
-        ];
-        
-        // Función para obtener tabla ISR según año de enajenación
-        function getTablaISR(fechaVenta) {
-            const year = new Date(fechaVenta).getFullYear();
-            if (year <= 2022) return TABLA_ISR_2020;
-            if (year <= 2025) return TABLA_ISR_2023;
-            return TABLA_ISR_2026;
-        }
         
         // Valor UDI (actualizar periodicamente)
         const VALOR_UDI = 8.465213; // Diciembre 2024
         const EXENCION_UDIS = 700000; // 700,000 UDIs
-
-        // TABLA UDIS HISTORICOS (valor aproximado dia 10-15 de cada mes)
-        // Fuente: Banxico via IDC Online
-        const UDIS = {
-            // 2015
-            '2015-01': 5.270368, '2015-02': 5.278052, '2015-03': 5.295461, '2015-04': 5.317426,
-            '2015-05': 5.294884, '2015-06': 5.296445, '2015-07': 5.306463, '2015-08': 5.320616,
-            '2015-09': 5.339710, '2015-10': 5.362855, '2015-11': 5.393159, '2015-12': 5.416833,
-            // 2016
-            '2016-01': 5.451567, '2016-02': 5.480134, '2016-03': 5.500521, '2016-04': 5.510616,
-            '2016-05': 5.497563, '2016-06': 5.502451, '2016-07': 5.517812, '2016-08': 5.537219,
-            '2016-09': 5.563102, '2016-10': 5.593751, '2016-11': 5.635782, '2016-12': 5.672159,
-            // 2017
-            '2017-01': 5.729851, '2017-02': 5.787125, '2017-03': 5.824183, '2017-04': 5.853256,
-            '2017-05': 5.855221, '2017-06': 5.862017, '2017-07': 5.878462, '2017-08': 5.903654,
-            '2017-09': 5.932183, '2017-10': 5.954628, '2017-11': 5.999527, '2017-12': 6.044891,
-            // 2018
-            '2018-01': 6.076232, '2018-02': 6.104218, '2018-03': 6.126819, '2018-04': 6.137682,
-            '2018-05': 6.118534, '2018-06': 6.126455, '2018-07': 6.154172, '2018-08': 6.183962,
-            '2018-09': 6.216127, '2018-10': 6.243517, '2018-11': 6.290254, '2018-12': 6.325516,
-            // 2019
-            '2019-01': 6.348728, '2019-02': 6.357284, '2019-03': 6.371425, '2019-04': 6.386125,
-            '2019-05': 6.373218, '2019-06': 6.371852, '2019-07': 6.384621, '2019-08': 6.402516,
-            '2019-09': 6.418253, '2019-10': 6.435127, '2019-11': 6.472519, '2019-12': 6.505821,
-            // 2020
-            '2020-01': 6.413049, '2020-02': 6.450946, '2020-03': 6.465984, '2020-04': 6.503457,
-            '2020-05': 6.406500, '2020-06': 6.437546, '2020-07': 6.457434, '2020-08': 6.510552,
-            '2020-09': 6.535170, '2020-10': 6.556696, '2020-11': 6.590288, '2020-12': 6.603870,
-            // 2021
-            '2021-01': 6.636254, '2021-02': 6.689125, '2021-03': 6.736419, '2021-04': 6.775218,
-            '2021-05': 6.784125, '2021-06': 6.796327, '2021-07': 6.831254, '2021-08': 6.866128,
-            '2021-09': 6.891527, '2021-10': 6.934218, '2021-11': 6.992514, '2021-12': 7.049817,
-            // 2022
-            '2022-01': 7.093821, '2022-02': 7.163605, '2022-03': 7.237251, '2022-04': 7.298254,
-            '2022-05': 7.328127, '2022-06': 7.378521, '2022-07': 7.453218, '2022-08': 7.521634,
-            '2022-09': 7.572519, '2022-10': 7.621435, '2022-11': 7.672518, '2022-12': 7.714625,
-            // 2023
-            '2023-01': 7.768521, '2023-02': 7.819254, '2023-03': 7.858127, '2023-04': 7.881254,
-            '2023-05': 7.884218, '2023-06': 7.885127, '2023-07': 7.909621, '2023-08': 7.943521,
-            '2023-09': 7.979254, '2023-10': 8.014127, '2023-11': 8.051824, '2023-12': 8.085127,
-            // 2024
-            '2024-01': 8.122144, '2024-02': 8.156821, '2024-03': 8.187254, '2024-04': 8.209521,
-            '2024-05': 8.209854, '2024-06': 8.214127, '2024-07': 8.247521, '2024-08': 8.283254,
-            '2024-09': 8.318127, '2024-10': 8.352854, '2024-11': 8.398521, '2024-12': 8.465213,
-            // 2025
-            '2025-01': 8.512854, '2025-02': 8.548127, '2025-03': 8.582521, '2025-04': 8.612854,
-            '2025-05': 8.615127, '2025-06': 8.618521, '2025-07': 8.648254, '2025-08': 8.682127,
-            '2025-09': 8.715521, '2025-10': 8.748254, '2025-11': 8.784127, '2025-12': 8.820521
-        };
-        
-        // Obtener UDI por fecha (usa mes de la fecha)
-        function getUDI(fecha) {
-            const d = new Date(fecha);
-            const year = d.getFullYear();
-            const month = d.getMonth() + 1;
-            const key = `${year}-${String(month).padStart(2, '0')}`;
-            return UDIS[key] || VALOR_UDI; // Fallback a valor actual
-        }
-
         
         let tipoInmueble = 'mixto';
         
@@ -662,50 +564,6 @@
             return null;
         }
         
-        // Cache para UDI consultados
-        const udiCache = {};
-        
-        // Fetch UDI de API Banxico
-        async function fetchUDI(year, month) {
-            try {
-                const response = await fetch('/api/udi?year=' + year + '&month=' + month);
-                if (!response.ok) return null;
-                const data = await response.json();
-                if (data.success && data.valor) {
-                    console.log('UDI API:', year, month, '=', data.valor);
-                    return data.valor;
-                }
-            } catch (e) {
-                console.log('Error UDI API:', e);
-            }
-            return null;
-        }
-        
-        // Obtener UDI con API primero, fallback a tabla local
-        async function getUDIAsync(fecha) {
-            const d = new Date(fecha);
-            const year = d.getFullYear();
-            const month = d.getMonth() + 1;
-            const key = year + '-' + String(month).padStart(2, '0');
-            
-            // Revisar cache
-            if (udiCache[key]) {
-                return udiCache[key];
-            }
-            
-            // Intentar API primero
-            const apiValue = await fetchUDI(year, month);
-            if (apiValue) {
-                udiCache[key] = apiValue;
-                return apiValue;
-            }
-            
-            // Fallback a tabla local o valor por defecto
-            const fallback = UDIS[key] || VALOR_UDI;
-            udiCache[key] = fallback;
-            return fallback;
-        }
-        
         // Cache para INPC consultados
         const inpcCache = {};
         
@@ -741,10 +599,10 @@
             return INPC[key] || INPC['2024-12'];
         }
         
-        function calcularISRTablas(utilidadAnual, fechaVentaParam) {
+        function calcularISRTablas(utilidadAnual) {
             if (utilidadAnual <= 0) return 0;
-            const tablaISR = getTablaISR(fechaVentaParam || fechaVenta);
-            for (const rango of tablaISR) {
+            
+            for (const rango of TABLAS_ISR) {
                 if (utilidadAnual >= rango.limiteInf && utilidadAnual <= rango.limiteSup) {
                     const excedente = utilidadAnual - rango.limiteInf;
                     return rango.cuotaFija + (excedente * rango.tasa / 100);
@@ -815,8 +673,7 @@
             
             if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
                 // Exencion = 700k UDIs × numero de enajenantes que exentan
-                const udiVenta = await getUDIAsync(fechaVenta);
-                exencionTotal = EXENCION_UDIS * udiVenta * numExentan;
+                exencionTotal = EXENCION_UDIS * VALOR_UDI * numExentan;
                 
                 if (precioVenta > exencionTotal) {
                     // Porcentaje gravable = excedente / precio total
@@ -852,7 +709,7 @@
                     isr35 = utilidadGravable * 0.35; // 35% sobre ganancia CON deducciones
                     
                     const utilidadAnual = utilidadGravable / anios;
-                    const isrAnual = calcularISRTablas(utilidadAnual, fechaVenta);
+                    const isrAnual = calcularISRTablas(utilidadAnual);
                     isrTablas = isrAnual * anios;
                     
                     // Elegir la menor de las TRES opciones
@@ -871,7 +728,7 @@
                 } else {
                     // Residente: cálculo normal
                     const utilidadAnual = utilidadGravable / anios;
-                    const isrAnual = calcularISRTablas(utilidadAnual, fechaVenta);
+                    const isrAnual = calcularISRTablas(utilidadAnual);
                     isrTotal = isrAnual * anios;
                     
                     // Distribución: Estado (máx 5%) + Federación
@@ -926,7 +783,7 @@
                 document.getElementById('seccionExtranjero').classList.add('hidden');
                 document.getElementById('seccionResidente').classList.remove('hidden');
                 document.getElementById('resUtilidadAnual').textContent = formatMoney(utilidadGravable / anios);
-                document.getElementById('resIsrAnual').textContent = formatMoney(calcularISRTablas(utilidadGravable / anios, fechaVenta));
+                document.getElementById('resIsrAnual').textContent = formatMoney(calcularISRTablas(utilidadGravable / anios));
                 document.getElementById('resIsrTotal').textContent = formatMoney(isrTotal);
             }
             

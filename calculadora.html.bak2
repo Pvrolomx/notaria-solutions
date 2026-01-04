@@ -500,24 +500,8 @@
             '2025-09': 141.8500, '2025-10': 142.2100, '2025-11': 142.6450, '2025-12': 143.1000
         };
         
-                // TABLAS ISR POR AÑO (Art. 152 LISR - Anexo 8 RMF)
-        // Tabla 2019-2022 (sin ajuste por inflación <10%)
-        const TABLA_ISR_2020 = [
-            { limiteInf: 0.01, limiteSup: 6942.20, cuotaFija: 0.00, tasa: 1.92 },
-            { limiteInf: 6942.21, limiteSup: 58922.16, cuotaFija: 133.28, tasa: 6.40 },
-            { limiteInf: 58922.17, limiteSup: 103550.44, cuotaFija: 3460.01, tasa: 10.88 },
-            { limiteInf: 103550.45, limiteSup: 120372.83, cuotaFija: 8315.57, tasa: 16.00 },
-            { limiteInf: 120372.84, limiteSup: 144119.23, cuotaFija: 11007.14, tasa: 17.92 },
-            { limiteInf: 144119.24, limiteSup: 290667.75, cuotaFija: 15262.49, tasa: 21.36 },
-            { limiteInf: 290667.76, limiteSup: 458132.29, cuotaFija: 46565.26, tasa: 23.52 },
-            { limiteInf: 458132.30, limiteSup: 874650.00, cuotaFija: 85952.92, tasa: 30.00 },
-            { limiteInf: 874650.01, limiteSup: 1166200.00, cuotaFija: 210908.23, tasa: 32.00 },
-            { limiteInf: 1166200.01, limiteSup: 3498600.00, cuotaFija: 304204.21, tasa: 34.00 },
-            { limiteInf: 3498600.01, limiteSup: Infinity, cuotaFija: 1097220.21, tasa: 35.00 }
-        ];
-        
-        // Tabla 2023-2025 (ajustada por inflación >10% en 2022)
-        const TABLA_ISR_2023 = [
+        // TABLAS ISR 2025 (Art. 152 LISR) - Anual
+        const TABLAS_ISR = [
             { limiteInf: 0.01, limiteSup: 8952.49, cuotaFija: 0, tasa: 1.92 },
             { limiteInf: 8952.50, limiteSup: 75984.55, cuotaFija: 171.88, tasa: 6.40 },
             { limiteInf: 75984.56, limiteSup: 133536.07, cuotaFija: 4461.94, tasa: 10.88 },
@@ -530,29 +514,6 @@
             { limiteInf: 1503902.47, limiteSup: 4511707.37, cuotaFija: 392294.17, tasa: 34.00 },
             { limiteInf: 4511707.38, limiteSup: Infinity, cuotaFija: 1414947.85, tasa: 35.00 }
         ];
-
-        // Tabla 2026+ (nueva actualización por inflación)
-        const TABLA_ISR_2026 = [
-            { limiteInf: 0.01, limiteSup: 10135.11, cuotaFija: 0, tasa: 1.92 },
-            { limiteInf: 10135.12, limiteSup: 86015.21, cuotaFija: 194.59, tasa: 6.40 },
-            { limiteInf: 86015.22, limiteSup: 151171.32, cuotaFija: 5050.95, tasa: 10.88 },
-            { limiteInf: 151171.33, limiteSup: 175729.53, cuotaFija: 12138.78, tasa: 16.00 },
-            { limiteInf: 175729.54, limiteSup: 210394.93, cuotaFija: 16068.10, tasa: 17.92 },
-            { limiteInf: 210394.94, limiteSup: 424319.74, cuotaFija: 22280.25, tasa: 21.36 },
-            { limiteInf: 424319.75, limiteSup: 668859.54, cuotaFija: 67949.21, tasa: 23.52 },
-            { limiteInf: 668859.55, limiteSup: 1276729.11, cuotaFija: 125458.11, tasa: 30.00 },
-            { limiteInf: 1276729.12, limiteSup: 1702305.47, cuotaFija: 307819.18, tasa: 32.00 },
-            { limiteInf: 1702305.48, limiteSup: 5106916.42, cuotaFija: 443998.60, tasa: 34.00 },
-            { limiteInf: 5106916.43, limiteSup: Infinity, cuotaFija: 1601546.35, tasa: 35.00 }
-        ];
-        
-        // Función para obtener tabla ISR según año de enajenación
-        function getTablaISR(fechaVenta) {
-            const year = new Date(fechaVenta).getFullYear();
-            if (year <= 2022) return TABLA_ISR_2020;
-            if (year <= 2025) return TABLA_ISR_2023;
-            return TABLA_ISR_2026;
-        }
         
         // Valor UDI (actualizar periodicamente)
         const VALOR_UDI = 8.465213; // Diciembre 2024
@@ -741,10 +702,10 @@
             return INPC[key] || INPC['2024-12'];
         }
         
-        function calcularISRTablas(utilidadAnual, fechaVentaParam) {
+        function calcularISRTablas(utilidadAnual) {
             if (utilidadAnual <= 0) return 0;
-            const tablaISR = getTablaISR(fechaVentaParam || fechaVenta);
-            for (const rango of tablaISR) {
+            
+            for (const rango of TABLAS_ISR) {
                 if (utilidadAnual >= rango.limiteInf && utilidadAnual <= rango.limiteSup) {
                     const excedente = utilidadAnual - rango.limiteInf;
                     return rango.cuotaFija + (excedente * rango.tasa / 100);
@@ -852,7 +813,7 @@
                     isr35 = utilidadGravable * 0.35; // 35% sobre ganancia CON deducciones
                     
                     const utilidadAnual = utilidadGravable / anios;
-                    const isrAnual = calcularISRTablas(utilidadAnual, fechaVenta);
+                    const isrAnual = calcularISRTablas(utilidadAnual);
                     isrTablas = isrAnual * anios;
                     
                     // Elegir la menor de las TRES opciones
@@ -871,7 +832,7 @@
                 } else {
                     // Residente: cálculo normal
                     const utilidadAnual = utilidadGravable / anios;
-                    const isrAnual = calcularISRTablas(utilidadAnual, fechaVenta);
+                    const isrAnual = calcularISRTablas(utilidadAnual);
                     isrTotal = isrAnual * anios;
                     
                     // Distribución: Estado (máx 5%) + Federación
@@ -926,7 +887,7 @@
                 document.getElementById('seccionExtranjero').classList.add('hidden');
                 document.getElementById('seccionResidente').classList.remove('hidden');
                 document.getElementById('resUtilidadAnual').textContent = formatMoney(utilidadGravable / anios);
-                document.getElementById('resIsrAnual').textContent = formatMoney(calcularISRTablas(utilidadGravable / anios, fechaVenta));
+                document.getElementById('resIsrAnual').textContent = formatMoney(calcularISRTablas(utilidadGravable / anios));
                 document.getElementById('resIsrTotal').textContent = formatMoney(isrTotal);
             }
             
