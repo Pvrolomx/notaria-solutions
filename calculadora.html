@@ -845,8 +845,15 @@
             let isrTablas = 0;
             let mejorOpcion = '';
             
-            if (!hayPerdida) {
-                if (esExtranjero) {
+            if (esExtranjero) {
+                if (hayPerdida) {
+                    // PÉRDIDA FISCAL = 25% OBLIGATORIO (Art.160 LISR)
+                    // Extranjero con pérdida NO puede elegir, debe pagar 25% sobre venta bruta
+                    isrTotal = precioVenta * 0.25;
+                    isrFederacion = isrTotal;
+                    isrEstado = 0;
+                    mejorOpcion = '25% s/Ingreso (pérdida fiscal)';
+                } else {
                     // Extranjero: calcular TRES opciones (Art.160 LISR)
                     const isr25 = precioVenta * 0.25; // 25% sobre ingreso SIN deducciones
                     isr35 = utilidadGravable * 0.35; // 35% sobre ganancia CON deducciones
@@ -868,16 +875,16 @@
                     // Extranjero: todo a federación
                     isrFederacion = isrTotal;
                     isrEstado = 0;
-                } else {
-                    // Residente: cálculo normal
-                    const utilidadAnual = utilidadGravable / anios;
-                    const isrAnual = calcularISRTablas(utilidadAnual, fechaVenta);
-                    isrTotal = isrAnual * anios;
-                    
-                    // Distribución: Estado (máx 5%) + Federación
-                    isrEstado = Math.min(utilidadGravable * 0.05, isrTotal);
-                    isrFederacion = isrTotal - isrEstado;
                 }
+            } else if (!hayPerdida) {
+                // Residente: cálculo normal
+                const utilidadAnual = utilidadGravable / anios;
+                const isrAnual = calcularISRTablas(utilidadAnual, fechaVenta);
+                isrTotal = isrAnual * anios;
+                
+                // Distribución: Estado (máx 5%) + Federación
+                isrEstado = Math.min(utilidadGravable * 0.05, isrTotal);
+                isrFederacion = isrTotal - isrEstado;
             }
             
             // IVA local comercial
