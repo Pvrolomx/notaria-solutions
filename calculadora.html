@@ -623,6 +623,50 @@
             return null;
         }
         
+        // Cache para UDI consultados
+        const udiCache = {};
+        
+        // Fetch UDI de API Banxico
+        async function fetchUDI(year, month) {
+            try {
+                const response = await fetch('/api/udi?year=' + year + '&month=' + month);
+                if (!response.ok) return null;
+                const data = await response.json();
+                if (data.success && data.valor) {
+                    console.log('UDI API:', year, month, '=', data.valor);
+                    return data.valor;
+                }
+            } catch (e) {
+                console.log('Error UDI API:', e);
+            }
+            return null;
+        }
+        
+        // Obtener UDI con API primero, fallback a tabla local
+        async function getUDIAsync(fecha) {
+            const d = new Date(fecha);
+            const year = d.getFullYear();
+            const month = d.getMonth() + 1;
+            const key = year + '-' + String(month).padStart(2, '0');
+            
+            // Revisar cache
+            if (udiCache[key]) {
+                return udiCache[key];
+            }
+            
+            // Intentar API primero
+            const apiValue = await fetchUDI(year, month);
+            if (apiValue) {
+                udiCache[key] = apiValue;
+                return apiValue;
+            }
+            
+            // Fallback a tabla local o valor por defecto
+            const fallback = UDIS[key] || VALOR_UDI;
+            udiCache[key] = fallback;
+            return fallback;
+        }
+        
         // Cache para INPC consultados
         const inpcCache = {};
         
@@ -732,7 +776,7 @@
             
             if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
                 // Exencion = 700k UDIs × numero de enajenantes que exentan
-                const udiVenta = getUDI(fechaVenta);
+                const udiVenta = await getUDIAsync(fechaVenta);
                 exencionTotal = EXENCION_UDIS * udiVenta * numExentan;
                 
                 if (precioVenta > exencionTotal) {
