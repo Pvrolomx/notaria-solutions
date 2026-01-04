@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NADA QUE VER</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        
+        #universe {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+        }
+        
+        .nothing-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 8vw, 6rem);
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #ff006e, #8338ec, #3a86ff, #06d6a0, #ffbe0b);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 5s ease infinite, glitch 3s ease-in-out infinite;
+            text-shadow: 0 0 80px rgba(255,0,110,0.5);
+        }
+        
+        @keyframes gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-5px, 2px); }
+            94% { transform: translate(5px, -2px); }
+            96% { transform: translate(-3px, -1px); }
+            98% { transform: translate(3px, 1px); }
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            letter-spacing: 0.3em;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .wisdom-box {
+            max-width: 600px;
+            padding: 2rem;
+            border: 1px solid #333;
+            border-radius: 20px;
+            background: rgba(20,20,20,0.8);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            transition: all 0.5s ease;
+        }
+        
+        .wisdom-box:hover {
+            border-color: #ff006e;
+            box-shadow: 0 0 50px rgba(255,0,110,0.2);
+            transform: scale(1.02);
+        }
+        
+        #wisdom {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #aaa;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-nothing {
+            margin-top: 2rem;
+            padding: 1rem 3rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            background: transparent;
+            border: 2px solid #ff006e;
+            color: #ff006e;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-nothing:hover {
+            background: #ff006e;
+            color: #000;
+            box-shadow: 0 0 30px rgba(255,0,110,0.5);
+        }
+        
+        .btn-nothing::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 0; height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-nothing:active::before {
+            width: 300px; height: 300px;
+        }
+        
+        .counter {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.8rem;
+            color: #444;
+        }
+        
+        .counter span { color: #ff006e; font-weight: bold; }
+        
+        .floating-thing {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2rem;
+            opacity: 0;
+            animation: floatUp 3s ease-out forwards;
+            z-index: 100;
+        }
+        
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translateY(-200px) rotate(360deg) scale(0); }
+        }
+        
+        .secret-portal {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #8338ec 0%, transparent 70%);
+            opacity: 0.3;
+            cursor: help;
+            transition: all 0.5s ease;
+        }
+        
+        .secret-portal:hover {
+            opacity: 1;
+            transform: scale(1.5);
+            box-shadow: 0 0 50px #8338ec;
+        }
+        
+        .void-mode {
+            background: #000 !important;
+        }
+        
+        .void-mode h1 {
+            -webkit-text-fill-color: #000;
+            text-shadow: none;
+        }
+        
+        .void-mode .wisdom-box {
+            border-color: #000;
+            background: transparent;
+        }
+        
+        .void-mode #wisdom {
+            color: #111;
+        }
+        
+        .enlightened h1 {
+            animation: rainbow 1s linear infinite;
+        }
+        
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+        
+        /* Particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: #ff006e;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle 1s ease-out forwards;
+        }
+        
+        @keyframes particle {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+        
+        /* Easter egg styles */
+        .matrix-mode {
+            background: #000 !important;
+        }
+        
+        .matrix-mode::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,255,0,0.03) 0px,
+                rgba(0,255,0,0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .matrix-mode h1 {
+            background: #0f0 !important;
+            -webkit-background-clip: text !important;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="universe"></canvas>
+    
+    <div class="secret-portal" onclick="enterVoid()" title="???"></div>
+    
+    <div class="nothing-container">
+        <h1>NADA</h1>
+        <p class="subtitle">que ver aquí • sigue tu camino • o no</p>
+        
+        <div class="wisdom-box">
+            <div id="wisdom">Haz clic en el botón para recibir sabiduría inútil</div>
+        </div>
+        
+        <button class="btn-nothing" onclick="seekWisdom()">
+            BUSCAR LA NADA
+        </button>
+    </div>
+    
+    <div class="counter">
+        Has buscado la nada <span id="count">0</span> veces
+    </div>
+
+    <script>
+        // Frases filosóficas absurdas
+        const wisdoms = [
+            "Si un árbol cae en el bosque y nadie lo escucha, ¿importa si era de IKEA?",
+            "La vida es como una caja de chocolates... cara y llena de rellenos raros.",
+            "El que ríe último, probablemente no entendió el chiste.",
+            "¿Por qué lo llaman amor cuando quieren decir 'necesito ayuda con la mudanza'?",
+            "La perfección no existe, excepto en los tacos al pastor.",
+            "Si la vida te da limones, probablemente alguien te está aventando cosas.",
+            "El tiempo es oro, pero el WiFi gratis no tiene precio.",
+            "Piensa diferente. O igual. Da lo mismo.",
+            "La nada absoluta es imposible. Siempre hay algo que nos debe dinero.",
+            "El universo es infinito. Tu paciencia no.",
+            "Si al principio no tienes éxito, redefine éxito.",
+            "La verdad está ahí afuera. Junto con la basura que no has sacado.",
+            "Sé el cambio que quieres ver en el mundo. O quéjate en Twitter. También funciona.",
+            "La vida es corta. Las reuniones de Zoom son eternas.",
+            "El conocimiento es poder. El café también.",
+            "Cuando una puerta se cierra, una ventana se abre. Tienes un problema de ventilación.",
+            "El que busca encuentra. El que no busca, tiene mejor memoria.",
+            "Más vale pájaro en mano que cien volando... a menos que sean palomas, esas dan asco.",
+            "La imaginación es más importante que el conocimiento. Por eso inventamos las excusas.",
+            "No hay mal que por bien no venga. Excepto los lunes.",
+            "El éxito es ir de fracaso en fracaso sin perder el entusiasmo. O sea, ser freelancer.",
+            "Si puedes soñarlo, puedes hacerlo. O puedes seguir soñando, que es gratis.",
+            "La vida comienza donde termina tu zona de confort. También los accidentes.",
+            "Cada día es una nueva oportunidad. De cometer los mismos errores.",
+            "El optimista ve el vaso medio lleno. El pesimista medio vacío. El ingeniero ve que el vaso es el doble de grande de lo necesario.",
+            "Aquí no hay nada que ver. Pero sigues leyendo. Interesante.",
+            "¿Esto es arte? ¿Esto es código? ¿Esto es una crisis existencial?",
+            "Has llegado al final de Internet. Felicidades. Ahora sal.",
+            "Esta frase se autodestruirá en 5 segundos. Mentira.",
+            "Error 404: Sentido no encontrado.",
+            "Cargando iluminación espiritual... 99%... Error de conexión.",
+            "La respuesta a todo es 42. La pregunta sigue siendo un misterio.",
+            "Si estás leyendo esto, ya es demasiado tarde. Para nada en particular.",
+            "Este texto no tiene significado. Igual que tus notificaciones.",
+            "¿Por qué estás aquí? ¿Por qué estamos todos aquí? ¿Ya comiste?"
+        ];
+        
+        const floatingThings = ['🌀', '✨', '💫', '🎭', '🦄', '👁️', '🔮', '🌙', '⚡', '🍓', '🐝', '🎪', '🎨', '∞', '◯', '△', '□', '☯️', '🕳️'];
+        
+        let count = 0;
+        let voidClicks = 0;
+        let secretCombo = '';
+        
+        // Canvas background
+        const canvas = document.getElementById('universe');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        
+        class Star {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speed = Math.random() * 0.5 + 0.1;
+                this.brightness = Math.random();
+            }
+            
+            update() {
+                this.y += this.speed;
+                this.brightness = Math.sin(Date.now() * 0.001 + this.x) * 0.5 + 0.5;
+                if (this.y > canvas.height) this.reset();
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.brightness * 0.5})`;
+                ctx.fill();
+            }
+        }
+        
+        const stars = Array.from({ length: 200 }, () => new Star());
+        
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        animate();
+        
+        // Main functions
+        function seekWisdom() {
+            count++;
+            document.getElementById('count').textContent = count;
+            
+            const wisdom = wisdoms[Math.floor(Math.random() * wisdoms.length)];
+            const wisdomEl = document.getElementById('wisdom');
+            
+            wisdomEl.style.opacity = 0;
+            setTimeout(() => {
+                wisdomEl.textContent = wisdom;
+                wisdomEl.style.opacity = 1;
+            }, 300);
+            
+            // Spawn floating things
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => spawnFloatingThing(), i * 100);
+            }
+            
+            // Easter eggs
+            if (count === 10) {
+                alert('🎉 ¡Logro desbloqueado: Buscador de la Nada Novato!');
+            } else if (count === 42) {
+                alert('🌌 Has encontrado la respuesta al universo. Era esto.');
+                document.body.classList.add('enlightened');
+            } else if (count === 69) {
+                alert('😏 Nice.');
+            } else if (count === 100) {
+                alert('🏆 100 clicks. ¿No tienes nada mejor que hacer? Nosotros tampoco.');
+            }
+        }
+        
+        function spawnFloatingThing() {
+            const thing = document.createElement('div');
+            thing.className = 'floating-thing';
+            thing.textContent = floatingThings[Math.floor(Math.random() * floatingThings.length)];
+            thing.style.left = Math.random() * window.innerWidth + 'px';
+            thing.style.top = Math.random() * window.innerHeight * 0.7 + window.innerHeight * 0.3 + 'px';
+            document.body.appendChild(thing);
+            
+            setTimeout(() => thing.remove(), 3000);
+        }
+        
+        function enterVoid() {
+            voidClicks++;
+            
+            if (voidClicks === 3) {
+                document.body.classList.toggle('void-mode');
+                setTimeout(() => document.body.classList.remove('void-mode'), 3000);
+            } else if (voidClicks === 7) {
+                document.body.classList.add('matrix-mode');
+                alert('🟢 Bienvenido a la Matrix. O algo así.');
+                setTimeout(() => document.body.classList.remove('matrix-mode'), 5000);
+                voidClicks = 0;
+            }
+        }
+        
+        // Mouse trail particles
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.9) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = e.clientX + 'px';
+                particle.style.top = e.clientY + 'px';
+                particle.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        });
+        
+        // Konami code easter egg
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    document.body.style.transform = 'rotate(180deg)';
+                    document.body.style.transition = 'transform 1s';
+                    alert('↑↑↓↓←→←→BA 🎮 ¡Código secreto activado! Todo al revés.');
+                    setTimeout(() => {
+                        document.body.style.transform = 'rotate(0deg)';
+                    }, 5000);
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+            
+            // Secret word: "nada"
+            secretCombo += e.key.toLowerCase();
+            if (secretCombo.includes('nada')) {
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => spawnFloatingThing(), i * 50);
+                }
+                secretCombo = '';
+            }
+            if (secretCombo.length > 10) secretCombo = secretCombo.slice(-10);
+        });
+        
+        // Click anywhere to spawn
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'BUTTON') {
+                const thing = document.createElement('div');
+                thing.className = 'floating-thing';
+                thing.textContent = floatingThings[Math.floor(Math.random() * floatingThings.length)];
+                thing.style.left = e.clientX + 'px';
+                thing.style.top = e.clientY + 'px';
+                document.body.appendChild(thing);
+                setTimeout(() => thing.remove(), 3000);
+            }
+        });
+        
+        // Console message
+        console.log('%c🍓 NADA QUE VER', 'font-size: 30px; font-weight: bold; color: #ff006e;');
+        console.log('%cPero si estás aquí, claramente buscas algo...', 'font-size: 14px; color: #888;');
+        console.log('%cPrueba el código Konami: ↑↑↓↓←→←→BA', 'font-size: 12px; color: #666;');
+        console.log('%cO escribe "nada" en cualquier momento...', 'font-size: 12px; color: #666;');
+    </script>
+</body>
+</html>
