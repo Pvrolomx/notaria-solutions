@@ -1652,6 +1652,140 @@
                 '<div class="calc-result-row"><span>IVA</span><span>' + fmt(iva) + '</span></div>' +
                 '<div class="calc-result-row total"><span>TOTAL</span><span>' + fmt(valor + iva) + '</span></div>';
         }
+
+        // === CLIENTES localStorage ===
+        var clienteActualId = null;
+        
+        function getClientes() {
+            var data = localStorage.getItem('notaria_clientes');
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function saveClientes(clientes) {
+            localStorage.setItem('notaria_clientes', JSON.stringify(clientes));
+        }
+        
+        function renderClientes() {
+            var clientes = getClientes();
+            var container = document.getElementById('listaClientes');
+            var total = document.getElementById('totalClientes');
+            
+            if (total) total.textContent = clientes.length;
+            
+            if (!container) return;
+            
+            if (clientes.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--text-light);">No hay clientes. Agrega uno nuevo.</p>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = 0; i < clientes.length; i++) {
+                var c = clientes[i];
+                html += '<div class="list-item" onclick="verCliente(' + i + ')" style="cursor:pointer;">' +
+                    '<div class="list-item-avatar">👤</div>' +
+                    '<div class="list-item-info">' +
+                    '<h4>' + c.nombre + '</h4>' +
+                    '<p>' + (c.rfc || 'Sin RFC') + ' • ' + c.tel1 + '</p>' +
+                    '</div></div>';
+            }
+            container.innerHTML = html;
+        }
+        
+        function showNuevoCliente() {
+            clienteActualId = null;
+            document.getElementById('clienteNombre').value = '';
+            document.getElementById('clienteTel1').value = '';
+            document.getElementById('clienteTel2').value = '';
+            document.getElementById('clienteEmail').value = '';
+            document.getElementById('clienteRFC').value = '';
+            document.getElementById('clienteNotas').value = '';
+            showPanel('nuevo-cliente');
+        }
+        
+        function guardarCliente() {
+            var nombre = document.getElementById('clienteNombre').value.trim();
+            var tel1 = document.getElementById('clienteTel1').value.trim();
+            
+            if (!nombre || !tel1) {
+                alert('Nombre y Teléfono 1 son obligatorios');
+                return;
+            }
+            
+            var cliente = {
+                nombre: nombre,
+                tel1: tel1,
+                tel2: document.getElementById('clienteTel2').value.trim(),
+                email: document.getElementById('clienteEmail').value.trim(),
+                rfc: document.getElementById('clienteRFC').value.trim().toUpperCase(),
+                notas: document.getElementById('clienteNotas').value.trim(),
+                fecha: new Date().toISOString()
+            };
+            
+            var clientes = getClientes();
+            
+            if (clienteActualId !== null) {
+                clientes[clienteActualId] = cliente;
+            } else {
+                clientes.push(cliente);
+            }
+            
+            saveClientes(clientes);
+            renderClientes();
+            showPanel('clientes');
+        }
+        
+        function verCliente(idx) {
+            var clientes = getClientes();
+            var c = clientes[idx];
+            if (!c) return;
+            
+            clienteActualId = idx;
+            
+            var html = '<h3>' + c.nombre + '</h3>' +
+                '<div style="margin-top:1rem;">' +
+                '<p><strong>Teléfono 1:</strong> <a href="tel:' + c.tel1 + '">' + c.tel1 + '</a></p>' +
+                (c.tel2 ? '<p><strong>Teléfono 2:</strong> <a href="tel:' + c.tel2 + '">' + c.tel2 + '</a></p>' : '') +
+                (c.email ? '<p><strong>Email:</strong> <a href="mailto:' + c.email + '">' + c.email + '</a></p>' : '') +
+                (c.rfc ? '<p><strong>RFC:</strong> ' + c.rfc + '</p>' : '') +
+                (c.notas ? '<p style="margin-top:1rem;"><strong>Notas:</strong><br>' + c.notas + '</p>' : '') +
+                '</div>' +
+                '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;">' +
+                '<a href="https://wa.me/52' + c.tel1.replace(/\D/g,'') + '" class="btn btn-primary" style="flex:1;text-decoration:none;">WhatsApp</a>' +
+                '<button class="btn btn-outline" style="color:var(--danger);" onclick="eliminarCliente(' + idx + ')">Eliminar</button>' +
+                '</div>';
+            
+            document.getElementById('detalleCliente').innerHTML = html;
+            showPanel('ver-cliente');
+        }
+        
+        function editarClienteActual() {
+            if (clienteActualId === null) return;
+            var clientes = getClientes();
+            var c = clientes[clienteActualId];
+            
+            document.getElementById('clienteNombre').value = c.nombre || '';
+            document.getElementById('clienteTel1').value = c.tel1 || '';
+            document.getElementById('clienteTel2').value = c.tel2 || '';
+            document.getElementById('clienteEmail').value = c.email || '';
+            document.getElementById('clienteRFC').value = c.rfc || '';
+            document.getElementById('clienteNotas').value = c.notas || '';
+            showPanel('nuevo-cliente');
+        }
+        
+        function eliminarCliente(idx) {
+            if (!confirm('¿Eliminar este cliente?')) return;
+            var clientes = getClientes();
+            clientes.splice(idx, 1);
+            saveClientes(clientes);
+            renderClientes();
+            showPanel('clientes');
+        }
+        
+        // Render on load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderClientes();
+        });
     </script>
 </body>
 </html>
