@@ -125,17 +125,15 @@
             transform: scale(0.98);
         }
         .menu-btn-icon {
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            height: 120px;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
         }
-        .menu-btn-icon.clientes { background: linear-gradient(135deg, #1E3A5F 0%, #2D5A8B 100%); }
-        .menu-btn-icon.expedientes { background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%); }
-        .menu-btn-icon.agenda { background: linear-gradient(135deg, #059669 0%, #34D399 100%); }
-        .menu-btn-icon.calculadoras { background: linear-gradient(135deg, #D97706 0%, #FBBF24 100%); }
+        .menu-btn-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         .menu-btn-content {
             padding: 1rem;
         }
@@ -797,28 +795,28 @@
         <div id="panel-home" class="panel active">
             <div class="main-menu">
                 <button class="menu-btn" onclick="showPanel('clientes')">
-                    <div class="menu-btn-icon clientes">👥</div>
+                    <div class="menu-btn-icon"><img src="/icon-clientes.jpeg" alt="Clientes"></div>
                     <div class="menu-btn-content">
                         <h3>Clientes</h3>
                         <p>156 registrados</p>
                     </div>
                 </button>
                 <button class="menu-btn" onclick="showPanel('expedientes')">
-                    <div class="menu-btn-icon expedientes">📁</div>
+                    <div class="menu-btn-icon"><img src="/icon-expedientes.jpeg" alt="Expedientes"></div>
                     <div class="menu-btn-content">
                         <h3>Expedientes <span class="menu-btn-badge">24</span></h3>
                         <p>Activos</p>
                     </div>
                 </button>
                 <button class="menu-btn" onclick="showPanel('agenda')">
-                    <div class="menu-btn-icon agenda">📅</div>
+                    <div class="menu-btn-icon"><img src="/icon-agenda.jpeg" alt="Agenda"></div>
                     <div class="menu-btn-content">
                         <h3>Agenda</h3>
                         <p>4 citas hoy</p>
                     </div>
                 </button>
                 <button class="menu-btn" onclick="showPanel('calculadoras')">
-                    <div class="menu-btn-icon calculadoras">🧮</div>
+                    <div class="menu-btn-icon"><img src="/icon-calculadora.png" alt="Calculadoras"></div>
                     <div class="menu-btn-content">
                         <h3>Calculadoras</h3>
                         <p>Honorarios, ISR</p>
