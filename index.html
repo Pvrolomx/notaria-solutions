@@ -1046,13 +1046,6 @@
             
             <!-- Menu de Calculadoras -->
             <div id="calc-menu" class="calc-menu-grid">
-                <div class="calc-menu-btn" onclick="showCalc('isr')">
-                    <div class="calc-menu-icon isr">💰</div>
-                    <div class="calc-menu-text">
-                        <h4>ISR</h4>
-                        <p>Impuesto Sobre la Renta</p>
-                    </div>
-                </div>
                 <div class="calc-menu-btn" onclick="showCalc('istp')">
                     <div class="calc-menu-icon istp">🏠</div>
                     <div class="calc-menu-text">
@@ -1083,98 +1076,7 @@
                 </a>
             </div>
             
-                        <!-- Calculadora ISR -->
-            <div id="calc-isr" class="calc-panel" style="display:none;">
-                <button class="calc-back" onclick="showCalcMenu()">← Volver</button>
-                <div class="calc-card">
-                    <h3>💰 Calculadora ISR por Enajenación</h3>
-                    
-                    <div class="calc-tabs">
-                        <button class="calc-tab active" onclick="setTipoCalculo('normal', this)">Normal</button>
-                        <button class="calc-tab" onclick="setTipoCalculo('excedente', this)">Excedente Terreno</button>
-                    </div>
-                    
-                    <!-- Fechas normales -->
-                    <div id="fechasNormal">
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Fecha Venta</label>
-                            <input type="date" id="isrFechaVenta" value="2024-12-31">
-                        </div>
-                        <div class="calc-field">
-                            <label>Fecha Compra</label>
-                            <input type="date" id="isrFechaCompra" value="2015-06-12">
-                        </div>
-                    </div>
-                    </div>
-                    
-                    <!-- Fechas excedente terreno -->
-                    <div id="fechasExcedente" style="display:none;">
-                    <div class="calc-field">
-                        <label>Fecha Venta</label>
-                        <input type="date" id="isrFechaVentaExc" value="2024-12-31">
-                    </div>
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Fecha Compra Terreno</label>
-                            <input type="date" id="isrFechaCompraTerreno" value="2010-03-15">
-                        </div>
-                        <div class="calc-field">
-                            <label>Fecha Construcción</label>
-                            <input type="date" id="isrFechaConstruccion" value="2015-06-12">
-                        </div>
-                    </div>
-                    </div>
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>Precio Venta $</label>
-                            <input type="number" id="isrPrecioVenta" value="3000000">
-                        </div>
-                        <div class="calc-field">
-                            <label>Precio Compra $</label>
-                            <input type="number" id="isrPrecioCompra" value="950000">
-                        </div>
-                    </div>
-                    <div class="calc-grid">
-                        <div class="calc-field">
-                            <label>% Terreno</label>
-                            <input type="number" id="isrPctTerreno" value="20">
-                        </div>
-                        <div class="calc-field">
-                            <label>% Construcción</label>
-                            <input type="number" id="isrPctConst" value="80">
-                        </div>
-                    </div>
-                    
-                    <!-- ENAJENANTES -->
-                    <div class="enajenantes-section">
-                        <div class="enajenantes-header">
-                            <label>Enajenantes</label>
-                            <button type="button" class="btn-add-enajenante" onclick="agregarEnajenante()">+ Agregar</button>
-                        </div>
-                        <div id="enajenantesContainer">
-                            <div class="enajenante-row" data-index="0">
-                                <input type="text" placeholder="Nombre" class="enajenante-nombre" value="Enajenante 1">
-                                <input type="number" placeholder="%" class="enajenante-pct" value="100" min="0" max="100">
-                                <select class="enajenante-tipo">
-                                    <option value="residente">Residente</option>
-                                    <option value="extranjero">Extranjero</option>
-                                </select>
-                                <label class="enajenante-casa"><input type="checkbox" class="enajenante-casa-check"> Casa Hab.</label>
-                                <button type="button" class="btn-remove-enajenante" onclick="quitarEnajenante(this)" style="display:none;">✕</button>
-                            </div>
-                        </div>
-                        <div class="enajenantes-total">
-                            Total: <span id="totalPorcentaje">100</span>%
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-primary btn-full" onclick="calcularISR()">Calcular ISR</button>
-                    <div id="isrResultado" class="calc-result" style="display:none;"></div>
-                </div>
-            </div>
-            
-            <!-- Calculadora ISTP -->
+                        <!-- Calculadora ISTP -->
             <div id="calc-istp" class="calc-panel" style="display:none;">
                 <button class="calc-back" onclick="showCalcMenu()">← Volver</button>
                 <div class="calc-card">
@@ -1301,7 +1203,6 @@
         // === CALCULADORAS MENU ===
         function showCalc(tipo) {
             document.getElementById('calc-menu').style.display = 'none';
-            document.getElementById('calc-isr').style.display = 'none';
             document.getElementById('calc-istp').style.display = 'none';
             document.getElementById('calc-iva').style.display = 'none';
             var target = document.getElementById('calc-' + tipo);
@@ -1311,7 +1212,6 @@
         }
         
         function showCalcMenu() {
-            document.getElementById('calc-isr').style.display = 'none';
             document.getElementById('calc-istp').style.display = 'none';
             document.getElementById('calc-iva').style.display = 'none';
             document.getElementById('calc-menu').style.display = 'flex';
