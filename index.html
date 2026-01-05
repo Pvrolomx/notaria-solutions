@@ -847,60 +847,60 @@
         </div>
         
         <!-- CLIENTES -->
-        <div id="panel-clientes" class="panel">
+                        <div id="panel-clientes" class="panel">
             <div class="panel-header">
                 <button class="back-btn" onclick="showPanel('home')">←</button>
-                <div>
-                    <h2>Clientes</h2>
-                    <p>Directorio de clientes</p>
-                </div>
+                <button class="btn btn-primary" onclick="showNuevoCliente()" style="margin-left:auto;">+ Nuevo</button>
             </div>
-            
             <div class="stats-row">
                 <div class="stat-card">
-                    <div class="stat-card-value">156</div>
+                    <div class="stat-card-value" id="totalClientes">0</div>
                     <div class="stat-card-label">Total</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-card-value">12</div>
-                    <div class="stat-card-label">Nuevos</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-value">89</div>
-                    <div class="stat-card-label">Activos</div>
-                </div>
             </div>
-            
-            <div class="list-container">
-                <div class="list-header">
-                    <h3>Clientes Recientes</h3>
-                    <button class="btn btn-primary" onclick="alert('Agregar Cliente - Proximamente')">+ Nuevo</button>
-                </div>
-                <div class="list-item" onclick="alert('Ver detalle cliente - Proximamente')" style="cursor:pointer;">
-                    <div class="list-item-avatar">👤</div>
-                    <div class="list-item-info">
-                        <h4>María García López</h4>
-                        <p>GALM850215 • 3 expedientes</p>
-                    </div>
-                    <span class="status-badge progress">Activo</span>
-                </div>
-                <div class="list-item" onclick="alert('Ver detalle cliente - Proximamente')" style="cursor:pointer;">
-                    <div class="list-item-avatar">👤</div>
-                    <div class="list-item-info">
-                        <h4>Carlos Mendoza Ríos</h4>
-                        <p>MERC780930 • 1 expediente</p>
-                    </div>
-                    <span class="status-badge pending">Pendiente</span>
-                </div>
-                <div class="list-item" onclick="alert('Ver detalle cliente - Proximamente')" style="cursor:pointer;">
-                    <div class="list-item-avatar">🏢</div>
-                    <div class="list-item-info">
-                        <h4>Grupo Industrial MX</h4>
-                        <p>GIM201015 • 2 expedientes</p>
-                    </div>
-                    <span class="status-badge urgent">Urgente</span>
-                </div>
+            <div id="listaClientes" class="list-container"></div>
+        </div>
+        
+        <div id="panel-nuevo-cliente" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('clientes')">←</button>
+                <h2 id="tituloFormCliente">Nuevo Cliente</h2>
             </div>
+            <div style="padding:15px;">
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Nombre *</label>
+                    <input type="text" id="clienteNombre" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Teléfono *</label>
+                    <input type="tel" id="clienteTel1" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Teléfono 2</label>
+                    <input type="tel" id="clienteTel2" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Email</label>
+                    <input type="email" id="clienteEmail" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">RFC</label>
+                    <input type="text" id="clienteRFC" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;text-transform:uppercase;" maxlength="13">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Notas</label>
+                    <textarea id="clienteNotas" rows="3" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="guardarCliente()" style="width:100%;padding:15px;font-size:16px;margin-top:10px;">Guardar Cliente</button>
+            </div>
+        </div>
+        
+        <div id="panel-ver-cliente" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('clientes')">←</button>
+                <h2>Detalle Cliente</h2>
+            </div>
+            <div id="detalleCliente" style="padding:15px;"></div>
         </div>
         
         <!-- EXPEDIENTES -->
