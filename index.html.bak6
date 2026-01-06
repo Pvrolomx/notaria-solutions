@@ -861,156 +861,37 @@
         
         <div id="panel-nuevo-cliente" class="panel">
             <div class="panel-header">
-                                <button class="back-btn" onclick="showPanel('clientes')">←</button>
-                <h2 id="tituloFormCliente">Agregar Cliente</h2>
+                <button class="back-btn" onclick="showPanel('clientes')">←</button>
+                <h2 id="tituloFormCliente">Nuevo Cliente</h2>
             </div>
-            <div style="padding:15px;max-height:calc(100vh - 120px);overflow-y:auto;">
-                <div style="margin-bottom:15px;padding:15px;background:#f5f5f5;border-radius:8px;">
-                    <label style="display:block;margin-bottom:8px;font-weight:600;">Subir Documento (OCR)</label>
-                    <input type="file" id="clienteOCR" accept="image/*,.pdf" style="width:100%;">
-                    <small style="color:#666;">PDF o imagen para extraer datos</small>
+            <div style="padding:15px;">
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Nombre *</label>
+                    <input type="text" id="clienteNombre" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                    <div style="grid-column:1/-1;">
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Nombre Completo *</label>
-                        <input type="text" id="clienteNombre" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha Nacimiento</label>
-                        <input type="date" id="clienteFechaNac" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Lugar Nacimiento</label>
-                        <input type="text" id="clienteLugarNac" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Nacionalidad</label>
-                        <select id="clienteNacionalidad" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                            <option value="Mexicana">Mexicana</option>
-                            <option value="Estadounidense">Estadounidense</option>
-                            <option value="Canadiense">Canadiense</option>
-                            <option value="Otra">Otra</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Pasaporte</label>
-                        <input type="text" id="clientePasaporte" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Expedición</label>
-                        <input type="date" id="clientePasaporteExp" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Vencimiento</label>
-                        <input type="date" id="clientePasaporteVenc" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Teléfono *</label>
+                    <input type="tel" id="clienteTel1" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Estado Civil</label>
-                        <select id="clienteEstadoCivil" onchange="toggleRegimen()" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                            <option value="Soltero">Soltero(a)</option>
-                            <option value="Casado">Casado(a)</option>
-                            <option value="Divorciado">Divorciado(a)</option>
-                            <option value="Viudo">Viudo(a)</option>
-                            <option value="Union Libre">Unión Libre</option>
-                        </select>
-                    </div>
-                    <div id="divRegimen" style="display:none;">
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Régimen Matrimonial</label>
-                        <select id="clienteRegimen" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                            <option value="">Seleccionar...</option>
-                            <option value="Sociedad Conyugal">Sociedad Conyugal</option>
-                            <option value="Separacion de Bienes">Separación de Bienes</option>
-                        </select>
-                    </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Teléfono 2</label>
+                    <input type="tel" id="clienteTel2" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                 </div>
-                <div style="margin-top:12px;">
-                    <label style="display:block;margin-bottom:5px;font-weight:600;">Dirección en México</label>
-                    <input type="text" id="clienteDirMx" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Email</label>
+                    <input type="email" id="clienteEmail" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                 </div>
-                <div style="margin-top:12px;">
-                    <label style="display:block;margin-bottom:5px;font-weight:600;">Dirección en Extranjero</label>
-                    <input type="text" id="clienteDirExt" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">RFC</label>
+                    <input type="text" id="clienteRFC" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;text-transform:uppercase;" maxlength="13">
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Ocupación</label>
-                        <select id="clienteOcupacion" onchange="toggleDatosLaborales()" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                            <option value="Empleado">Empleado</option>
-                            <option value="Independiente">Profesionista Independiente</option>
-                            <option value="Empresario">Empresario</option>
-                            <option value="Retirado">Retirado/Jubilado</option>
-                            <option value="Hogar">Hogar</option>
-                            <option value="Estudiante">Estudiante</option>
-                            <option value="Otro">Otro</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="divDatosLaborales" style="margin-top:12px;padding:15px;background:#f9f9f9;border-radius:8px;">
-                    <h4 style="margin:0 0 12px 0;color:#333;">Datos Laborales</h4>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                        <div>
-                            <label style="display:block;margin-bottom:5px;font-weight:600;">Puesto</label>
-                            <input type="text" id="clientePuesto" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                        </div>
-                        <div>
-                            <label style="display:block;margin-bottom:5px;font-weight:600;">Empresa</label>
-                            <input type="text" id="clienteEmpresa" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                        </div>
-                        <div>
-                            <label style="display:block;margin-bottom:5px;font-weight:600;">Tipo de Empresa</label>
-                            <select id="clienteTipoEmpresa" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                                <option value="">Seleccionar...</option>
-                                <option value="Privada">Privada</option>
-                                <option value="Gobierno">Gobierno</option>
-                                <option value="ONG">ONG</option>
-                                <option value="Propia">Propia</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display:block;margin-bottom:5px;font-weight:600;">Teléfono Empresa</label>
-                            <input type="tel" id="clienteTelEmpresa" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                        </div>
-                        <div style="grid-column:1/-1;">
-                            <label style="display:block;margin-bottom:5px;font-weight:600;">Dirección Empresa</label>
-                            <input type="text" id="clienteDirEmpresa" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                        </div>
-                    </div>
-                </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">CURP</label>
-                        <input type="text" id="clienteCURP" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;text-transform:uppercase;" maxlength="18">
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">RFC</label>
-                        <input type="text" id="clienteRFC" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;text-transform:uppercase;" maxlength="13">
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Email</label>
-                        <input type="email" id="clienteEmail" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Teléfono *</label>
-                        <input type="tel" id="clienteTel1" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">SS# / SIN#</label>
-                        <input type="text" id="clienteSSN" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
-                </div>
-                <div style="margin-top:12px;">
+                <div style="margin-bottom:12px;">
                     <label style="display:block;margin-bottom:5px;font-weight:600;">Notas</label>
                     <textarea id="clienteNotas" rows="3" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
                 </div>
-                <div style="display:flex;gap:10px;margin-top:15px;">
-                    <button class="btn btn-primary" onclick="guardarCliente()" style="flex:1;padding:15px;font-size:16px;">Guardar</button>
-                    <button class="btn" onclick="showPanel('clientes')" style="padding:15px;font-size:16px;background:#ccc;">Cancelar</button>
-                </div>
+                <button class="btn btn-primary" onclick="guardarCliente()" style="width:100%;padding:15px;font-size:16px;margin-top:10px;">Guardar Cliente</button>
             </div>
         </div>
-
         
         <div id="panel-ver-cliente" class="panel">
             <div class="panel-header">
@@ -1809,27 +1690,6 @@
             container.innerHTML = html;
         }
         
-
-        function toggleRegimen() {
-            var estadoCivil = document.getElementById('clienteEstadoCivil').value;
-            var divRegimen = document.getElementById('divRegimen');
-            if (estadoCivil === 'Casado' || estadoCivil === 'Union Libre') {
-                divRegimen.style.display = 'block';
-            } else {
-                divRegimen.style.display = 'none';
-            }
-        }
-        
-        function toggleDatosLaborales() {
-            var ocupacion = document.getElementById('clienteOcupacion').value;
-            var divDatos = document.getElementById('divDatosLaborales');
-            if (ocupacion === 'Retirado' || ocupacion === 'Hogar' || ocupacion === 'Estudiante') {
-                divDatos.style.display = 'none';
-            } else {
-                divDatos.style.display = 'block';
-            }
-        }
-
         function showNuevoCliente() {
             clienteActualId = null;
             document.getElementById('clienteNombre').value = '';
@@ -1846,34 +1706,17 @@
             var tel1 = document.getElementById('clienteTel1').value.trim();
             
             if (!nombre || !tel1) {
-                alert('Nombre y Teléfono son obligatorios');
+                alert('Nombre y Teléfono 1 son obligatorios');
                 return;
             }
             
             var cliente = {
                 nombre: nombre,
                 tel1: tel1,
-                fechaNac: document.getElementById('clienteFechaNac') ? document.getElementById('clienteFechaNac').value : '',
-                lugarNac: document.getElementById('clienteLugarNac') ? document.getElementById('clienteLugarNac').value.trim() : '',
-                nacionalidad: document.getElementById('clienteNacionalidad') ? document.getElementById('clienteNacionalidad').value : '',
-                pasaporte: document.getElementById('clientePasaporte') ? document.getElementById('clientePasaporte').value.trim() : '',
-                pasaporteExp: document.getElementById('clientePasaporteExp') ? document.getElementById('clientePasaporteExp').value : '',
-                pasaporteVenc: document.getElementById('clientePasaporteVenc') ? document.getElementById('clientePasaporteVenc').value : '',
-                estadoCivil: document.getElementById('clienteEstadoCivil') ? document.getElementById('clienteEstadoCivil').value : '',
-                regimen: document.getElementById('clienteRegimen') ? document.getElementById('clienteRegimen').value : '',
-                dirMx: document.getElementById('clienteDirMx') ? document.getElementById('clienteDirMx').value.trim() : '',
-                dirExt: document.getElementById('clienteDirExt') ? document.getElementById('clienteDirExt').value.trim() : '',
-                ocupacion: document.getElementById('clienteOcupacion') ? document.getElementById('clienteOcupacion').value : '',
-                puesto: document.getElementById('clientePuesto') ? document.getElementById('clientePuesto').value.trim() : '',
-                empresa: document.getElementById('clienteEmpresa') ? document.getElementById('clienteEmpresa').value.trim() : '',
-                tipoEmpresa: document.getElementById('clienteTipoEmpresa') ? document.getElementById('clienteTipoEmpresa').value : '',
-                telEmpresa: document.getElementById('clienteTelEmpresa') ? document.getElementById('clienteTelEmpresa').value.trim() : '',
-                dirEmpresa: document.getElementById('clienteDirEmpresa') ? document.getElementById('clienteDirEmpresa').value.trim() : '',
-                curp: document.getElementById('clienteCURP') ? document.getElementById('clienteCURP').value.trim().toUpperCase() : '',
-                rfc: document.getElementById('clienteRFC') ? document.getElementById('clienteRFC').value.trim().toUpperCase() : '',
-                email: document.getElementById('clienteEmail') ? document.getElementById('clienteEmail').value.trim() : '',
-                ssn: document.getElementById('clienteSSN') ? document.getElementById('clienteSSN').value.trim() : '',
-                notas: document.getElementById('clienteNotas') ? document.getElementById('clienteNotas').value.trim() : '',
+                tel2: document.getElementById('clienteTel2').value.trim(),
+                email: document.getElementById('clienteEmail').value.trim(),
+                rfc: document.getElementById('clienteRFC').value.trim().toUpperCase(),
+                notas: document.getElementById('clienteNotas').value.trim(),
                 fecha: new Date().toISOString()
             };
             
