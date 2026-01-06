@@ -885,22 +885,33 @@
                     </div>
                     <div>
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Nacionalidad</label>
-                        <select id="clienteNacionalidad" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                        <select id="clienteNacionalidad" onchange="toggleIdentificacion()" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                             <option value="Mexicana">Mexicana</option>
                             <option value="Estadounidense">Estadounidense</option>
                             <option value="Canadiense">Canadiense</option>
                             <option value="Otra">Otra</option>
                         </select>
                     </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Pasaporte</label>
+                    <div id="divTipoID">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Tipo de Identificación</label>
+                        <select id="clienteTipoID" onchange="toggleTipoID()" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="INE">INE</option>
+                            <option value="Pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div id="divINE">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Número INE</label>
+                        <input type="text" id="clienteINE" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;" maxlength="18">
+                    </div>
+                    <div id="divPasaporte" style="display:none;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Número Pasaporte</label>
                         <input type="text" id="clientePasaporte" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                     </div>
-                    <div>
+                    <div id="divPasaporteExp" style="display:none;">
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Expedición</label>
                         <input type="date" id="clientePasaporteExp" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                     </div>
-                    <div>
+                    <div id="divPasaporteVenc" style="display:none;">
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Vencimiento</label>
                         <input type="date" id="clientePasaporteVenc" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                     </div>
@@ -1829,11 +1840,52 @@
                 divDatos.style.display = 'block';
             }
         }
+        function toggleIdentificacion() {
+            var nac = document.getElementById('clienteNacionalidad').value;
+            var divTipoID = document.getElementById('divTipoID');
+            var divINE = document.getElementById('divINE');
+            var divPasaporte = document.getElementById('divPasaporte');
+            var divPasaporteExp = document.getElementById('divPasaporteExp');
+            var divPasaporteVenc = document.getElementById('divPasaporteVenc');
+            
+            if (nac === 'Mexicana') {
+                divTipoID.style.display = 'block';
+                toggleTipoID();
+            } else {
+                // Extranjeros solo pasaporte
+                divTipoID.style.display = 'none';
+                divINE.style.display = 'none';
+                divPasaporte.style.display = 'block';
+                divPasaporteExp.style.display = 'block';
+                divPasaporteVenc.style.display = 'block';
+            }
+        }
+        
+        function toggleTipoID() {
+            var tipo = document.getElementById('clienteTipoID').value;
+            var divINE = document.getElementById('divINE');
+            var divPasaporte = document.getElementById('divPasaporte');
+            var divPasaporteExp = document.getElementById('divPasaporteExp');
+            var divPasaporteVenc = document.getElementById('divPasaporteVenc');
+            
+            if (tipo === 'INE') {
+                divINE.style.display = 'block';
+                divPasaporte.style.display = 'none';
+                divPasaporteExp.style.display = 'none';
+                divPasaporteVenc.style.display = 'none';
+            } else {
+                divINE.style.display = 'none';
+                divPasaporte.style.display = 'block';
+                divPasaporteExp.style.display = 'block';
+                divPasaporteVenc.style.display = 'block';
+            }
+        }
+
 
         function showNuevoCliente() {
             clienteActualId = null;
             // Limpiar todos los campos del formulario
-            var campos = ['clienteNombre', 'clienteTel1', 'clienteFechaNac', 'clienteLugarNac', 
+            var campos = ['clienteNombre', 'clienteTel1', 'clienteFechaNac', 'clienteLugarNac', 'clienteINE', 
                           'clientePasaporte', 'clientePasaporteExp', 'clientePasaporteVenc',
                           'clienteDirMx', 'clienteDirExt', 'clientePuesto', 'clienteEmpresa',
                           'clienteTelEmpresa', 'clienteDirEmpresa', 'clienteCURP', 'clienteRFC',
@@ -1843,7 +1895,7 @@
                 if (el) el.value = '';
             }
             // Reset selects
-            var selects = ['clienteNacionalidad', 'clienteEstadoCivil', 'clienteRegimen', 
+            var selects = ['clienteNacionalidad', 'clienteTipoID', 'clienteEstadoCivil', 'clienteRegimen', 
                            'clienteOcupacion', 'clienteTipoEmpresa'];
             for (var i = 0; i < selects.length; i++) {
                 var el = document.getElementById(selects[i]);
@@ -1852,6 +1904,17 @@
             // Ocultar regimen y mostrar datos laborales por defecto
             var divRegimen = document.getElementById('divRegimen');
             if (divRegimen) divRegimen.style.display = 'none';
+            // Reset identificación (mexicana por defecto = INE visible)
+            var divTipoID = document.getElementById('divTipoID');
+            if (divTipoID) divTipoID.style.display = 'block';
+            var divINE = document.getElementById('divINE');
+            if (divINE) divINE.style.display = 'block';
+            var divPasaporte = document.getElementById('divPasaporte');
+            if (divPasaporte) divPasaporte.style.display = 'none';
+            var divPasaporteExp = document.getElementById('divPasaporteExp');
+            if (divPasaporteExp) divPasaporteExp.style.display = 'none';
+            var divPasaporteVenc = document.getElementById('divPasaporteVenc');
+            if (divPasaporteVenc) divPasaporteVenc.style.display = 'none';
             var divDatos = document.getElementById('divDatosLaborales');
             if (divDatos) divDatos.style.display = 'block';
             
@@ -1874,6 +1937,8 @@
                 fechaNac: document.getElementById('clienteFechaNac') ? document.getElementById('clienteFechaNac').value : '',
                 lugarNac: document.getElementById('clienteLugarNac') ? document.getElementById('clienteLugarNac').value.trim() : '',
                 nacionalidad: document.getElementById('clienteNacionalidad') ? document.getElementById('clienteNacionalidad').value : '',
+                tipoID: document.getElementById('clienteTipoID') ? document.getElementById('clienteTipoID').value : '',
+                ine: document.getElementById('clienteINE') ? document.getElementById('clienteINE').value.trim() : '',
                 pasaporte: document.getElementById('clientePasaporte') ? document.getElementById('clientePasaporte').value.trim() : '',
                 pasaporteExp: document.getElementById('clientePasaporteExp') ? document.getElementById('clientePasaporteExp').value : '',
                 pasaporteVenc: document.getElementById('clientePasaporteVenc') ? document.getElementById('clientePasaporteVenc').value : '',
