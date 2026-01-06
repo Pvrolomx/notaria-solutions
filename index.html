@@ -1832,12 +1832,30 @@
 
         function showNuevoCliente() {
             clienteActualId = null;
-            document.getElementById('clienteNombre').value = '';
-            document.getElementById('clienteTel1').value = '';
-            document.getElementById('clienteTel2').value = '';
-            document.getElementById('clienteEmail').value = '';
-            document.getElementById('clienteRFC').value = '';
-            document.getElementById('clienteNotas').value = '';
+            // Limpiar todos los campos del formulario
+            var campos = ['clienteNombre', 'clienteTel1', 'clienteFechaNac', 'clienteLugarNac', 
+                          'clientePasaporte', 'clientePasaporteExp', 'clientePasaporteVenc',
+                          'clienteDirMx', 'clienteDirExt', 'clientePuesto', 'clienteEmpresa',
+                          'clienteTelEmpresa', 'clienteDirEmpresa', 'clienteCURP', 'clienteRFC',
+                          'clienteEmail', 'clienteSSN', 'clienteNotas'];
+            for (var i = 0; i < campos.length; i++) {
+                var el = document.getElementById(campos[i]);
+                if (el) el.value = '';
+            }
+            // Reset selects
+            var selects = ['clienteNacionalidad', 'clienteEstadoCivil', 'clienteRegimen', 
+                           'clienteOcupacion', 'clienteTipoEmpresa'];
+            for (var i = 0; i < selects.length; i++) {
+                var el = document.getElementById(selects[i]);
+                if (el) el.selectedIndex = 0;
+            }
+            // Ocultar regimen y mostrar datos laborales por defecto
+            var divRegimen = document.getElementById('divRegimen');
+            if (divRegimen) divRegimen.style.display = 'none';
+            var divDatos = document.getElementById('divDatosLaborales');
+            if (divDatos) divDatos.style.display = 'block';
+            
+            document.getElementById('tituloFormCliente').textContent = 'Agregar Cliente';
             showPanel('nuevo-cliente');
         }
         
