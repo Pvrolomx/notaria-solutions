@@ -1,0 +1,202 @@
+================================================================================
+REGLAS ISR - CALCULADORA ENAJENACIÓN DE INMUEBLES
+Notaria Solutions - Puerto Vallarta, Jalisco
+Última actualización: Enero 2026
+================================================================================
+
+1. TABLA ISR ANUAL (Art. 152 LISR)
+================================================================================
+Límite Inferior    | Cuota Fija      | Tasa %
+-------------------|-----------------|--------
+$0.00              | $0.00           | 1.92%
+$8,952.50          | $171.88         | 6.40%
+$75,984.56         | $4,461.94       | 10.88%
+$133,536.08        | $10,723.55      | 16.00%
+$155,229.81        | $14,194.54      | 17.92%
+$185,852.58        | $19,682.13      | 21.36%
+$374,837.89        | $60,049.40      | 23.52%
+$590,796.00        | $110,842.74     | 30.00%
+$1,127,926.85      | $271,981.99     | 32.00%
+$1,503,902.47      | $392,294.17     | 34.00%
+$4,511,707.38      | $1,414,947.85   | 35.00%
+
+Fórmula: ISR = Cuota Fija + ((Utilidad - Límite Inferior) × Tasa%)
+
+
+2. ÍNDICE NACIONAL DE PRECIOS AL CONSUMIDOR (INPC)
+================================================================================
+Año  | INPC Base 2018
+-----|---------------
+2015 | 87.5
+2016 | 90.4
+2017 | 94.5
+2018 | 98.0  (base)
+2019 | 101.5
+2020 | 104.5
+2021 | 109.5
+2022 | 117.5
+2023 | 124.0
+2024 | 131.0
+2025 | 141.0
+
+Fuente: INEGI / Banxico
+Nota: También se usa INPC mensual cuando está disponible.
+
+
+3. FACTOR DE ACTUALIZACIÓN
+================================================================================
+Factor = INPC(Fecha Venta) / INPC(Fecha Compra)
+
+Ejemplo:
+- Compra: Enero 2018 (INPC = 98.0)
+- Venta: Diciembre 2024 (INPC = 131.0)
+- Factor = 131.0 / 98.0 = 1.3367
+
+
+4. CÁLCULO DE AÑOS DE TENENCIA
+================================================================================
+Años = (Fecha Venta - Fecha Compra) / 365.25 días
+
+Reglas:
+- Mínimo: 1 año
+- Máximo: 20 años (para efectos del cálculo)
+
+
+5. DEPRECIACIÓN DE CONSTRUCCIÓN
+================================================================================
+Tasa anual: 3% por año de antigüedad
+Máximo: 80% del valor construcción
+
+Fórmula: Depreciación = MIN(Años × 3%, 80%)
+Valor Actualizado Construcción = Costo × (1 - Depreciación%) × Factor INPC
+
+
+6. ACTUALIZACIÓN DE TERRENO
+================================================================================
+Valor Actualizado Terreno = Costo Terreno × Factor INPC
+
+(El terreno NO se deprecia)
+
+
+7. CÁLCULO DE UTILIDAD GRAVABLE
+================================================================================
+Precio Venta (proporción del enajenante)
+- Terreno Actualizado
+- Construcción Actualizada (con depreciación)
+= Utilidad Gravable
+
+
+8. CÁLCULO ISR POR ENAJENANTE
+================================================================================
+RESIDENTES MEXICANOS:
+1. Dividir Utilidad entre años de tenencia
+2. Aplicar tabla ISR a la porción anual
+3. Multiplicar resultado por años
+
+Fórmula: ISR = calcISRTabla(Utilidad / Años) × Años
+
+EXTRANJEROS (No residentes):
+Se elige el menor de:
+- 35% sobre utilidad total, O
+- Cálculo por tablas (igual que residentes)
+
+
+9. EXENCIÓN CASA HABITACIÓN (Art. 93 LISR)
+================================================================================
+Aplica solo a: Residentes mexicanos
+Monto: 700,000 UDIs
+
+Valor UDI (referencia): $8.46 MXN
+Exención en pesos: ~$5,922,000 MXN
+
+METODOLOGÍA (Criterio Nuvigant):
+- La exención aplica sobre el INGRESO (precio venta), no sobre la ganancia
+- Si Precio Venta ≤ Exención: 100% exento
+- Si Precio Venta > Exención:
+  - % Gravado = (Precio Venta - Exención) / Precio Venta
+  - Se aplica % Gravado tanto a precio como a deducciones
+
+Requisitos:
+- Comprobar que es casa habitación del enajenante
+- No haber aplicado exención en últimos 3 años
+- Cada copropietario puede aplicar su propia exención
+
+
+10. ISR ESTATAL (Jalisco)
+================================================================================
+Tasa: 5% sobre utilidad gravable
+Máximo: No puede exceder el ISR Federal calculado
+
+Fórmula: ISR Estatal = MIN(Utilidad × 5%, ISR Total)
+ISR Federal = ISR Total - ISR Estatal
+
+
+11. TIPO DE CAMBIO Y UDI
+================================================================================
+Fuente: Banxico API
+- Tipo de Cambio USD/MXN: Variable diario (~$20.50)
+- Valor UDI: Variable diario (~$8.46)
+
+Se actualizan automáticamente desde API Banxico.
+
+
+12. EXCEDENTE DE TERRENO
+================================================================================
+Caso especial cuando:
+- Terreno se compró en fecha diferente a construcción
+- Requiere cálculo separado de factores INPC
+
+Se calculan:
+- Factor Terreno = INPC(Venta) / INPC(Compra Terreno)
+- Factor Construcción = INPC(Venta) / INPC(Fecha Construcción)
+- Años Terreno y Años Construcción por separado
+
+
+13. MÚLTIPLES ENAJENANTES (Copropietarios)
+================================================================================
+Cada enajenante:
+- Tiene su porcentaje de propiedad
+- Puede ser residente o extranjero
+- Puede marcar casa habitación (si aplica)
+- Se calcula ISR individual
+
+La suma de porcentajes debe ser 100%.
+
+
+14. FÓRMULAS RESUMEN
+================================================================================
+
+FACTOR_INPC = INPC_VENTA / INPC_COMPRA
+
+TERRENO_ACT = COSTO × PCT_TERRENO × FACTOR_INPC
+
+DEPREC = MIN(AÑOS × 0.03, 0.80)
+CONST_ACT = COSTO × PCT_CONST × (1 - DEPREC) × FACTOR_INPC
+
+DEDUCCIONES = TERRENO_ACT + CONST_ACT
+
+UTILIDAD = PRECIO_VENTA × PCT_ENAJENANTE - DEDUCCIONES × PCT_ENAJENANTE
+
+Si CASA_HAB y RESIDENTE:
+    Si PRECIO ≤ EXENCION: UTILIDAD_GRAVABLE = 0
+    Si PRECIO > EXENCION: PCT_GRAV = (PRECIO - EXENCION) / PRECIO
+                          UTILIDAD_GRAVABLE = UTILIDAD × PCT_GRAV
+
+Si EXTRANJERO:
+    ISR = MIN(UTILIDAD × 0.35, calcISRTabla(UTILIDAD/AÑOS) × AÑOS)
+Si RESIDENTE:
+    ISR = calcISRTabla(UTILIDAD/AÑOS) × AÑOS
+
+ISR_ESTADO = MIN(UTILIDAD × 0.05, ISR)
+ISR_FED = ISR - ISR_ESTADO
+
+
+================================================================================
+DISCLAIMER
+================================================================================
+Este documento es de referencia. Consulte con un contador o fiscalista 
+para casos específicos. Las tasas y valores pueden cambiar según 
+actualizaciones del SAT, SHCP e INEGI.
+
+Generado por: C9 Lacqa - Colmena AI
+================================================================================
