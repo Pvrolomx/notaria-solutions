@@ -1035,75 +1035,86 @@
         <div id="panel-expedientes" class="panel">
             <div class="panel-header">
                 <button class="back-btn" onclick="showPanel('home')">←</button>
-                <div>
-                    <h2>Expedientes</h2>
-                    <p>Gestión de expedientes</p>
-                </div>
+                <button class="btn btn-primary" onclick="showNuevoExpediente()" style="margin-left:auto;">+ Nuevo</button>
             </div>
-            
             <div class="stats-row">
                 <div class="stat-card">
-                    <div class="stat-card-value">47</div>
+                    <div class="stat-card-value" id="totalExpedientes">0</div>
+                    <div class="stat-card-label">Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="expActivos">0</div>
                     <div class="stat-card-label">Activos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-card-value">8</div>
-                    <div class="stat-card-label">Firma pend.</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-value">3</div>
-                    <div class="stat-card-label">Urgentes</div>
+                    <div class="stat-card-value" id="expFirmados">0</div>
+                    <div class="stat-card-label">Firmados</div>
                 </div>
             </div>
-            
-            <div class="quick-actions">
-                <div class="quick-action">
-                    <div class="quick-action-icon">📝</div>
-                    <div class="quick-action-text">Nuevo</div>
+            <div id="listaExpedientes" class="list-container"></div>
+        </div>
+        
+        <div id="panel-nuevo-expediente" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('expedientes')">←</button>
+                <h2 id="tituloFormExpediente">Nuevo Expediente</h2>
+            </div>
+            <div style="padding:15px;max-height:calc(100vh - 120px);overflow-y:auto;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Número *</label>
+                        <input type="text" id="expNumero" placeholder="EXP-2025-001" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Tipo *</label>
+                        <select id="expTipo" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Compraventa">Compraventa</option>
+                            <option value="Poder Notarial">Poder Notarial</option>
+                            <option value="Testamento">Testamento</option>
+                            <option value="Constitución SA">Constitución SA</option>
+                            <option value="Fideicomiso">Fideicomiso</option>
+                            <option value="Donación">Donación</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Cliente Principal *</label>
+                        <select id="expCliente" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="">Seleccionar cliente...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Estado</label>
+                        <select id="expEstado" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Activo">Activo</option>
+                            <option value="Pendiente">Pendiente Docs</option>
+                            <option value="Firma">Listo para Firma</option>
+                            <option value="Firmado">Firmado</option>
+                            <option value="Cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha Apertura</label>
+                        <input type="date" id="expFecha" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Descripción</label>
+                        <textarea id="expDescripcion" rows="3" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
+                    </div>
                 </div>
-                <div class="quick-action">
-                    <div class="quick-action-icon">📤</div>
-                    <div class="quick-action-text">Subir Doc</div>
-                </div>
-                <div class="quick-action">
-                    <div class="quick-action-icon">✍️</div>
-                    <div class="quick-action-text">Firma</div>
-                </div>
-                <div class="quick-action">
-                    <div class="quick-action-icon">🔍</div>
-                    <div class="quick-action-text">Buscar</div>
+                <div style="display:flex;gap:10px;margin-top:15px;">
+                    <button class="btn btn-primary" onclick="guardarExpediente()" style="flex:1;padding:15px;font-size:16px;">Guardar</button>
+                    <button class="btn" onclick="showPanel('expedientes')" style="padding:15px;font-size:16px;background:#ccc;">Cancelar</button>
                 </div>
             </div>
-            
-            <div class="list-container">
-                <div class="list-header">
-                    <h3>Expedientes Recientes</h3>
-                </div>
-                <div class="list-item" onclick="alert('Ver detalle cliente - Proximamente')" style="cursor:pointer;">
-                    <div class="list-item-avatar">📁</div>
-                    <div class="list-item-info">
-                        <h4>EXP-2024-0847</h4>
-                        <p>Compraventa • María García</p>
-                    </div>
-                    <span class="status-badge progress">En proceso</span>
-                </div>
-                <div class="list-item" onclick="alert('Ver detalle cliente - Proximamente')" style="cursor:pointer;">
-                    <div class="list-item-avatar">📁</div>
-                    <div class="list-item-info">
-                        <h4>EXP-2024-0846</h4>
-                        <p>Poder Notarial • Carlos M.</p>
-                    </div>
-                    <span class="status-badge pending">Pendiente</span>
-                </div>
-                <div class="list-item" onclick="alert('Ver detalle cliente - Proximamente')" style="cursor:pointer;">
-                    <div class="list-item-avatar">📁</div>
-                    <div class="list-item-info">
-                        <h4>EXP-2024-0844</h4>
-                        <p>Constitución SA • Grupo Ind.</p>
-                    </div>
-                    <span class="status-badge urgent">Urgente</span>
-                </div>
+        </div>
+        
+        <div id="panel-ver-expediente" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('expedientes')">←</button>
+                <h2>Detalle Expediente</h2>
             </div>
+            <div id="detalleExpediente" style="padding:15px;"></div>
         </div>
         
         <!-- AGENDA -->
@@ -1324,6 +1335,9 @@
             if (target) {
                 target.classList.add('active');
             }
+            // Render data when showing panels
+            if (panelId === 'clientes') renderClientes();
+            if (panelId === 'expedientes') renderExpedientes();
         }
         
         // === CALCULADORAS MENU ===
@@ -2020,9 +2034,183 @@
             showPanel('clientes');
         }
         
-        // Render on load
+        
+        // ========== EXPEDIENTES ==========
+        var expedienteActualId = null;
+        
+        function getExpedientes() {
+            var data = localStorage.getItem('notaria_expedientes');
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function saveExpedientes(expedientes) {
+            localStorage.setItem('notaria_expedientes', JSON.stringify(expedientes));
+        }
+        
+        function renderExpedientes() {
+            var expedientes = getExpedientes();
+            var container = document.getElementById('listaExpedientes');
+            var total = document.getElementById('totalExpedientes');
+            var activos = document.getElementById('expActivos');
+            var firmados = document.getElementById('expFirmados');
+            
+            if (total) total.textContent = expedientes.length;
+            
+            var countActivos = 0, countFirmados = 0;
+            for (var i = 0; i < expedientes.length; i++) {
+                if (expedientes[i].estado === 'Activo' || expedientes[i].estado === 'Pendiente') countActivos++;
+                if (expedientes[i].estado === 'Firmado' || expedientes[i].estado === 'Cerrado') countFirmados++;
+            }
+            if (activos) activos.textContent = countActivos;
+            if (firmados) firmados.textContent = countFirmados;
+            
+            if (!container) return;
+            if (expedientes.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--text-light);">No hay expedientes. Crea uno nuevo.</p>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = expedientes.length - 1; i >= 0; i--) {
+                var e = expedientes[i];
+                var badgeClass = 'progress';
+                if (e.estado === 'Pendiente') badgeClass = 'pending';
+                if (e.estado === 'Firmado' || e.estado === 'Cerrado') badgeClass = 'success';
+                if (e.estado === 'Firma') badgeClass = 'urgent';
+                
+                html += '<div class="list-item" onclick="verExpediente(' + i + ')" style="cursor:pointer;">' +
+                    '<div class="list-item-avatar">📁</div>' +
+                    '<div class="list-item-info">' +
+                    '<h4>' + e.numero + '</h4>' +
+                    '<p>' + e.tipo + ' • ' + (e.clienteNombre || 'Sin cliente') + '</p>' +
+                    '</div>' +
+                    '<span class="status-badge ' + badgeClass + '">' + e.estado + '</span>' +
+                    '</div>';
+            }
+            container.innerHTML = html;
+        }
+        
+        function showNuevoExpediente() {
+            expedienteActualId = null;
+            document.getElementById('expNumero').value = generarNumeroExp();
+            document.getElementById('expTipo').selectedIndex = 0;
+            document.getElementById('expEstado').selectedIndex = 0;
+            document.getElementById('expFecha').value = new Date().toISOString().split('T')[0];
+            document.getElementById('expDescripcion').value = '';
+            cargarClientesEnSelect();
+            document.getElementById('tituloFormExpediente').textContent = 'Nuevo Expediente';
+            showPanel('nuevo-expediente');
+        }
+        
+        function generarNumeroExp() {
+            var year = new Date().getFullYear();
+            var expedientes = getExpedientes();
+            var num = expedientes.length + 1;
+            return 'EXP-' + year + '-' + String(num).padStart(4, '0');
+        }
+        
+        function cargarClientesEnSelect() {
+            var clientes = getClientes();
+            var select = document.getElementById('expCliente');
+            select.innerHTML = '<option value="">Seleccionar cliente...</option>';
+            for (var i = 0; i < clientes.length; i++) {
+                select.innerHTML += '<option value="' + i + '">' + clientes[i].nombre + '</option>';
+            }
+        }
+        
+        function guardarExpediente() {
+            var numero = document.getElementById('expNumero').value.trim();
+            var tipo = document.getElementById('expTipo').value;
+            var clienteIdx = document.getElementById('expCliente').value;
+            
+            if (!numero || !tipo) {
+                alert('Número y Tipo son obligatorios');
+                return;
+            }
+            
+            var clientes = getClientes();
+            var clienteNombre = clienteIdx !== '' ? clientes[parseInt(clienteIdx)].nombre : '';
+            
+            var expediente = {
+                numero: numero,
+                tipo: tipo,
+                clienteIdx: clienteIdx,
+                clienteNombre: clienteNombre,
+                estado: document.getElementById('expEstado').value,
+                fecha: document.getElementById('expFecha').value,
+                descripcion: document.getElementById('expDescripcion').value.trim(),
+                fechaCreacion: new Date().toISOString()
+            };
+            
+            var expedientes = getExpedientes();
+            
+            if (expedienteActualId !== null) {
+                expedientes[expedienteActualId] = expediente;
+            } else {
+                expedientes.push(expediente);
+            }
+            
+            saveExpedientes(expedientes);
+            renderExpedientes();
+            showPanel('expedientes');
+        }
+        
+        function verExpediente(idx) {
+            var expedientes = getExpedientes();
+            var e = expedientes[idx];
+            if (!e) return;
+            
+            expedienteActualId = idx;
+            
+            var html = '<h3>' + e.numero + '</h3>' +
+                '<div style="margin-top:1rem;">' +
+                '<p><strong>Tipo:</strong> ' + e.tipo + '</p>' +
+                '<p><strong>Cliente:</strong> ' + (e.clienteNombre || 'N/A') + '</p>' +
+                '<p><strong>Estado:</strong> ' + e.estado + '</p>' +
+                '<p><strong>Fecha:</strong> ' + (e.fecha || 'N/A') + '</p>' +
+                (e.descripcion ? '<p style="margin-top:1rem;"><strong>Descripción:</strong><br>' + e.descripcion + '</p>' : '') +
+                '</div>' +
+                '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;">' +
+                '<button class="btn btn-primary" onclick="editarExpediente(' + idx + ')">Editar</button>' +
+                '<button class="btn" style="background:#dc3545;color:white;" onclick="eliminarExpediente(' + idx + ')">Eliminar</button>' +
+                '</div>';
+            
+            document.getElementById('detalleExpediente').innerHTML = html;
+            showPanel('ver-expediente');
+        }
+        
+        function editarExpediente(idx) {
+            var expedientes = getExpedientes();
+            var e = expedientes[idx];
+            if (!e) return;
+            
+            expedienteActualId = idx;
+            cargarClientesEnSelect();
+            
+            document.getElementById('expNumero').value = e.numero;
+            document.getElementById('expTipo').value = e.tipo;
+            document.getElementById('expCliente').value = e.clienteIdx || '';
+            document.getElementById('expEstado').value = e.estado;
+            document.getElementById('expFecha').value = e.fecha || '';
+            document.getElementById('expDescripcion').value = e.descripcion || '';
+            
+            document.getElementById('tituloFormExpediente').textContent = 'Editar Expediente';
+            showPanel('nuevo-expediente');
+        }
+        
+        function eliminarExpediente(idx) {
+            if (!confirm('¿Eliminar este expediente?')) return;
+            var expedientes = getExpedientes();
+            expedientes.splice(idx, 1);
+            saveExpedientes(expedientes);
+            renderExpedientes();
+            showPanel('expedientes');
+        }
+
+// Render on load
         document.addEventListener('DOMContentLoaded', function() {
             renderClientes();
+            renderExpedientes();
         });
     </script>
 </body>
