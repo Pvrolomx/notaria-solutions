@@ -1121,54 +1121,87 @@
         <div id="panel-agenda" class="panel">
             <div class="panel-header">
                 <button class="back-btn" onclick="showPanel('home')">←</button>
-                <div>
-                    <h2>Agenda</h2>
-                    <p>31 Diciembre 2024</p>
-                </div>
+                <button class="btn btn-primary" onclick="showNuevaCita()" style="margin-left:auto;">+ Nueva Cita</button>
             </div>
-            
             <div class="stats-row">
                 <div class="stat-card">
-                    <div class="stat-card-value">4</div>
+                    <div class="stat-card-value" id="citasHoy">0</div>
                     <div class="stat-card-label">Hoy</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-card-value">12</div>
+                    <div class="stat-card-value" id="citasSemana">0</div>
                     <div class="stat-card-label">Semana</div>
                 </div>
-            </div>
-            
-            <button class="btn btn-primary btn-full" style="margin-bottom:1rem;" onclick="alert('Nueva Cita - Proximamente')">+ Nueva Cita</button>
-            
-            <div class="list-container">
-                <div class="list-header">
-                    <h3>Citas de Hoy</h3>
-                </div>
-                <div class="list-item" onclick="alert('Ver detalle cliente - Proximamente')" style="cursor:pointer;">
-                    <div class="list-item-avatar">🕐</div>
-                    <div class="list-item-info">
-                        <h4>10:00 AM - María García</h4>
-                        <p>Firma de Escritura • EXP-0847</p>
-                    </div>
-                    <span class="status-badge complete">Confirmada</span>
-                </div>
-                <div class="list-item" onclick="alert('Ver detalle cliente - Proximamente')" style="cursor:pointer;">
-                    <div class="list-item-avatar">🕐</div>
-                    <div class="list-item-info">
-                        <h4>12:30 PM - Nuevo Cliente</h4>
-                        <p>Consulta Inicial • Testamento</p>
-                    </div>
-                    <span class="status-badge pending">Por confirmar</span>
-                </div>
-                <div class="list-item" onclick="alert('Ver detalle cliente - Proximamente')" style="cursor:pointer;">
-                    <div class="list-item-avatar">🕐</div>
-                    <div class="list-item-info">
-                        <h4>4:00 PM - Carlos Mendoza</h4>
-                        <p>Entrega Documentos • EXP-0846</p>
-                    </div>
-                    <span class="status-badge complete">Confirmada</span>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="totalCitas">0</div>
+                    <div class="stat-card-label">Total</div>
                 </div>
             </div>
+            <div id="listaCitas" class="list-container"></div>
+        </div>
+        
+        <div id="panel-nueva-cita" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('agenda')">←</button>
+                <h2 id="tituloFormCita">Nueva Cita</h2>
+            </div>
+            <div style="padding:15px;max-height:calc(100vh - 120px);overflow-y:auto;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha *</label>
+                        <input type="date" id="citaFecha" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Hora *</label>
+                        <input type="time" id="citaHora" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Cliente</label>
+                        <select id="citaCliente" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="">Seleccionar cliente...</option>
+                        </select>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Título / Asunto *</label>
+                        <input type="text" id="citaTitulo" placeholder="Ej: Firma de escritura" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Tipo</label>
+                        <select id="citaTipo" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Consulta">Consulta</option>
+                            <option value="Firma">Firma</option>
+                            <option value="Entrega">Entrega Documentos</option>
+                            <option value="Revision">Revisión</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Estado</label>
+                        <select id="citaEstado" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Confirmada">Confirmada</option>
+                            <option value="Completada">Completada</option>
+                            <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Notas</label>
+                        <textarea id="citaNotas" rows="3" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:15px;">
+                    <button class="btn btn-primary" onclick="guardarCita()" style="flex:1;padding:15px;font-size:16px;">Guardar</button>
+                    <button class="btn" onclick="showPanel('agenda')" style="padding:15px;font-size:16px;background:#ccc;">Cancelar</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="panel-ver-cita" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('agenda')">←</button>
+                <h2>Detalle Cita</h2>
+            </div>
+            <div id="detalleCita" style="padding:15px;"></div>
         </div>
         
         <!-- CALCULADORAS -->
@@ -1338,6 +1371,7 @@
             // Render data when showing panels
             if (panelId === 'clientes') renderClientes();
             if (panelId === 'expedientes') renderExpedientes();
+            if (panelId === 'agenda') renderCitas();
         }
         
         // === CALCULADORAS MENU ===
@@ -2207,10 +2241,201 @@
             showPanel('expedientes');
         }
 
+
+        // ========== AGENDA / CITAS ==========
+        var citaActualId = null;
+        
+        function getCitas() {
+            var data = localStorage.getItem('notaria_citas');
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function saveCitas(citas) {
+            localStorage.setItem('notaria_citas', JSON.stringify(citas));
+        }
+        
+        function renderCitas() {
+            var citas = getCitas();
+            var container = document.getElementById('listaCitas');
+            var totalEl = document.getElementById('totalCitas');
+            var hoyEl = document.getElementById('citasHoy');
+            var semanaEl = document.getElementById('citasSemana');
+            
+            if (totalEl) totalEl.textContent = citas.length;
+            
+            var hoy = new Date().toISOString().split('T')[0];
+            var inicioSemana = new Date();
+            inicioSemana.setDate(inicioSemana.getDate() - inicioSemana.getDay());
+            var finSemana = new Date(inicioSemana);
+            finSemana.setDate(finSemana.getDate() + 6);
+            
+            var countHoy = 0, countSemana = 0;
+            for (var i = 0; i < citas.length; i++) {
+                var fechaCita = citas[i].fecha;
+                if (fechaCita === hoy) countHoy++;
+                if (fechaCita >= inicioSemana.toISOString().split('T')[0] && 
+                    fechaCita <= finSemana.toISOString().split('T')[0]) countSemana++;
+            }
+            if (hoyEl) hoyEl.textContent = countHoy;
+            if (semanaEl) semanaEl.textContent = countSemana;
+            
+            if (!container) return;
+            if (citas.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--text-light);">No hay citas. Agenda una nueva.</p>';
+                return;
+            }
+            
+            // Ordenar por fecha y hora
+            citas.sort(function(a, b) {
+                var dateA = a.fecha + 'T' + (a.hora || '00:00');
+                var dateB = b.fecha + 'T' + (b.hora || '00:00');
+                return dateA.localeCompare(dateB);
+            });
+            
+            var html = '';
+            for (var i = 0; i < citas.length; i++) {
+                var c = citas[i];
+                var badgeClass = 'pending';
+                if (c.estado === 'Confirmada') badgeClass = 'progress';
+                if (c.estado === 'Completada') badgeClass = 'success';
+                if (c.estado === 'Cancelada') badgeClass = 'urgent';
+                
+                var fechaStr = c.fecha ? new Date(c.fecha + 'T12:00:00').toLocaleDateString('es-MX', {weekday:'short', day:'numeric', month:'short'}) : '';
+                var horaStr = c.hora || '';
+                
+                html += '<div class="list-item" onclick="verCita(' + i + ')" style="cursor:pointer;">' +
+                    '<div class="list-item-avatar">📅</div>' +
+                    '<div class="list-item-info">' +
+                    '<h4>' + horaStr + ' - ' + (c.clienteNombre || c.titulo) + '</h4>' +
+                    '<p>' + c.tipo + ' • ' + fechaStr + '</p>' +
+                    '</div>' +
+                    '<span class="status-badge ' + badgeClass + '">' + c.estado + '</span>' +
+                    '</div>';
+            }
+            container.innerHTML = html;
+        }
+        
+        function showNuevaCita() {
+            citaActualId = null;
+            document.getElementById('citaFecha').value = new Date().toISOString().split('T')[0];
+            document.getElementById('citaHora').value = '10:00';
+            document.getElementById('citaTitulo').value = '';
+            document.getElementById('citaTipo').selectedIndex = 0;
+            document.getElementById('citaEstado').selectedIndex = 0;
+            document.getElementById('citaNotas').value = '';
+            cargarClientesEnSelectCita();
+            document.getElementById('tituloFormCita').textContent = 'Nueva Cita';
+            showPanel('nueva-cita');
+        }
+        
+        function cargarClientesEnSelectCita() {
+            var clientes = getClientes();
+            var select = document.getElementById('citaCliente');
+            select.innerHTML = '<option value="">Seleccionar cliente...</option>';
+            for (var i = 0; i < clientes.length; i++) {
+                select.innerHTML += '<option value="' + i + '">' + clientes[i].nombre + '</option>';
+            }
+        }
+        
+        function guardarCita() {
+            var fecha = document.getElementById('citaFecha').value;
+            var hora = document.getElementById('citaHora').value;
+            var titulo = document.getElementById('citaTitulo').value.trim();
+            
+            if (!fecha || !hora || !titulo) {
+                alert('Fecha, Hora y Título son obligatorios');
+                return;
+            }
+            
+            var clienteIdx = document.getElementById('citaCliente').value;
+            var clientes = getClientes();
+            var clienteNombre = clienteIdx !== '' ? clientes[parseInt(clienteIdx)].nombre : '';
+            
+            var cita = {
+                fecha: fecha,
+                hora: hora,
+                titulo: titulo,
+                clienteIdx: clienteIdx,
+                clienteNombre: clienteNombre,
+                tipo: document.getElementById('citaTipo').value,
+                estado: document.getElementById('citaEstado').value,
+                notas: document.getElementById('citaNotas').value.trim(),
+                fechaCreacion: new Date().toISOString()
+            };
+            
+            var citas = getCitas();
+            
+            if (citaActualId !== null) {
+                citas[citaActualId] = cita;
+            } else {
+                citas.push(cita);
+            }
+            
+            saveCitas(citas);
+            renderCitas();
+            showPanel('agenda');
+        }
+        
+        function verCita(idx) {
+            var citas = getCitas();
+            var c = citas[idx];
+            if (!c) return;
+            
+            citaActualId = idx;
+            var fechaStr = c.fecha ? new Date(c.fecha + 'T12:00:00').toLocaleDateString('es-MX', {weekday:'long', day:'numeric', month:'long', year:'numeric'}) : '';
+            
+            var html = '<h3>' + c.titulo + '</h3>' +
+                '<div style="margin-top:1rem;">' +
+                '<p><strong>Fecha:</strong> ' + fechaStr + '</p>' +
+                '<p><strong>Hora:</strong> ' + (c.hora || 'N/A') + '</p>' +
+                '<p><strong>Cliente:</strong> ' + (c.clienteNombre || 'N/A') + '</p>' +
+                '<p><strong>Tipo:</strong> ' + c.tipo + '</p>' +
+                '<p><strong>Estado:</strong> ' + c.estado + '</p>' +
+                (c.notas ? '<p style="margin-top:1rem;"><strong>Notas:</strong><br>' + c.notas + '</p>' : '') +
+                '</div>' +
+                '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;">' +
+                '<button class="btn btn-primary" onclick="editarCita(' + idx + ')">Editar</button>' +
+                '<button class="btn" style="background:#dc3545;color:white;" onclick="eliminarCita(' + idx + ')">Eliminar</button>' +
+                '</div>';
+            
+            document.getElementById('detalleCita').innerHTML = html;
+            showPanel('ver-cita');
+        }
+        
+        function editarCita(idx) {
+            var citas = getCitas();
+            var c = citas[idx];
+            if (!c) return;
+            
+            citaActualId = idx;
+            cargarClientesEnSelectCita();
+            
+            document.getElementById('citaFecha').value = c.fecha || '';
+            document.getElementById('citaHora').value = c.hora || '';
+            document.getElementById('citaTitulo').value = c.titulo || '';
+            document.getElementById('citaCliente').value = c.clienteIdx || '';
+            document.getElementById('citaTipo').value = c.tipo || 'Consulta';
+            document.getElementById('citaEstado').value = c.estado || 'Pendiente';
+            document.getElementById('citaNotas').value = c.notas || '';
+            
+            document.getElementById('tituloFormCita').textContent = 'Editar Cita';
+            showPanel('nueva-cita');
+        }
+        
+        function eliminarCita(idx) {
+            if (!confirm('¿Eliminar esta cita?')) return;
+            var citas = getCitas();
+            citas.splice(idx, 1);
+            saveCitas(citas);
+            renderCitas();
+            showPanel('agenda');
+        }
+
 // Render on load
         document.addEventListener('DOMContentLoaded', function() {
             renderClientes();
             renderExpedientes();
+            renderCitas();
         });
     </script>
 </body>
