@@ -1219,13 +1219,20 @@
             
             <!-- Menu de Calculadoras -->
             <div id="calc-menu" class="calc-menu-grid">
-                <div class="calc-menu-btn" onclick="showCalc('istp')">
-                    <div class="calc-menu-icon istp">🏠</div>
+                <a href="calculadora.html" class="calc-menu-btn" style="text-decoration:none;color:inherit;">
+                    <div class="calc-menu-icon" style="background:linear-gradient(135deg, #1E3A5F 0%, #3B82F6 100%);">📊</div>
                     <div class="calc-menu-text">
-                        <h4>ISTP</h4>
-                        <p>Traslación de Dominio</p>
+                        <h4>ISR</h4>
+                        <p>Múltiples enajenantes, INPC, UDI</p>
                     </div>
-                </div>
+                </a>
+                <a href="calculadora-isabi.html" class="calc-menu-btn" style="text-decoration:none;color:inherit;">
+                    <div class="calc-menu-icon" style="background:linear-gradient(135deg, #DC2626 0%, #F87171 100%);">🏛️</div>
+                    <div class="calc-menu-text">
+                        <h4>ISABI</h4>
+                        <p>Jalisco / Nayarit - Tabla 2025</p>
+                    </div>
+                </a>
                 <div class="calc-menu-btn" onclick="showCalc('iva')">
                     <div class="calc-menu-icon iva">🧾</div>
                     <div class="calc-menu-text">
@@ -1233,47 +1240,8 @@
                         <p>Impuesto al Valor Agregado</p>
                     </div>
                 </div>
-                <a href="calculadora-isabi.html" class="calc-menu-btn" style="text-decoration:none;color:inherit;">
-                    <div class="calc-menu-icon" style="background:linear-gradient(135deg, #DC2626 0%, #F87171 100%);">🏛️</div>
-                    <div class="calc-menu-text">
-                        <h4>ISABI Avanzado</h4>
-                        <p>Jalisco / Nayarit - Tabla 2025</p>
-                    </div>
-                </a>
-                <a href="calculadora.html" class="calc-menu-btn" style="text-decoration:none;color:inherit;">
-                    <div class="calc-menu-icon" style="background:linear-gradient(135deg, #1E3A5F 0%, #3B82F6 100%);">📊</div>
-                    <div class="calc-menu-text">
-                        <h4>ISR Avanzado</h4>
-                        <p>Múltiples enajenantes, INPC, UDI</p>
-                    </div>
-                </a>
             </div>
             
-                        <!-- Calculadora ISTP -->
-            <div id="calc-istp" class="calc-panel" style="display:none;">
-                <button class="calc-back" onclick="showCalcMenu()">← Volver</button>
-                <div class="calc-card">
-                    <h3>🏠 Calculadora ISTP</h3>
-                    <div class="calc-field">
-                        <label>Estado</label>
-                        <select id="istpEstado">
-                            <option value="jalisco">Jalisco (Tabla Progresiva)</option>
-                            <option value="nayarit">Nayarit (2%)</option>
-                            <option value="cdmx">CDMX (5%)</option>
-                            <option value="nuevo_leon">Nuevo León (3%)</option>
-                        </select>
-                    </div>
-                    <div class="calc-field">
-                        <label>Valor de Operación $</label>
-                        <input type="number" id="istpValor" value="3000000">
-                    </div>
-                    <div class="calc-checks">
-                        <label><input type="checkbox" id="istpVivienda"> Vivienda interés social</label>
-                    </div>
-                    <button class="btn btn-primary btn-full" onclick="calcularISTP()">Calcular ISTP</button>
-                    <div id="istpResultado" class="calc-result" style="display:none;"></div>
-                </div>
-            </div>
             
             <!-- Calculadora IVA -->
             <div id="calc-iva" class="calc-panel" style="display:none;">
@@ -1380,7 +1348,6 @@
         // === CALCULADORAS MENU ===
         function showCalc(tipo) {
             document.getElementById('calc-menu').style.display = 'none';
-            document.getElementById('calc-istp').style.display = 'none';
             document.getElementById('calc-iva').style.display = 'none';
             var target = document.getElementById('calc-' + tipo);
             if (target) {
@@ -1389,7 +1356,6 @@
         }
         
         function showCalcMenu() {
-            document.getElementById('calc-istp').style.display = 'none';
             document.getElementById('calc-iva').style.display = 'none';
             document.getElementById('calc-menu').style.display = 'flex';
         }
@@ -1739,83 +1705,6 @@
             };
             
             html2pdf().set(opt).from(pdfContent).save();
-        }
-        
-        // === ISTP ===
-        // Tabla ISTP Jalisco 2025 - Transmisiones Patrimoniales
-        var TABLA_ISTP_JAL = [
-            { lim: 0.01, sup: 584775.00, cuota: 0.00, tasa: 2.65 },
-            { lim: 584775.01, sup: 988162.00, cuota: 15496.54, tasa: 2.75 },
-            { lim: 988162.01, sup: 1630274.00, cuota: 26589.68, tasa: 2.85 },
-            { lim: 1630274.01, sup: 2500184.00, cuota: 44889.87, tasa: 2.95 },
-            { lim: 2500184.01, sup: 4067064.00, cuota: 70552.22, tasa: 3.05 },
-            { lim: 4067064.01, sup: 6559136.00, cuota: 118342.06, tasa: 3.15 },
-            { lim: 6559136.01, sup: 13143342.00, cuota: 196842.32, tasa: 3.25 },
-            { lim: 13143342.01, sup: 48372251.00, cuota: 410829.02, tasa: 3.35 },
-            { lim: 48372251.01, sup: 219067566.00, cuota: 1590997.47, tasa: 3.45 },
-            { lim: 219067566.01, sup: Infinity, cuota: 7479985.84, tasa: 3.55 }
-        ];
-        
-        function calcISTPJalisco(valor) {
-            for (var i = TABLA_ISTP_JAL.length - 1; i >= 0; i--) {
-                if (valor >= TABLA_ISTP_JAL[i].lim) {
-                    var excedente = valor - TABLA_ISTP_JAL[i].lim;
-                    var impMarginal = excedente * (TABLA_ISTP_JAL[i].tasa / 100);
-                    return {
-                        cuota: TABLA_ISTP_JAL[i].cuota,
-                        marginal: impMarginal,
-                        total: TABLA_ISTP_JAL[i].cuota + impMarginal,
-                        tasa: TABLA_ISTP_JAL[i].tasa,
-                        rango: i + 1
-                    };
-                }
-            }
-            return { cuota: 0, marginal: 0, total: 0, tasa: 2.65, rango: 1 };
-        }
-        
-        function calcularISTP() {
-            var estado = document.getElementById('istpEstado').value;
-            var valor = parseFloat(document.getElementById('istpValor').value) || 0;
-            var esViv = document.getElementById('istpVivienda').checked;
-            
-            var resultado = '';
-            var istp = 0;
-            
-            if (estado === 'jalisco') {
-                // Jalisco: Tabla progresiva
-                var calc = calcISTPJalisco(valor);
-                istp = calc.total;
-                
-                // Reducción vivienda (50%)
-                if (esViv) {
-                    istp = istp * 0.5;
-                }
-                
-                resultado = '<div class="calc-result-row"><span>Base Gravable</span><span>' + fmt(valor) + '</span></div>' +
-                    '<div class="calc-result-row"><span>Rango Tabla</span><span>#' + calc.rango + ' (' + calc.tasa + '%)</span></div>' +
-                    '<div class="calc-result-row"><span>Cuota Fija</span><span>' + fmt(calc.cuota) + '</span></div>' +
-                    '<div class="calc-result-row"><span>Imp. Marginal</span><span>' + fmt(calc.marginal) + '</span></div>';
-                
-                if (esViv) {
-                    resultado += '<div class="calc-result-row"><span>Subtotal</span><span>' + fmt(calc.total) + '</span></div>' +
-                        '<div class="calc-result-row" style="color:#22C55E;"><span>Reduccion Vivienda</span><span>-50%</span></div>';
-                }
-                
-                resultado += '<div class="calc-result-row total"><span>TOTAL ISTP</span><span>' + fmt(istp) + '</span></div>';
-            } else {
-                // Otros estados: Tasa fija
-                var tasas = {nayarit:{n:2,r:1}, cdmx:{n:5,r:3}, nuevo_leon:{n:3,r:2}};
-                var t = tasas[estado] || {n:3,r:1.5};
-                var tasa = esViv ? t.r : t.n;
-                istp = valor * (tasa / 100);
-                
-                resultado = '<div class="calc-result-row"><span>Base</span><span>' + fmt(valor) + '</span></div>' +
-                    '<div class="calc-result-row"><span>Tasa</span><span>' + tasa + '%</span></div>' +
-                    '<div class="calc-result-row total"><span>TOTAL ISTP</span><span>' + fmt(istp) + '</span></div>';
-            }
-            
-            document.getElementById('istpResultado').style.display = 'block';
-            document.getElementById('istpResultado').innerHTML = resultado;
         }
         
         // === IVA ===
