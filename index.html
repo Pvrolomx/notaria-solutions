@@ -2441,8 +2441,19 @@
             renderCitas();
         });
 
-        // ========== OCR CLIENTES CON SOPORTE PDF ==========
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // ========== OCR CLIENTES CON SOPORTE PDF + FALLBACKS ==========
+        
+        // Fallback: verificar si pdf.js está disponible
+        let pdfJsAvailable = false;
+        try {
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                pdfJsAvailable = true;
+            }
+        } catch (e) {
+            console.warn('pdf.js no disponible:', e);
+        }
         
         let clienteOCRData = { imageBase64: null, isPdf: false };
         
@@ -2453,11 +2464,27 @@
             const statusEl = document.getElementById('ocrStatusCliente');
             const btnScan = document.getElementById('btnScanCliente');
             
+            // Validar tamaño (máx 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                statusEl.textContent = 'Error: archivo muy grande (máx 10MB)';
+                statusEl.style.color = '#ef4444';
+                btnScan.disabled = true;
+                return;
+            }
+            
             clienteOCRData.isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
             
             if (clienteOCRData.isPdf) {
+                if (!pdfJsAvailable) {
+                    statusEl.textContent = 'PDFs no soportados. Sube una imagen (JPG/PNG).';
+                    statusEl.style.color = '#f59e0b';
+                    btnScan.disabled = true;
+                    return;
+                }
+                
                 statusEl.textContent = 'Convirtiendo PDF...';
                 statusEl.style.color = '#6366f1';
+                
                 try {
                     const arrayBuffer = await file.arrayBuffer();
                     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -2465,6 +2492,7 @@
                     const scale = 2;
                     const viewport = page.getViewport({ scale });
                     const canvas = document.getElementById('pdfCanvasCliente');
+                    if (!canvas) throw new Error('Canvas no encontrado');
                     const context = canvas.getContext('2d');
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
@@ -2474,11 +2502,20 @@
                     statusEl.style.color = '#10b981';
                     btnScan.disabled = false;
                 } catch (err) {
-                    statusEl.textContent = 'Error: ' + err.message;
+                    console.error('Error PDF:', err);
+                    statusEl.textContent = 'Error PDF. Intenta con imagen o screenshot.';
                     statusEl.style.color = '#ef4444';
                     btnScan.disabled = true;
                 }
             } else {
+                // Validar que sea imagen
+                if (!file.type.startsWith('image/')) {
+                    statusEl.textContent = 'Formato no soportado. Usa JPG, PNG o PDF.';
+                    statusEl.style.color = '#ef4444';
+                    btnScan.disabled = true;
+                    return;
+                }
+                
                 statusEl.textContent = 'Cargando imagen...';
                 const reader = new FileReader();
                 reader.onload = (ev) => {
@@ -2487,12 +2524,20 @@
                     statusEl.style.color = '#10b981';
                     btnScan.disabled = false;
                 };
+                reader.onerror = () => {
+                    statusEl.textContent = 'Error al leer archivo';
+                    statusEl.style.color = '#ef4444';
+                    btnScan.disabled = true;
+                };
                 reader.readAsDataURL(file);
             }
         });
         
         async function scanClienteDoc() {
-            if (!clienteOCRData.imageBase64) { alert('Primero sube un documento'); return; }
+            if (!clienteOCRData.imageBase64) { 
+                alert('Primero sube un documento'); 
+                return; 
+            }
             
             const statusEl = document.getElementById('ocrStatusCliente');
             const btnScan = document.getElementById('btnScanCliente');
@@ -2500,36 +2545,73 @@
             statusEl.textContent = 'Escaneando con Google Vision...';
             statusEl.style.color = '#6366f1';
             
+            // Timeout de 30 segundos
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
+            
             try {
                 const response = await fetch('/api/vision', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ image: clienteOCRData.imageBase64 })
+                    body: JSON.stringify({ image: clienteOCRData.imageBase64 }),
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
                 const data = await response.json();
                 
-                if (data.error) throw new Error(data.error);
-                if (!data.responses || !data.responses[0]) throw new Error('Sin respuesta de Vision');
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                if (!data.responses || !data.responses[0]) {
+                    throw new Error('Respuesta vacía de Vision API');
+                }
                 
                 const fullText = data.responses[0].fullTextAnnotation;
                 const textAnnotations = data.responses[0].textAnnotations;
                 let text = '';
-                if (fullText && fullText.text) text = fullText.text;
-                else if (textAnnotations && textAnnotations.length > 0) text = textAnnotations[0].description;
                 
-                if (!text) throw new Error('No se detectó texto');
+                if (fullText && fullText.text) {
+                    text = fullText.text;
+                } else if (textAnnotations && textAnnotations.length > 0) {
+                    text = textAnnotations[0].description;
+                }
                 
-                parseClienteOCR(text);
-                statusEl.textContent = 'Datos extraídos ✓';
+                if (!text) {
+                    statusEl.textContent = 'No se detectó texto. Intenta con mejor imagen.';
+                    statusEl.style.color = '#f59e0b';
+                    btnScan.disabled = false;
+                    return;
+                }
+                
+                const filledCount = parseClienteOCR(text);
+                statusEl.textContent = `✓ ${filledCount} campos extraídos`;
                 statusEl.style.color = '#10b981';
+                
             } catch (err) {
-                statusEl.textContent = 'Error: ' + err.message;
+                console.error('OCR Error:', err);
+                
+                if (err.name === 'AbortError') {
+                    statusEl.textContent = 'Timeout. Intenta de nuevo.';
+                } else if (err.message.includes('Failed to fetch')) {
+                    statusEl.textContent = 'Sin conexión. Verifica internet.';
+                } else {
+                    statusEl.textContent = 'Error: ' + err.message;
+                }
                 statusEl.style.color = '#ef4444';
             }
+            
             btnScan.disabled = false;
         }
         
         function parseClienteOCR(text) {
+            let filledCount = 0;
             const lines = text.split('\n').map(l => l.trim()).filter(l => l);
             
             function findValue(patterns) {
@@ -2543,94 +2625,115 @@
                 return null;
             }
             
+            function safeSetValue(id, value) {
+                try {
+                    const el = document.getElementById(id);
+                    if (el && value) {
+                        el.value = value;
+                        return true;
+                    }
+                } catch (e) {
+                    console.warn('Error setting', id, e);
+                }
+                return false;
+            }
+            
             // Nombre
             const name = findValue(['Name', 'Nombre', 'Nombre Completo']);
-            if (name) document.getElementById('clienteNombre').value = name;
+            if (safeSetValue('clienteNombre', name)) filledCount++;
             
             // Fecha nacimiento
             const dob = findValue(['Date of Birth', 'Fecha de Nacimiento', 'Fecha Nac', 'DOB']);
             if (dob) {
-                // Intentar parsear fecha
                 const dateMatch = dob.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
                 if (dateMatch) {
                     const [, d, m, y] = dateMatch;
-                    document.getElementById('clienteFechaNac').value = `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+                    if (safeSetValue('clienteFechaNac', `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`)) filledCount++;
                 }
             }
             
             // Lugar nacimiento
             const pob = findValue(['Place of Birth', 'Lugar de Nacimiento', 'Lugar Nac']);
-            if (pob) document.getElementById('clienteLugarNac').value = pob;
+            if (safeSetValue('clienteLugarNac', pob)) filledCount++;
             
             // Nacionalidad
             const nationality = findValue(['Nationality', 'Nacionalidad']);
             if (nationality) {
-                const sel = document.getElementById('clienteNacionalidad');
-                const opt = Array.from(sel.options).find(o => o.text.toLowerCase().includes(nationality.toLowerCase()));
-                if (opt) sel.value = opt.value;
+                try {
+                    const sel = document.getElementById('clienteNacionalidad');
+                    if (sel) {
+                        const opt = Array.from(sel.options).find(o => 
+                            o.text.toLowerCase().includes(nationality.toLowerCase()) ||
+                            nationality.toLowerCase().includes(o.text.toLowerCase())
+                        );
+                        if (opt) { sel.value = opt.value; filledCount++; }
+                    }
+                } catch (e) {}
             }
             
             // Pasaporte
             const passport = findValue(['Passport', 'Pasaporte', 'Passport Number']);
             if (passport) {
-                document.getElementById('clienteTipoID').value = 'Pasaporte';
-                toggleTipoID();
-                document.getElementById('clientePasaporte').value = passport.split(/\s+/)[0];
+                try {
+                    const tipoId = document.getElementById('clienteTipoID');
+                    if (tipoId) { tipoId.value = 'Pasaporte'; if(typeof toggleTipoID === 'function') toggleTipoID(); }
+                    if (safeSetValue('clientePasaporte', passport.split(/\s+/)[0])) filledCount++;
+                } catch (e) {}
             }
             
             // Estado civil
             const marital = findValue(['Marital Status', 'Estado Civil', 'Marital']);
             if (marital) {
-                const sel = document.getElementById('clienteEstadoCivil');
-                if (marital.toLowerCase().includes('married') || marital.toLowerCase().includes('casad')) sel.value = 'Casado(a)';
-                else if (marital.toLowerCase().includes('single') || marital.toLowerCase().includes('solter')) sel.value = 'Soltero(a)';
-                else if (marital.toLowerCase().includes('divorced') || marital.toLowerCase().includes('divorciad')) sel.value = 'Divorciado(a)';
-                else if (marital.toLowerCase().includes('widow') || marital.toLowerCase().includes('viud')) sel.value = 'Viudo(a)';
+                try {
+                    const sel = document.getElementById('clienteEstadoCivil');
+                    if (sel) {
+                        const m = marital.toLowerCase();
+                        if (m.includes('married') || m.includes('casad')) { sel.value = 'Casado(a)'; filledCount++; }
+                        else if (m.includes('single') || m.includes('solter')) { sel.value = 'Soltero(a)'; filledCount++; }
+                        else if (m.includes('divorced') || m.includes('divorciad')) { sel.value = 'Divorciado(a)'; filledCount++; }
+                        else if (m.includes('widow') || m.includes('viud')) { sel.value = 'Viudo(a)'; filledCount++; }
+                    }
+                } catch (e) {}
             }
             
-            // Dirección México
+            // Direcciones
             const addrMX = findValue(['Address in Mexico', 'Domicilio en Mexico', 'Direccion Mexico', 'Domicilio']);
-            if (addrMX) document.getElementById('clienteDirMx').value = addrMX;
+            if (safeSetValue('clienteDirMx', addrMX)) filledCount++;
             
-            // Dirección extranjero
             const addrExt = findValue(['Address Abroad', 'Direccion Extranjero', 'Domicilio Extranjero']);
-            if (addrExt) document.getElementById('clienteDirExt').value = addrExt;
+            if (safeSetValue('clienteDirExt', addrExt)) filledCount++;
             
             // Ocupación
             const occupation = findValue(['Occupation', 'Ocupacion', 'Profesion']);
             if (occupation) {
-                const sel = document.getElementById('clienteOcupacion');
-                if (occupation.toLowerCase().includes('retired') || occupation.toLowerCase().includes('jubilad') || occupation.toLowerCase().includes('retirad')) {
-                    sel.value = 'Jubilado';
-                } else if (occupation.toLowerCase().includes('employ') || occupation.toLowerCase().includes('emplead')) {
-                    sel.value = 'Empleado';
-                }
-                toggleDatosLaborales();
+                try {
+                    const sel = document.getElementById('clienteOcupacion');
+                    if (sel) {
+                        const o = occupation.toLowerCase();
+                        if (o.includes('retired') || o.includes('jubilad') || o.includes('retirad')) { 
+                            sel.value = 'Jubilado'; filledCount++; 
+                        } else if (o.includes('employ') || o.includes('emplead')) { 
+                            sel.value = 'Empleado'; filledCount++; 
+                        }
+                        if(typeof toggleDatosLaborales === 'function') toggleDatosLaborales();
+                    }
+                } catch (e) {}
             }
             
-            // CURP
+            // Regex patterns
             const curpMatch = text.match(/[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z\d]\d/);
-            if (curpMatch && document.getElementById('clienteCURP')) {
-                document.getElementById('clienteCURP').value = curpMatch[0];
-            }
+            if (curpMatch && safeSetValue('clienteCURP', curpMatch[0])) filledCount++;
             
-            // RFC
             const rfcMatch = text.match(/[A-Z&Ñ]{3,4}\d{6}[A-Z0-9]{3}/);
-            if (rfcMatch && document.getElementById('clienteRFC')) {
-                document.getElementById('clienteRFC').value = rfcMatch[0];
-            }
+            if (rfcMatch && safeSetValue('clienteRFC', rfcMatch[0])) filledCount++;
             
-            // Email
             const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-            if (emailMatch && document.getElementById('clienteEmail')) {
-                document.getElementById('clienteEmail').value = emailMatch[0];
-            }
+            if (emailMatch && safeSetValue('clienteEmail', emailMatch[0])) filledCount++;
             
-            // Teléfono
             const telMatch = text.match(/\b\d{10}\b/);
-            if (telMatch && document.getElementById('clienteTelefono')) {
-                document.getElementById('clienteTelefono').value = telMatch[0];
-            }
+            if (telMatch && safeSetValue('clienteTelefono', telMatch[0])) filledCount++;
+            
+            return filledCount;
         }
         // ========== FIN OCR CLIENTES ==========
     </script>
