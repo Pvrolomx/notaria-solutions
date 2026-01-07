@@ -271,11 +271,11 @@
             <div class="grid-2">
                 <div class="field">
                     <label>Precio de Enajenación (Venta) $</label>
-                    <input type="number" id="precioVenta" placeholder="3,000,000" value="">
+                    <input type="number" id="precioVenta" placeholder="" value="">
                 </div>
                 <div class="field">
                     <label>Precio de Adquisición (Compra) $</label>
-                    <input type="number" id="precioCompra" placeholder="950,000" value="">
+                    <input type="number" id="precioCompra" placeholder="" value="">
                 </div>
             </div>
             
@@ -867,23 +867,18 @@
                     isrEstado = 0;
                     mejorOpcion = '25% s/Ingreso (pérdida fiscal)';
                 } else {
-                    // Extranjero: calcular TRES opciones (Art.160 LISR)
+                    // Extranjero: DOS opciones (Art.160 LISR)
                     const isr25 = precioVenta * 0.25; // 25% sobre ingreso SIN deducciones
                     isr35 = utilidadGravable * 0.35; // 35% sobre ganancia CON deducciones
                     
-                    const utilidadAnual = utilidadGravable / anios;
-                    const isrAnual = calcularISRTablas(utilidadAnual, fechaVenta);
-                    isrTablas = isrAnual * anios;
-                    
-                    // Elegir la menor de las TRES opciones
-                    const opciones = [
-                        { valor: isr25, nombre: '25% s/Ingreso (sin deduc)' },
-                        { valor: isr35, nombre: '35% s/Ganancia (con deduc)' },
-                        { valor: isrTablas, nombre: 'Tablas Art.152' }
-                    ];
-                    opciones.sort((a, b) => a.valor - b.valor);
-                    isrTotal = opciones[0].valor;
-                    mejorOpcion = opciones[0].nombre;
+                    // Elegir la menor de las DOS opciones
+                    if (isr25 <= isr35) {
+                        isrTotal = isr25;
+                        mejorOpcion = '25% s/Ingreso (sin deduc)';
+                    } else {
+                        isrTotal = isr35;
+                        mejorOpcion = '35% s/Ganancia (con deduc)';
+                    }
                     
                     // Extranjero: todo a federación
                     isrFederacion = isrTotal;

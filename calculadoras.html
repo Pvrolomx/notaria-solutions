@@ -44,6 +44,21 @@
         }
         .header h1 { font-size: 1.25rem; color: var(--primary); margin-bottom: 0.25rem; }
         .header p { font-size: 0.8rem; color: var(--text-light); }
+        #header-content { position: relative; }
+        .back-arrow {
+            position: absolute;
+            left: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+            padding: 0.5rem;
+        }
+        .back-arrow:hover { color: var(--accent); }
+        @media (max-width: 500px) {
+            .back-arrow { left: -30px; font-size: 1.25rem; }
+        }
         
         /* Menu Principal */
         .menu-grid {
@@ -231,9 +246,11 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <h1>🧮 Calculadoras</h1>
-        <p>Herramientas de cálculo notarial</p>
+    <header class="header" id="main-header">
+        <div id="header-content">
+            <h1>🧮 Calculadoras</h1>
+            <p>Herramientas de cálculo notarial</p>
+        </div>
     </header>
 
     <div class="container">
@@ -266,11 +283,9 @@
 
         <!-- CALCULADORA ISR -->
         <div id="panel-isr" class="panel">
-            <button class="back-btn" onclick="showPanel('menu')">← Volver al menú</button>
+            
             
             <div class="card">
-                <h2>💰 Calculadora ISR</h2>
-                <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:1rem;">Impuesto por venta de inmuebles</p>
                 
                 <div class="grid-2">
                     <div class="field">
@@ -362,11 +377,9 @@
 
         <!-- CALCULADORA ISTP -->
         <div id="panel-istp" class="panel">
-            <button class="back-btn" onclick="showPanel('menu')">← Volver al menú</button>
+            
             
             <div class="card">
-                <h2>🏠 Calculadora ISTP</h2>
-                <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:1rem;">Impuesto por adquisición de inmuebles</p>
                 
                 <div class="field">
                     <label>Estado</label>
@@ -416,11 +429,9 @@
 
         <!-- CALCULADORA IVA -->
         <div id="panel-iva" class="panel">
-            <button class="back-btn" onclick="showPanel('menu')">← Volver al menú</button>
+            
             
             <div class="card">
-                <h2>🧾 Calculadora IVA</h2>
-                <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:1rem;">IVA en operaciones inmobiliarias</p>
                 
                 <div class="field">
                     <label>Tipo de Operación</label>
@@ -522,6 +533,20 @@
         function showPanel(id) {
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             document.getElementById('panel-' + id).classList.add('active');
+            updateHeader(id);
+        }
+        
+        function updateHeader(id) {
+            const headerContent = document.getElementById('header-content');
+            const titles = {
+                menu: { icon: '🧮', title: 'Calculadoras', desc: 'Herramientas de cálculo notarial', back: false },
+                isr: { icon: '💰', title: 'Calculadora ISR', desc: 'Impuesto por venta de inmuebles', back: true },
+                istp: { icon: '🏠', title: 'Calculadora ISTP', desc: 'Impuesto por adquisición de inmuebles', back: true },
+                iva: { icon: '🧾', title: 'Calculadora IVA', desc: 'IVA en operaciones inmobiliarias', back: true }
+            };
+            const t = titles[id];
+            headerContent.innerHTML = (t.back ? '<div class="back-arrow" onclick="showPanel(\'menu\')">←</div>' : '') +
+                '<h1>' + t.icon + ' ' + t.title + '</h1><p>' + t.desc + '</p>';
         }
         
         function setTipoISR(tipo, el) {
