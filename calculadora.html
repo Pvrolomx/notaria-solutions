@@ -232,11 +232,11 @@
             <div class="grid-2">
                 <div class="field">
                     <label>Fecha de Enajenación (Venta)</label>
-                    <input type="date" id="fechaVenta" value="2024-12-31">
+                    <input type="date" id="fechaVenta" value="">
                 </div>
                 <div class="field">
                     <label>Fecha de Adquisición (Compra)</label>
-                    <input type="date" id="fechaCompra" value="2015-06-12">
+                    <input type="date" id="fechaCompra" value="">
                 </div>
             </div>
             <div class="checkbox-group">
@@ -245,11 +245,11 @@
                     <span>Enajenante Extranjero (sin RFC)</span>
                 </label>
                 <label class="checkbox-item">
-                    <input type="checkbox" id="esCasaHabitacion">
+                    <input type="checkbox" id="esCasaHabitacion" onchange="if(this.checked) document.getElementById('esLocalComercial').checked=false">
                     <span>Casa Habitación (exención)</span>
                 </label>
                 <label class="checkbox-item">
-                    <input type="checkbox" id="esLocalComercial">
+                    <input type="checkbox" id="esLocalComercial" onchange="if(this.checked) document.getElementById('esCasaHabitacion').checked=false">
                     <span>Local Comercial (genera IVA)</span>
                 </label>
             </div>
@@ -271,11 +271,11 @@
             <div class="grid-2">
                 <div class="field">
                     <label>Precio de Enajenación (Venta) $</label>
-                    <input type="number" id="precioVenta" placeholder="3,000,000" value="3000000">
+                    <input type="number" id="precioVenta" placeholder="3,000,000" value="">
                 </div>
                 <div class="field">
                     <label>Precio de Adquisición (Compra) $</label>
-                    <input type="number" id="precioCompra" placeholder="950,000" value="950000">
+                    <input type="number" id="precioCompra" placeholder="950,000" value="">
                 </div>
             </div>
             
