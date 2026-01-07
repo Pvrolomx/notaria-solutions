@@ -280,9 +280,9 @@
             </div>
             
             <div class="tabs">
-                <div class="tab active" onclick="setTipoInmueble('mixto')">Terreno + Construcción</div>
-                <div class="tab" onclick="setTipoInmueble('terreno')">Solo Terreno</div>
-                <div class="tab" onclick="setTipoInmueble('construccion')">Solo Construcción</div>
+                <div class="tab active" onclick="setTipoInmueble(this, 'mixto')">Terreno + Construcción</div>
+                <div class="tab" onclick="setTipoInmueble(this, 'terreno')">Solo Terreno</div>
+                <div class="tab" onclick="setTipoInmueble(this, 'construccion')">Solo Construcción</div>
             </div>
             
             <div id="splitSection">
@@ -623,10 +623,10 @@
         
         let tipoInmueble = 'mixto';
         
-        function setTipoInmueble(tipo) {
+        function setTipoInmueble(el, tipo) {
             tipoInmueble = tipo;
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
+            el.classList.add('active');
             
             const splitSection = document.getElementById('splitSection');
             if (tipo === 'mixto') {
@@ -971,14 +971,15 @@
         }
     </script>
     <!-- PWA Service Worker -->
+    <!-- PWA Service Worker -->
     <script>
-    if (" serviceWorker in navigator) {
- window.addEventListener(oad, () => {
- navigator.serviceWorker.register(/sw.js)
- .then(reg => console.log(SW registrado, reg.scope))
- .catch(err => console.log(SW error, err));
- });
- }
- </script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/sw.js")
+                .then(reg => console.log("SW registrado", reg.scope))
+                .catch(err => console.log("SW error", err));
+        });
+    }
+    </script>
 </body>
 </html>
