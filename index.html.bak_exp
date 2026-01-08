@@ -1092,10 +1092,6 @@
                             <option value="">Seleccionar cliente...</option>
                         </select>
                     </div>
-                    <div style="grid-column:1/-1;">
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Partes Involucradas</label>
-                        <textarea id="expPartes" rows="2" placeholder="Otras partes del acto (compradores, vendedores, apoderados...)" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
-                    </div>
                     <div>
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Estado</label>
                         <select id="expEstado" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
@@ -1107,15 +1103,11 @@
                         </select>
                     </div>
                     <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Presupuesto</label>
-                        <input type="number" id="expPresupuesto" placeholder="0.00" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
-                    <div>
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha Apertura</label>
                         <input type="date" id="expFecha" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                     </div>
                     <div style="grid-column:1/-1;">
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Notas Adicionales</label>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Descripción</label>
                         <textarea id="expDescripcion" rows="3" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
                     </div>
                 </div>
@@ -2037,8 +2029,6 @@
             document.getElementById('expEstado').selectedIndex = 0;
             document.getElementById('expFecha').value = new Date().toISOString().split('T')[0];
             document.getElementById('expDescripcion').value = '';
-            document.getElementById('expPartes').value = '';
-            document.getElementById('expPresupuesto').value = '';
             cargarClientesEnSelect();
             document.getElementById('tituloFormExpediente').textContent = 'Nuevo Expediente';
             showPanel('nuevo-expediente');
@@ -2081,8 +2071,6 @@
                 estado: document.getElementById('expEstado').value,
                 fecha: document.getElementById('expFecha').value,
                 descripcion: document.getElementById('expDescripcion').value.trim(),
-                partes: document.getElementById('expPartes').value.trim(),
-                presupuesto: document.getElementById('expPresupuesto').value,
                 fechaCreacion: new Date().toISOString()
             };
             
@@ -2137,8 +2125,6 @@
             document.getElementById('expEstado').value = e.estado;
             document.getElementById('expFecha').value = e.fecha || '';
             document.getElementById('expDescripcion').value = e.descripcion || '';
-            document.getElementById('expPartes').value = e.partes || '';
-            document.getElementById('expPresupuesto').value = e.presupuesto || '';
             
             document.getElementById('tituloFormExpediente').textContent = 'Editar Expediente';
             showPanel('nuevo-expediente');
