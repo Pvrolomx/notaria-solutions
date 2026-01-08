@@ -1329,21 +1329,44 @@
         <!-- LLAMADAS -->
         <div id="panel-llamadas" class="panel">
             <div class="panel-header">
-                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <button class="back-btn" onclick="showPanel('home')">&#8592;</button>
                 <div>
                     <h2>Llamadas</h2>
-                    <p>Voz y video</p>
+                    <p>Contactos y comunicaciones</p>
                 </div>
             </div>
             
-            <div class="call-container">
-                <div class="call-avatar">AS</div>
-                <div class="call-name">Ana - Asistente</div>
-                <div class="call-status">Listo para llamar</div>
-                <div class="call-actions">
-                    <button class="call-btn mute">🎤</button>
-                    <button class="call-btn call">📞</button>
-                    <button class="call-btn video">📹</button>
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="margin-bottom: 1rem;">Contactos Frecuentes</h3>
+                <div id="contactos-frecuentes">
+                    <p style="color: #888; text-align: center;">
+                        Los contactos de tus clientes apareceran aqui
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="margin-bottom: 1rem;">Llamada Rapida</h3>
+                <div class="field" style="margin-bottom: 1rem;">
+                    <label>Numero de telefono</label>
+                    <input type="tel" id="llamada-tel" placeholder="322 xxx xxxx">
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-primary" onclick="iniciarLlamada()" style="flex: 1;">
+                        Llamar
+                    </button>
+                    <button class="btn" onclick="iniciarWhatsApp()" style="flex: 1; background: #25D366; color: white;">
+                        WhatsApp
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">Historial Reciente</h3>
+                <div id="historial-llamadas">
+                    <p style="color: #888; text-align: center;">
+                        No hay llamadas recientes
+                    </p>
                 </div>
             </div>
         </div>
@@ -2733,6 +2756,123 @@
             return filledCount;
         }
         // ========== FIN OCR CLIENTES ==========
+        
+        // ========== LLAMADAS ==========
+        function iniciarLlamada() {
+            var tel = document.getElementById('llamada-tel').value.replace(/\s/g, '');
+            if (!tel) {
+                alert('Ingresa un numero de telefono');
+                return;
+            }
+            // Guardar en historial
+            guardarHistorialLlamada(tel, 'llamada');
+            // Abrir enlace tel:
+            window.location.href = 'tel:' + tel;
+        }
+        
+        function iniciarWhatsApp() {
+            var tel = document.getElementById('llamada-tel').value.replace(/\s/g, '');
+            if (!tel) {
+                alert('Ingresa un numero de telefono');
+                return;
+            }
+            // Limpiar numero (quitar +52 si tiene, agregar 52 si no)
+            tel = tel.replace(/^\+/, '');
+            if (!tel.startsWith('52') && tel.length === 10) {
+                tel = '52' + tel;
+            }
+            // Guardar en historial
+            guardarHistorialLlamada(tel, 'whatsapp');
+            // Abrir WhatsApp
+            window.open('https://wa.me/' + tel, '_blank');
+        }
+        
+        function guardarHistorialLlamada(tel, tipo) {
+            var historial = JSON.parse(localStorage.getItem('historial_llamadas') || '[]');
+            historial.unshift({
+                tel: tel,
+                tipo: tipo,
+                fecha: new Date().toISOString()
+            });
+            // Mantener solo las ultimas 20
+            historial = historial.slice(0, 20);
+            localStorage.setItem('historial_llamadas', JSON.stringify(historial));
+            renderHistorialLlamadas();
+        }
+        
+        function renderHistorialLlamadas() {
+            var historial = JSON.parse(localStorage.getItem('historial_llamadas') || '[]');
+            var container = document.getElementById('historial-llamadas');
+            if (!container) return;
+            
+            if (historial.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center;">No hay llamadas recientes</p>';
+                return;
+            }
+            
+            var html = '';
+            historial.forEach(function(item) {
+                var fecha = new Date(item.fecha);
+                var fechaStr = fecha.toLocaleDateString() + ' ' + fecha.toLocaleTimeString().slice(0,5);
+                var icono = item.tipo === 'whatsapp' ? '💬' : '📞';
+                html += '<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #eee;">';
+                html += '<span>' + icono + ' ' + item.tel + '</span>';
+                html += '<span style="color: #888; font-size: 0.8rem;">' + fechaStr + '</span>';
+                html += '</div>';
+            });
+            container.innerHTML = html;
+        }
+        
+        function renderContactosFrecuentes() {
+            var clientes = JSON.parse(localStorage.getItem('notaria_clientes') || '[]');
+            var container = document.getElementById('contactos-frecuentes');
+            if (!container) return;
+            
+            // Filtrar clientes que tienen telefono
+            var conTel = clientes.filter(function(c) { return c.telefono; });
+            
+            if (conTel.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center;">Los contactos de tus clientes apareceran aqui</p>';
+                return;
+            }
+            
+            var html = '';
+            conTel.slice(0, 10).forEach(function(cliente) {
+                html += '<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #eee;">';
+                html += '<span style="font-weight: 500;">' + cliente.nombre + '</span>';
+                html += '<div style="display: flex; gap: 0.5rem;">';
+                html += '<button onclick="llamarContacto('' + cliente.telefono + '')" style="padding: 0.25rem 0.5rem; border: none; background: #3B82F6; color: white; border-radius: 4px; cursor: pointer;">📞</button>';
+                html += '<button onclick="whatsappContacto('' + cliente.telefono + '')" style="padding: 0.25rem 0.5rem; border: none; background: #25D366; color: white; border-radius: 4px; cursor: pointer;">💬</button>';
+                html += '</div>';
+                html += '</div>';
+            });
+            container.innerHTML = html;
+        }
+        
+        function llamarContacto(tel) {
+            guardarHistorialLlamada(tel, 'llamada');
+            window.location.href = 'tel:' + tel;
+        }
+        
+        function whatsappContacto(tel) {
+            tel = tel.replace(/^\+/, '').replace(/\s/g, '');
+            if (!tel.startsWith('52') && tel.length === 10) {
+                tel = '52' + tel;
+            }
+            guardarHistorialLlamada(tel, 'whatsapp');
+            window.open('https://wa.me/' + tel, '_blank');
+        }
+        
+        // Inicializar al cargar panel de llamadas
+        var originalShowPanel = showPanel;
+        showPanel = function(panelId) {
+            originalShowPanel(panelId);
+            if (panelId === 'llamadas') {
+                renderHistorialLlamadas();
+                renderContactosFrecuentes();
+            }
+        };
+        // ========== FIN LLAMADAS ==========
     </script>
 </body>
 </html>
