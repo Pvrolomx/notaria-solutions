@@ -740,10 +740,6 @@
             inpcCache[key] = fallback;
             return fallback;
         }
-
-            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-            return INPC[key] || INPC['2024-12'];
-        }
         
         function calcularISRTablas(utilidadAnual, fechaVentaParam) {
             if (utilidadAnual <= 0) return 0;
