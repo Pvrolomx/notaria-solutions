@@ -26,3 +26,25 @@
 
 ---
 Generado por LAQCA 🐝 | Colmena 2026
+
+## ESTÁNDARES DE DESARROLLO
+
+### Almacenamiento de Archivos
+**REGLA OBLIGATORIA**: Toda app que almacene expedientes o documentos DEBE usar IndexedDB para archivos adjuntos.
+
+**Razones:**
+- localStorage tiene límite 5-10MB (insuficiente)
+- IndexedDB maneja archivos grandes (50MB+)
+- Funciona 100% offline
+- Datos permanecen en dispositivo del usuario (privacidad)
+
+**Aplicable a:**
+- Hub Notarial (expedientes) ✓ Implementado
+- Cualquier módulo con archivos adjuntos
+- Apps futuras con documentos
+
+**Patrón de implementación:**
+- Metadata (nombre, fecha, estado) → localStorage
+- Archivos binarios (PDF, imágenes) → IndexedDB
+- Escalabilidad → SD externa en Android
+
