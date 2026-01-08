@@ -266,6 +266,10 @@
                     <input type="checkbox" id="esLocalComercial" onchange="if(this.checked) document.getElementById('esCasaHabitacion').checked=false">
                     <span>Local Comercial (genera IVA)</span>
                 </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" id="usarTablaLocal" checked>
+                    <span>Usar tabla INPC local (ejercicio)</span>
+                </label>
             </div>
             <div class="grid-2" id="enajenantesSection">
                 <div class="field">
@@ -718,8 +722,18 @@
         // Cache para INPC consultados
         const inpcCache = {};
         
-        // getINPC ahora es async y usa API primero
+        // getINPC ahora es async y respeta toggle de tabla local
         async function getINPCAsync(fecha, usarMesAnterior = false) {
+            // Si toggle "Usar tabla local" esta activo, usar directamente la tabla
+            const usarLocal = document.getElementById('usarTablaLocal')?.checked;
+            if (usarLocal) {
+                const dt = new Date(fecha);
+                if (usarMesAnterior) { dt.setMonth(dt.getMonth() - 1); }
+                const yr = dt.getFullYear();
+                const mo = dt.getMonth() + 1;
+                const ky = yr + '-' + String(mo).padStart(2, '0');
+                return INPC[ky] || INPC['2024-12'];
+            }
             const d = new Date(fecha);
             if (usarMesAnterior) {
                 d.setMonth(d.getMonth() - 1);
