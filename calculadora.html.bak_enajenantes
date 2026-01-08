@@ -887,18 +887,16 @@
                     isrEstado = 0;
                 }
             } else if (!hayPerdida) {
-                // Residente: cálculo por enajenante (Art. 126 LISR)
-                const utilidadPorEnajenante = utilidadGravable / numEnajenantes;
-                const utilidadAnual = utilidadPorEnajenante / anios;
+                // Residente: cálculo normal
+                const utilidadAnual = utilidadGravable / anios;
                 const isrAnual = calcularISRTablas(utilidadAnual, fechaVenta);
-                const isrPorEnajenante = isrAnual * anios;
-                isrTotal = isrPorEnajenante * numEnajenantes;
+                isrTotal = isrAnual * anios;
                 
-                // Distribución: Estado (máx 5% utilidad por enajenante) + Federación
-                const isrEstadoPorEnajenante = Math.min(utilidadPorEnajenante * 0.05, isrPorEnajenante);
-                isrEstado = isrEstadoPorEnajenante * numEnajenantes;
+                // Distribución: Estado (máx 5%) + Federación
+                isrEstado = Math.min(utilidadGravable * 0.05, isrTotal);
                 isrFederacion = isrTotal - isrEstado;
             }
+            
             // IVA local comercial
             const iva = esLocalComercial ? precioVenta * 0.16 : 0;
             
