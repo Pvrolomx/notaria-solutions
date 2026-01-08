@@ -236,7 +236,7 @@
                 </div>
                 <div class="field">
                     <label>Precio de Adquisición $</label>
-                    <input type="number" id="precioCompra" placeholder="" value="">
+                    <input type="text" id="precioCompra" placeholder="0" oninput="formatInputMoney(this)">
                 </div>
             </div>
             <div class="grid-2">
@@ -246,7 +246,7 @@
                 </div>
                 <div class="field">
                     <label>Precio de Enajenación $</label>
-                    <input type="number" id="precioVenta" placeholder="" value="">
+                    <input type="text" id="precioVenta" placeholder="0" oninput="formatInputMoney(this)">
                 </div>
             </div>
             <div class="checkbox-group">
@@ -775,18 +775,30 @@
         function formatMoney(num) {
             return '$' + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
+        // Formatear input mientras escribe
+        function formatInputMoney(input) {
+            let val = input.value.replace(/[^0-9.]/g, '');
+            if (val === '') { input.value = ''; return; }
+            let parts = val.split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            input.value = parts.join('.');
+        }
+        function parseInputMoney(val) {
+            return parseFloat(val.replace(/,/g, '')) || 0;
+        }
+
         
         async function calcularISR() {
             // Obtener valores
             const fechaVenta = document.getElementById('fechaVenta').value;
             const fechaCompra = document.getElementById('fechaCompra').value;
-            const precioVenta = parseFloat(document.getElementById('precioVenta').value) || 0;
-            const precioCompra = parseFloat(document.getElementById('precioCompra').value) || 0;
+            const precioVenta = parseInputMoney(document.getElementById('precioVenta').value);
+            const precioCompra = parseInputMoney(document.getElementById('precioCompra').value);
             const pctTerreno = parseFloat(document.getElementById('pctTerreno').value) / 100;
             const pctConstruccion = parseFloat(document.getElementById('pctConstruccion').value) / 100;
-            const gastosMejoras = parseFloat(document.getElementById('gastosMejoras').value) || 0;
+            const gastosMejoras = parseInputMoney(document.getElementById('gastosMejoras').value);
             const fechaMejoras = document.getElementById('fechaMejoras').value;
-            const comision = parseFloat(document.getElementById('comision').value) || 0;
+            const comision = parseInputMoney(document.getElementById('comision').value);
             const esExtranjero = document.getElementById('esExtranjero').checked;
             const esCasaHabitacion = document.getElementById('esCasaHabitacion').checked;
             const aplicaExencion = document.getElementById('aplicaExencion').checked;

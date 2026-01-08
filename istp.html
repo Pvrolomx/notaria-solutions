@@ -152,12 +152,12 @@
             
             <div class="field">
                 <label>Valor de Operación (Precio Venta) $</label>
-                <input type="number" id="valorOperacion" placeholder="0" value="">
+                <input type="text" id="valorOperacion" placeholder="0" oninput="formatInputMoney(this)">
             </div>
             
             <div class="field" id="fieldValorFiscal">
                 <label>Valor Fiscal / Catastral $</label>
-                <input type="number" id="valorFiscal" placeholder="0" value="">
+                <input type="text" id="valorFiscal" placeholder="0" oninput="formatInputMoney(this)">
             </div>
             
             <button class="btn btn-primary" onclick="calcularISTP()">
@@ -257,8 +257,8 @@
         }
         
         function calcularISTP() {
-            const valorOperacion = parseFloat(document.getElementById('valorOperacion').value) || 0;
-            const valorFiscal = parseFloat(document.getElementById('valorFiscal').value) || 0;
+            const valorOperacion = parseInputMoney(document.getElementById('valorOperacion').value) || 0;
+            const valorFiscal = parseInputMoney(document.getElementById('valorFiscal').value) || 0;
             
             let base, istp, metodo;
             
