@@ -1092,10 +1092,6 @@
                             <option value="">Seleccionar cliente...</option>
                         </select>
                     </div>
-                    <div style="grid-column:1/-1;">
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Partes Involucradas</label>
-                        <textarea id="expPartes" rows="2" placeholder="Otros participantes en la operación..." style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
-                    </div>
                     <div>
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Estado</label>
                         <select id="expEstado" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
@@ -1110,12 +1106,8 @@
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha Apertura</label>
                         <input type="date" id="expFecha" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                     </div>
-                    <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Presupuesto</label>
-                        <input type="number" id="expPresupuesto" placeholder="$0.00" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
                     <div style="grid-column:1/-1;">
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Notas Adicionales</label>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Descripción</label>
                         <textarea id="expDescripcion" rows="3" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
                     </div>
                 </div>
@@ -1180,7 +1172,7 @@
                     </div>
                     <div style="grid-column:1/-1;">
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Título / Asunto *</label>
-                        <select id="citaTitulo" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;"><option value="Compraventa">Compraventa</option><option value="Poder Notarial">Poder Notarial</option><option value="Testamento">Testamento</option><option value="Constitución SA">Constitución SA</option><option value="Fideicomiso">Fideicomiso</option><option value="Donación">Donación</option><option value="Otro">Otro</option></select>
+                        <input type="text" id="citaTitulo" placeholder="Ej: Firma de escritura" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                     </div>
                     <div>
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Tipo</label>
@@ -1942,34 +1934,13 @@
                 (c.rfc ? '<p><strong>RFC:</strong> ' + c.rfc + '</p>' : '') +
                 (c.notas ? '<p style="margin-top:1rem;"><strong>Notas:</strong><br>' + c.notas + '</p>' : '') +
                 '</div>' +
-                '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap;">' +
+                '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;">' +
                 '<a href="https://wa.me/52' + c.tel1.replace(/\D/g,'') + '" class="btn btn-primary" style="flex:1;text-decoration:none;">WhatsApp</a>' +
-                '<button class="btn btn-outline" style="color:var(--primary);" onclick="editarClienteActual()">✏️ Modificar</button>' +
                 '<button class="btn btn-outline" style="color:var(--danger);" onclick="eliminarCliente(' + idx + ')">Eliminar</button>' +
-                '</div>' +
-                '<div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);">' +
-                '<h4 style="margin-bottom:1rem;color:var(--primary);">📁 Documentos</h4>' +
-                '<div id="docsCliente' + idx + '" style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">' +
-                '<label class="btn btn-outline" style="text-align:center;cursor:pointer;font-size:0.85rem;">' +
-                '📄 INE<input type="file" accept="image/*,.pdf" style="display:none" onchange="subirDocCliente(' + idx + ',\'ine\',this)">' +
-                '</label>' +
-                '<label class="btn btn-outline" style="text-align:center;cursor:pointer;font-size:0.85rem;">' +
-                '🛂 Pasaporte<input type="file" accept="image/*,.pdf" style="display:none" onchange="subirDocCliente(' + idx + ',\'pasaporte\',this)">' +
-                '</label>' +
-                '<label class="btn btn-outline" style="text-align:center;cursor:pointer;font-size:0.85rem;">' +
-                '🆔 CURP<input type="file" accept="image/*,.pdf" style="display:none" onchange="subirDocCliente(' + idx + ',\'curp\',this)">' +
-                '</label>' +
-                '<label class="btn btn-outline" style="text-align:center;cursor:pointer;font-size:0.85rem;">' +
-                '🏠 Domicilio<input type="file" accept="image/*,.pdf" style="display:none" onchange="subirDocCliente(' + idx + ',\'domicilio\',this)">' +
-                '</label>' +
-                '</div>' +
-                '<div id="listaDocsCliente' + idx + '" style="margin-top:1rem;"></div>' +
                 '</div>';
             
             document.getElementById('detalleCliente').innerHTML = html;
             showPanel('ver-cliente');
-            // Mostrar documentos existentes
-            setTimeout(function() { mostrarDocsCliente(idx); }, 100);
         }
         
         function editarClienteActual() {
@@ -1993,82 +1964,6 @@
             saveClientes(clientes);
             renderClientes();
             showPanel('clientes');
-        }
-        
-        // Subir documento de cliente
-        function subirDocCliente(idx, tipo, input) {
-            if (!input.files || !input.files[0]) return;
-            var file = input.files[0];
-            var clientes = getClientes();
-            var c = clientes[idx];
-            
-            // Inicializar array de documentos si no existe
-            if (!c.documentos) c.documentos = {};
-            
-            // Convertir archivo a base64
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                c.documentos[tipo] = {
-                    nombre: file.name,
-                    tipo: file.type,
-                    fecha: new Date().toISOString(),
-                    data: e.target.result
-                };
-                saveClientes(clientes);
-                mostrarDocsCliente(idx);
-                showToast('Documento ' + tipo.toUpperCase() + ' guardado');
-            };
-            reader.readAsDataURL(file);
-        }
-        
-        // Mostrar documentos del cliente
-        function mostrarDocsCliente(idx) {
-            var clientes = getClientes();
-            var c = clientes[idx];
-            var container = document.getElementById('listaDocsCliente' + idx);
-            if (!container) return;
-            
-            if (!c.documentos || Object.keys(c.documentos).length === 0) {
-                container.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem;">Sin documentos subidos</p>';
-                return;
-            }
-            
-            var html = '<div style="display:flex;flex-direction:column;gap:0.5rem;">';
-            var tipos = {ine: '📄 INE', pasaporte: '🛂 Pasaporte', curp: '🆔 CURP', domicilio: '🏠 Domicilio'};
-            for (var tipo in c.documentos) {
-                var doc = c.documentos[tipo];
-                html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem;background:var(--bg);border-radius:6px;">' +
-                    '<span style="font-size:0.85rem;">' + (tipos[tipo] || tipo) + ' - ' + doc.nombre + '</span>' +
-                    '<div style="display:flex;gap:0.5rem;">' +
-                    '<button onclick="verDocCliente(' + idx + ',\'' + tipo + '\')" style="padding:4px 8px;border:none;background:var(--primary);color:white;border-radius:4px;cursor:pointer;font-size:0.75rem;">Ver</button>' +
-                    '<button onclick="borrarDocCliente(' + idx + ',\'' + tipo + '\')" style="padding:4px 8px;border:none;background:var(--danger);color:white;border-radius:4px;cursor:pointer;font-size:0.75rem;">✕</button>' +
-                    '</div></div>';
-            }
-            html += '</div>';
-            container.innerHTML = html;
-        }
-        
-        // Ver documento
-        function verDocCliente(idx, tipo) {
-            var clientes = getClientes();
-            var doc = clientes[idx].documentos[tipo];
-            if (!doc) return;
-            var win = window.open();
-            if (doc.tipo.startsWith('image/')) {
-                win.document.write('<img src="' + doc.data + '" style="max-width:100%;">');
-            } else {
-                win.document.write('<embed src="' + doc.data + '" type="application/pdf" width="100%" height="100%">');
-            }
-        }
-        
-        // Borrar documento
-        function borrarDocCliente(idx, tipo) {
-            if (!confirm('¿Eliminar este documento?')) return;
-            var clientes = getClientes();
-            delete clientes[idx].documentos[tipo];
-            saveClientes(clientes);
-            mostrarDocsCliente(idx);
-            showToast('Documento eliminado');
         }
         
         
