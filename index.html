@@ -341,6 +341,35 @@
         .btn-outline { background: var(--white); border: 1px solid var(--border); color: var(--text); }
         .btn-full { width: 100%; }
         
+        
+        /* Chat Contactos */
+        .chat-contactos {
+            padding: 0.5rem;
+        }
+        .contacto-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .contacto-item:hover {
+            background: var(--bg-light);
+        }
+        .contacto-info {
+            flex: 1;
+        }
+        .contacto-nombre {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        .contacto-ultimo {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
         /* Chat Panel */
         .chat-container {
             background: var(--white);
@@ -1301,27 +1330,44 @@
         <!-- CHAT -->
         <div id="panel-chat" class="panel">
             <div class="panel-header">
-                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <button class="back-btn" onclick="volverDeChat()">←</button>
                 <div>
-                    <h2>Chat</h2>
-                    <p>Mensajería interna</p>
+                    <h2 id="chatTitulo">Chat</h2>
+                    <p id="chatSubtitulo">Mensajería interna</p>
                 </div>
             </div>
             
-            <div class="chat-container">
-                <div class="chat-header">
-                    <div class="chat-avatar">AS</div>
-                    <div>
-                        <div style="font-weight:500;">Ana - Asistente</div>
-                        <div style="font-size:0.7rem;color:var(--text-light);">En línea</div>
+            <!-- Lista de contactos -->
+            <div id="chatContactos" class="chat-contactos">
+                <div class="contacto-item" onclick="abrirChat('ana', 'Ana García', 'AG')">
+                    <div class="chat-avatar">AG</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">Ana García</div>
+                        <div class="contacto-ultimo">Asistente Legal</div>
                     </div>
                 </div>
-                <div class="chat-messages" id="chatMessages">
-                    <!-- Los mensajes se agregan dinámicamente -->
+                <div class="contacto-item" onclick="abrirChat('carlos', 'Carlos López', 'CL')">
+                    <div class="chat-avatar">CL</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">Carlos López</div>
+                        <div class="contacto-ultimo">Notario Auxiliar</div>
+                    </div>
                 </div>
+                <div class="contacto-item" onclick="abrirChat('maria', 'María Sánchez', 'MS')">
+                    <div class="chat-avatar">MS</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">María Sánchez</div>
+                        <div class="contacto-ultimo">Recepción</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Conversación -->
+            <div id="chatConversacion" class="chat-container" style="display:none;">
+                <div class="chat-messages" id="chatMessages"></div>
                 <div class="chat-input">
-                    <input type="text" placeholder="Escribe un mensaje...">
-                    <button>➤</button>
+                    <input type="text" id="chatInput" placeholder="Escribe un mensaje..." onkeypress="if(event.key==='Enter')enviarMensaje()">
+                    <button onclick="enviarMensaje()">➤</button>
                 </div>
             </div>
         </div>
@@ -2873,7 +2919,80 @@
             }
         };
         // ========== FIN LLAMADAS ==========
-    </script>
+    
+        // ===== CHAT INTERNO =====
+        let chatActual = null;
+        let chatNombreActual = '';
+        
+        function abrirChat(id, nombre, iniciales) {
+            chatActual = id;
+            chatNombreActual = nombre;
+            
+            // Cambiar título
+            document.getElementById('chatTitulo').textContent = nombre;
+            document.getElementById('chatSubtitulo').textContent = 'Conversación';
+            
+            // Mostrar conversación, ocultar contactos
+            document.getElementById('chatContactos').style.display = 'none';
+            document.getElementById('chatConversacion').style.display = 'flex';
+            
+            // Cargar mensajes
+            cargarMensajes(id);
+        }
+        
+        function volverDeChat() {
+            if (chatActual) {
+                // Volver a lista de contactos
+                chatActual = null;
+                document.getElementById('chatTitulo').textContent = 'Chat';
+                document.getElementById('chatSubtitulo').textContent = 'Mensajería interna';
+                document.getElementById('chatContactos').style.display = 'block';
+                document.getElementById('chatConversacion').style.display = 'none';
+            } else {
+                // Volver al home
+                showPanel('home');
+            }
+        }
+        
+        function cargarMensajes(contactoId) {
+            const key = 'notaria_chat_' + contactoId;
+            const mensajes = JSON.parse(localStorage.getItem(key) || '[]');
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+            
+            mensajes.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'message ' + (msg.enviado ? 'sent' : 'received');
+                div.innerHTML = msg.texto + '<div style="font-size:0.6rem;opacity:0.7;margin-top:2px;">' + msg.hora + '</div>';
+                container.appendChild(div);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function enviarMensaje() {
+            const input = document.getElementById('chatInput');
+            const texto = input.value.trim();
+            if (!texto || !chatActual) return;
+            
+            const key = 'notaria_chat_' + chatActual;
+            const mensajes = JSON.parse(localStorage.getItem(key) || '[]');
+            
+            const ahora = new Date();
+            const hora = ahora.getHours().toString().padStart(2,'0') + ':' + ahora.getMinutes().toString().padStart(2,'0');
+            
+            mensajes.push({
+                texto: texto,
+                enviado: true,
+                hora: hora
+            });
+            
+            localStorage.setItem(key, JSON.stringify(mensajes));
+            input.value = '';
+            cargarMensajes(chatActual);
+        }
+
+        </script>
 </body>
 </html>
 <!-- deploy fix -->
