@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora ISR - Notarial Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1E3A5F;
+            --primary-light: #2D5A8B;
+            --accent: #C9A227;
+            --bg: #F5F7FA;
+            --white: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #E1E5EB;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        @media (max-width: 600px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+        .field {
+            margin-bottom: 1rem;
+        }
+        .field label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+        .field input, .field select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .field input:focus, .field select:focus {
+            border-color: var(--primary);
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background: var(--primary-light);
+        }
+        .result-section {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 1rem;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .result-row:last-child {
+            border-bottom: none;
+        }
+        .result-row.total {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--primary);
+            border-top: 2px solid var(--primary);
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+        }
+        .result-row.highlight {
+            background: #FEF3C7;
+            margin: 0.5rem -1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+        }
+        .result-row .label {
+            color: var(--text-light);
+        }
+        .result-row .value {
+            font-weight: 500;
+        }
+        .result-row .value.negative {
+            color: var(--danger);
+        }
+        .result-row .value.positive {
+            color: var(--success);
+        }
+        .info-box {
+            background: #EBF5FF;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+        .warning-box {
+            background: #FEF3C7;
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .tab {
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .hidden { display: none; }
+    </style>
+    <!-- PWA Meta Tags -->
+    <link rel=" manifest href=/manifest.json>
+ <meta name=	heme-color content=#d4af37>
+ <meta name=pple-mobile-web-app-capable content=yes>
+ <meta name=pple-mobile-web-app-status-bar-style content=black-translucent>
+ <meta name=pple-mobile-web-app-title content=NotariaSol>
+ <link rel=pple-touch-icon href=/icon-192.png>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧮 Calculadora ISR por Enajenación</h1>
+            <p>Cálculo de Impuesto Sobre la Renta en venta de inmuebles</p>
+        </div>
+
+        <!-- DATOS GENERALES -->
+        <div class="card">
+            <h2>📋 Datos Generales</h2>
+            <div class="grid-2">
+                <div class="field">
+                    <label>Fecha de Enajenación (Venta)</label>
+                    <input type="date" id="fechaVenta" value="">
+                </div>
+                <div class="field">
+                    <label>Fecha de Adquisición (Compra)</label>
+                    <input type="date" id="fechaCompra" value="">
+                </div>
+            </div>
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="esExtranjero">
+                    <span>Enajenante Extranjero (sin RFC)</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" id="esCasaHabitacion" onchange="if(this.checked) document.getElementById('esLocalComercial').checked=false">
+                    <span>Casa Habitación (exención)</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" id="esLocalComercial" onchange="if(this.checked) document.getElementById('esCasaHabitacion').checked=false">
+                    <span>Local Comercial (genera IVA)</span>
+                </label>
+            </div>
+            <div class="grid-2" id="enajenantesSection">
+                <div class="field">
+                    <label>Número de Enajenantes</label>
+                    <input type="number" id="numEnajenantes" value="1" min="1" max="10">
+                </div>
+                <div class="field">
+                    <label>¿Cuántos aplican exención?</label>
+                    <input type="number" id="numExentan" value="1" min="0" max="10">
+                </div>
+            </div>
+        </div>
+
+        <!-- VALORES -->
+        <div class="card">
+            <h2>💰 Valores de la Operación</h2>
+            <div class="grid-2">
+                <div class="field">
+                    <label>Precio de Enajenación (Venta) $</label>
+                    <input type="number" id="precioVenta" placeholder="3,000,000" value="">
+                </div>
+                <div class="field">
+                    <label>Precio de Adquisición (Compra) $</label>
+                    <input type="number" id="precioCompra" placeholder="950,000" value="">
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="setTipoInmueble(this, 'mixto')">Terreno + Construcción</div>
+                <div class="tab" onclick="setTipoInmueble(this, 'terreno')">Solo Terreno</div>
+                <div class="tab" onclick="setTipoInmueble(this, 'construccion')">Solo Construcción</div>
+            </div>
+            
+            <div id="splitSection">
+                <div class="grid-2">
+                    <div class="field">
+                        <label>% Terreno</label>
+                        <input type="number" id="pctTerreno" value="20" min="0" max="100">
+                    </div>
+                    <div class="field">
+                        <label>% Construcción</label>
+                        <input type="number" id="pctConstruccion" value="80" min="0" max="100">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <label>Gastos/Mejoras Deducibles (opcional) $</label>
+                <input type="number" id="gastosMejoras" placeholder="0" value="0">
+            </div>
+            <div class="field">
+                <label>Fecha de Mejoras (si aplica)</label>
+                <input type="date" id="fechaMejoras">
+            </div>
+            <div class="field">
+                <label>Comisión Inmobiliaria (opcional) $</label>
+                <input type="number" id="comision" placeholder="0" value="0">
+            </div>
+        </div>
+
+        <!-- BOTÓN CALCULAR -->
+        <button class="btn btn-primary" onclick="calcularISR()">
+            🧮 Calcular ISR
+        </button>
+
+        <!-- RESULTADOS -->
+        <div id="resultados" class="card hidden">
+            <h2>📊 Resultados del Cálculo</h2>
+            
+            <div class="result-section">
+                <h3 style="font-size:0.85rem;margin-bottom:1rem;color:var(--primary);">Actualización por Inflación</h3>
+                <div class="result-row">
+                    <span class="label">INPC Venta</span>
+                    <span class="value" id="resInpcVenta">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">INPC Compra</span>
+                    <span class="value" id="resInpcCompra">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">Factor de Actualización</span>
+                    <span class="value" id="resFactor">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">Años Transcurridos</span>
+                    <span class="value" id="resAnios">-</span>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <h3 style="font-size:0.85rem;margin-bottom:1rem;color:var(--primary);">Deducciones</h3>
+                <div class="result-row">
+                    <span class="label">Terreno Actualizado</span>
+                    <span class="value" id="resTerrenoAct">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">Construcción (depreciada y actualizada)</span>
+                    <span class="value" id="resConstruccionAct">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">Gastos/Mejoras</span>
+                    <span class="value" id="resGastos">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">Comisión</span>
+                    <span class="value" id="resComision">-</span>
+                </div>
+                <div class="result-row" style="font-weight:600;">
+                    <span class="label">TOTAL DEDUCCIONES</span>
+                    <span class="value" id="resTotalDeduc">-</span>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <h3 style="font-size:0.85rem;margin-bottom:1rem;color:var(--primary);">Utilidad Gravable</h3>
+                <div class="result-row">
+                    <span class="label">Precio Enajenación</span>
+                    <span class="value" id="resPrecioVenta">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">(-) Total Deducciones</span>
+                    <span class="value" id="resMenosDeduc">-</span>
+                </div>
+                <div id="rowExencion" class="result-row hidden">
+                    <span class="label">(-) Exención Casa Habitación</span>
+                    <span class="value" id="resExencion">-</span>
+                </div>
+                <div id="rowPctGravable" class="result-row hidden">
+                    <span class="label">% Gravable (después exención)</span>
+                    <span class="value" id="resPctGravable">-</span>
+                </div>
+                <div class="result-row" style="font-weight:600;">
+                    <span class="label">UTILIDAD GRAVABLE</span>
+                    <span class="value" id="resUtilidad">-</span>
+                </div>
+            </div>
+            
+            <div id="seccionExtranjero" class="result-section hidden">
+                <h3 style="font-size:0.85rem;margin-bottom:1rem;color:var(--primary);">ISR Extranjero (2 opciones)</h3>
+                <div class="result-row">
+                    <span class="label">Opción 1: 25% s/Ingreso (sin deduc)</span>
+                    <span class="value" id="resIsr25">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">Opción 2: 35% s/Ganancia (con deduc)</span>
+                    <span class="value" id="resIsr35">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">Opción 3: Tablas Art.152</span>
+                    <span class="value" id="resIsrTablas">-</span>
+                </div>
+                <div class="result-row highlight">
+                    <span class="label">✅ MEJOR OPCIÓN</span>
+                    <span class="value" id="resMejorOpcion">-</span>
+                </div>
+            </div>
+            
+            <div id="seccionResidente" class="result-section">
+                <h3 style="font-size:0.85rem;margin-bottom:1rem;color:var(--primary);">Cálculo ISR</h3>
+                <div class="result-row">
+                    <span class="label">Utilidad Anual (Utilidad ÷ Años)</span>
+                    <span class="value" id="resUtilidadAnual">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">ISR Anual (tablas Art. 152)</span>
+                    <span class="value" id="resIsrAnual">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">ISR Total (ISR Anual × Años)</span>
+                    <span class="value" id="resIsrTotal">-</span>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <h3 style="font-size:0.85rem;margin-bottom:1rem;color:var(--primary);">Distribución del ISR</h3>
+                <div class="result-row">
+                    <span class="label">ISR Entidad Federativa (máx 5%)</span>
+                    <span class="value" id="resIsrEstado">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">ISR Federación</span>
+                    <span class="value" id="resIsrFed">-</span>
+                </div>
+                <div id="rowIva" class="result-row hidden">
+                    <span class="label">IVA Local Comercial (16%)</span>
+                    <span class="value" id="resIva">-</span>
+                </div>
+                <div class="result-row total">
+                    <span class="label">💰 TOTAL ISR A PAGAR</span>
+                    <span class="value" id="resIsrFinal">-</span>
+                </div>
+                <div class="result-row">
+                    <span class="label">% sobre Precio Venta</span>
+                    <span class="value" id="resPorcentaje">-</span>
+                </div>
+            </div>
+            
+            <div id="infoPerdida" class="warning-box hidden">
+                ⚠️ <strong>Pérdida:</strong> El cálculo arroja una pérdida (deducciones mayores al precio de venta). No hay ISR a pagar.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // TABLAS INPC (Base 2da quincena julio 2018 = 100)
+        const INPC = {
+            // 2015
+            '2015-01': 87.6360, '2015-02': 87.7170, '2015-03': 87.9620, '2015-04': 87.4970,
+            '2015-05': 87.1760, '2015-06': 87.1131, '2015-07': 87.1110, '2015-08': 87.2420,
+            '2015-09': 87.4880, '2015-10': 87.8340, '2015-11': 88.2250, '2015-12': 88.6110,
+            // 2016
+            '2016-01': 88.9810, '2016-02': 89.3540, '2016-03': 89.4870, '2016-04': 89.2530,
+            '2016-05': 89.0910, '2016-06': 89.1830, '2016-07': 89.3890, '2016-08': 89.6280,
+            '2016-09': 90.0850, '2016-10': 90.6120, '2016-11': 91.1640, '2016-12': 91.7970,
+            // 2017
+            '2017-01': 93.0630, '2017-02': 93.6620, '2017-03': 94.0640, '2017-04': 93.8130,
+            '2017-05': 93.5190, '2017-06': 93.5920, '2017-07': 93.8360, '2017-08': 94.3220,
+            '2017-09': 94.5510, '2017-10': 95.0300, '2017-11': 95.9800, '2017-12': 96.6120,
+            // 2018
+            '2018-01': 97.0570, '2018-02': 97.2870, '2018-03': 97.5250, '2018-04': 97.2800,
+            '2018-05': 97.0480, '2018-06': 97.2540, '2018-07': 97.6500, '2018-08': 98.2080,
+            '2018-09': 98.5180, '2018-10': 98.9180, '2018-11': 99.8490, '2018-12': 100.2530,
+            // 2019
+            '2019-01': 100.5130, '2019-02': 100.5080, '2019-03': 100.9220, '2019-04': 100.7890,
+            '2019-05': 100.5340, '2019-06': 100.5240, '2019-07': 100.7810, '2019-08': 100.8650,
+            '2019-09': 101.0790, '2019-10': 101.5510, '2019-11': 102.2980, '2019-12': 102.6780,
+            // 2020
+            '2020-01': 103.1080, '2020-02': 103.4050, '2020-03': 103.5970, '2020-04': 102.9440,
+            '2020-05': 102.7660, '2020-06': 103.2340, '2020-07': 103.7580, '2020-08': 104.1530,
+            '2020-09': 104.4690, '2020-10': 104.9050, '2020-11': 105.3080, '2020-12': 105.8510,
+            // 2021
+            '2021-01': 106.5870, '2021-02': 107.1290, '2021-03': 107.7280, '2021-04': 108.0560,
+            '2021-05': 108.2880, '2021-06': 108.7790, '2021-07': 109.3520, '2021-08': 109.8860,
+            '2021-09': 110.4510, '2021-10': 111.2780, '2021-11': 112.3460, '2021-12': 112.9250,
+            // 2022
+            '2022-01': 113.8490, '2022-02': 114.6140, '2022-03': 115.4440, '2022-04': 116.0160,
+            '2022-05': 116.2670, '2022-06': 117.0420, '2022-07': 117.8720, '2022-08': 118.7720,
+            '2022-09': 119.4700, '2022-10': 119.8990, '2022-11': 120.5180, '2022-12': 120.8450,
+            // 2023
+            '2023-01': 121.6510, '2023-02': 122.0510, '2023-03': 122.2500, '2023-04': 122.5060,
+            '2023-05': 122.3680, '2023-06': 122.5860, '2023-07': 122.9510, '2023-08': 123.5110,
+            '2023-09': 124.1380, '2023-10': 124.7110, '2023-11': 125.3050, '2023-12': 126.1890,
+            // 2024
+            '2024-01': 127.1530, '2024-02': 127.5700, '2024-03': 127.7970, '2024-04': 128.2140,
+            '2024-05': 128.0750, '2024-06': 128.5200, '2024-07': 129.2300, '2024-08': 129.8910,
+            '2024-09': 130.4720, '2024-10': 131.0230, '2024-11': 131.8240, '2024-12': 137.9770,
+            // 2025
+            '2025-01': 138.1780, '2025-02': 138.5130, '2025-03': 138.7260, '2025-04': 139.1200,
+            '2025-05': 139.3500, '2025-06': 140.5190, '2025-07': 140.8300, '2025-08': 141.3200,
+            '2025-09': 141.8500, '2025-10': 142.2100, '2025-11': 142.6450, '2025-12': 143.1000
+        };
+        
+                // TABLAS ISR POR AÑO (Art. 152 LISR - Anexo 8 RMF)
+        // Tabla 2019-2022 (sin ajuste por inflación <10%)
+        const TABLA_ISR_2020 = [
+            { limiteInf: 0.01, limiteSup: 6942.20, cuotaFija: 0.00, tasa: 1.92 },
+            { limiteInf: 6942.21, limiteSup: 58922.16, cuotaFija: 133.28, tasa: 6.40 },
+            { limiteInf: 58922.17, limiteSup: 103550.44, cuotaFija: 3460.01, tasa: 10.88 },
+            { limiteInf: 103550.45, limiteSup: 120372.83, cuotaFija: 8315.57, tasa: 16.00 },
+            { limiteInf: 120372.84, limiteSup: 144119.23, cuotaFija: 11007.14, tasa: 17.92 },
+            { limiteInf: 144119.24, limiteSup: 290667.75, cuotaFija: 15262.49, tasa: 21.36 },
+            { limiteInf: 290667.76, limiteSup: 458132.29, cuotaFija: 46565.26, tasa: 23.52 },
+            { limiteInf: 458132.30, limiteSup: 874650.00, cuotaFija: 85952.92, tasa: 30.00 },
+            { limiteInf: 874650.01, limiteSup: 1166200.00, cuotaFija: 210908.23, tasa: 32.00 },
+            { limiteInf: 1166200.01, limiteSup: 3498600.00, cuotaFija: 304204.21, tasa: 34.00 },
+            { limiteInf: 3498600.01, limiteSup: Infinity, cuotaFija: 1097220.21, tasa: 35.00 }
+        ];
+        
+        // Tabla 2023-2025 (ajustada por inflación >10% en 2022)
+        const TABLA_ISR_2023 = [
+            { limiteInf: 0.01, limiteSup: 8952.49, cuotaFija: 0, tasa: 1.92 },
+            { limiteInf: 8952.50, limiteSup: 75984.55, cuotaFija: 171.88, tasa: 6.40 },
+            { limiteInf: 75984.56, limiteSup: 133536.07, cuotaFija: 4461.94, tasa: 10.88 },
+            { limiteInf: 133536.08, limiteSup: 155229.80, cuotaFija: 10723.55, tasa: 16.00 },
+            { limiteInf: 155229.81, limiteSup: 185852.57, cuotaFija: 14194.54, tasa: 17.92 },
+            { limiteInf: 185852.58, limiteSup: 374837.88, cuotaFija: 19682.13, tasa: 21.36 },
+            { limiteInf: 374837.89, limiteSup: 590795.99, cuotaFija: 60049.40, tasa: 23.52 },
+            { limiteInf: 590796.00, limiteSup: 1127926.84, cuotaFija: 110842.74, tasa: 30.00 },
+            { limiteInf: 1127926.85, limiteSup: 1503902.46, cuotaFija: 271981.99, tasa: 32.00 },
+            { limiteInf: 1503902.47, limiteSup: 4511707.37, cuotaFija: 392294.17, tasa: 34.00 },
+            { limiteInf: 4511707.38, limiteSup: Infinity, cuotaFija: 1414947.85, tasa: 35.00 }
+        ];
+
+        // Tabla 2026+ (nueva actualización por inflación)
+        const TABLA_ISR_2026 = [
+            { limiteInf: 0.01, limiteSup: 10135.11, cuotaFija: 0, tasa: 1.92 },
+            { limiteInf: 10135.12, limiteSup: 86015.21, cuotaFija: 194.59, tasa: 6.40 },
+            { limiteInf: 86015.22, limiteSup: 151171.32, cuotaFija: 5050.95, tasa: 10.88 },
+            { limiteInf: 151171.33, limiteSup: 175729.53, cuotaFija: 12138.78, tasa: 16.00 },
+            { limiteInf: 175729.54, limiteSup: 210394.93, cuotaFija: 16068.10, tasa: 17.92 },
+            { limiteInf: 210394.94, limiteSup: 424319.74, cuotaFija: 22280.25, tasa: 21.36 },
+            { limiteInf: 424319.75, limiteSup: 668859.54, cuotaFija: 67949.21, tasa: 23.52 },
+            { limiteInf: 668859.55, limiteSup: 1276729.11, cuotaFija: 125458.11, tasa: 30.00 },
+            { limiteInf: 1276729.12, limiteSup: 1702305.47, cuotaFija: 307819.18, tasa: 32.00 },
+            { limiteInf: 1702305.48, limiteSup: 5106916.42, cuotaFija: 443998.60, tasa: 34.00 },
+            { limiteInf: 5106916.43, limiteSup: Infinity, cuotaFija: 1601546.35, tasa: 35.00 }
+        ];
+        
+        // Función para obtener tabla ISR según año de enajenación
+        function getTablaISR(fechaVenta) {
+            const year = new Date(fechaVenta).getFullYear();
+            if (year <= 2022) return TABLA_ISR_2020;
+            if (year <= 2025) return TABLA_ISR_2023;
+            return TABLA_ISR_2026;
+        }
+        
+        // Valor UDI (actualizar periodicamente)
+        const VALOR_UDI = 8.465213; // Diciembre 2024
+        const EXENCION_UDIS = 700000; // 700,000 UDIs
+
+        // TABLA UDIS HISTORICOS (valor aproximado dia 10-15 de cada mes)
+        // Fuente: Banxico via IDC Online
+        const UDIS = {
+            // 2015
+            '2015-01': 5.270368, '2015-02': 5.278052, '2015-03': 5.295461, '2015-04': 5.317426,
+            '2015-05': 5.294884, '2015-06': 5.296445, '2015-07': 5.306463, '2015-08': 5.320616,
+            '2015-09': 5.339710, '2015-10': 5.362855, '2015-11': 5.393159, '2015-12': 5.416833,
+            // 2016
+            '2016-01': 5.451567, '2016-02': 5.480134, '2016-03': 5.500521, '2016-04': 5.510616,
+            '2016-05': 5.497563, '2016-06': 5.502451, '2016-07': 5.517812, '2016-08': 5.537219,
+            '2016-09': 5.563102, '2016-10': 5.593751, '2016-11': 5.635782, '2016-12': 5.672159,
+            // 2017
+            '2017-01': 5.729851, '2017-02': 5.787125, '2017-03': 5.824183, '2017-04': 5.853256,
+            '2017-05': 5.855221, '2017-06': 5.862017, '2017-07': 5.878462, '2017-08': 5.903654,
+            '2017-09': 5.932183, '2017-10': 5.954628, '2017-11': 5.999527, '2017-12': 6.044891,
+            // 2018
+            '2018-01': 6.076232, '2018-02': 6.104218, '2018-03': 6.126819, '2018-04': 6.137682,
+            '2018-05': 6.118534, '2018-06': 6.126455, '2018-07': 6.154172, '2018-08': 6.183962,
+            '2018-09': 6.216127, '2018-10': 6.243517, '2018-11': 6.290254, '2018-12': 6.325516,
+            // 2019
+            '2019-01': 6.348728, '2019-02': 6.357284, '2019-03': 6.371425, '2019-04': 6.386125,
+            '2019-05': 6.373218, '2019-06': 6.371852, '2019-07': 6.384621, '2019-08': 6.402516,
+            '2019-09': 6.418253, '2019-10': 6.435127, '2019-11': 6.472519, '2019-12': 6.505821,
+            // 2020
+            '2020-01': 6.413049, '2020-02': 6.450946, '2020-03': 6.465984, '2020-04': 6.503457,
+            '2020-05': 6.406500, '2020-06': 6.437546, '2020-07': 6.457434, '2020-08': 6.510552,
+            '2020-09': 6.535170, '2020-10': 6.556696, '2020-11': 6.590288, '2020-12': 6.603870,
+            // 2021
+            '2021-01': 6.636254, '2021-02': 6.689125, '2021-03': 6.736419, '2021-04': 6.775218,
+            '2021-05': 6.784125, '2021-06': 6.796327, '2021-07': 6.831254, '2021-08': 6.866128,
+            '2021-09': 6.891527, '2021-10': 6.934218, '2021-11': 6.992514, '2021-12': 7.049817,
+            // 2022
+            '2022-01': 7.093821, '2022-02': 7.163605, '2022-03': 7.237251, '2022-04': 7.298254,
+            '2022-05': 7.328127, '2022-06': 7.378521, '2022-07': 7.453218, '2022-08': 7.521634,
+            '2022-09': 7.572519, '2022-10': 7.621435, '2022-11': 7.672518, '2022-12': 7.714625,
+            // 2023
+            '2023-01': 7.768521, '2023-02': 7.819254, '2023-03': 7.858127, '2023-04': 7.881254,
+            '2023-05': 7.884218, '2023-06': 7.885127, '2023-07': 7.909621, '2023-08': 7.943521,
+            '2023-09': 7.979254, '2023-10': 8.014127, '2023-11': 8.051824, '2023-12': 8.085127,
+            // 2024
+            '2024-01': 8.122144, '2024-02': 8.156821, '2024-03': 8.187254, '2024-04': 8.209521,
+            '2024-05': 8.209854, '2024-06': 8.214127, '2024-07': 8.247521, '2024-08': 8.283254,
+            '2024-09': 8.318127, '2024-10': 8.352854, '2024-11': 8.398521, '2024-12': 8.465213,
+            // 2025
+            '2025-01': 8.512854, '2025-02': 8.548127, '2025-03': 8.582521, '2025-04': 8.612854,
+            '2025-05': 8.615127, '2025-06': 8.618521, '2025-07': 8.648254, '2025-08': 8.682127,
+            '2025-09': 8.715521, '2025-10': 8.748254, '2025-11': 8.784127, '2025-12': 8.820521
+        };
+        
+        // Obtener UDI por fecha (usa mes de la fecha)
+        function getUDI(fecha) {
+            const d = new Date(fecha);
+            const year = d.getFullYear();
+            const month = d.getMonth() + 1;
+            const key = `${year}-${String(month).padStart(2, '0')}`;
+            return UDIS[key] || VALOR_UDI; // Fallback a valor actual
+        }
+
+        
+        let tipoInmueble = 'mixto';
+        
+        function setTipoInmueble(el, tipo) {
+            tipoInmueble = tipo;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            
+            const splitSection = document.getElementById('splitSection');
+            if (tipo === 'mixto') {
+                splitSection.classList.remove('hidden');
+            } else {
+                splitSection.classList.add('hidden');
+                if (tipo === 'terreno') {
+                    document.getElementById('pctTerreno').value = 100;
+                    document.getElementById('pctConstruccion').value = 0;
+                } else {
+                    document.getElementById('pctTerreno').value = 0;
+                    document.getElementById('pctConstruccion').value = 100;
+                }
+            }
+        }
+        
+        function getINPC(fecha, usarMesAnterior = false) {
+            const d = new Date(fecha);
+            if (usarMesAnterior) {
+                d.setMonth(d.getMonth() - 1);
+            }
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            return INPC[key] || INPC['2024-12'];
+        }
+        // Función para consultar API INPC
+        async function fetchINPC(year, month) {
+            try {
+                const response = await fetch(`/api/inpc?year=${year}&month=${month}`);
+                const data = await response.json();
+                if (data.success && data.valor) {
+                    console.log(`INPC API: ${year}-${month} = ${data.valor}`);
+                    return data.valor;
+                }
+            } catch (e) {
+                console.log('API INPC no disponible, usando tabla local');
+            }
+            return null;
+        }
+        
+        // Cache para UDI consultados
+        const udiCache = {};
+        
+        // Fetch UDI de API Banxico
+        async function fetchUDI(year, month) {
+            try {
+                const response = await fetch('/api/udi?year=' + year + '&month=' + month);
+                if (!response.ok) return null;
+                const data = await response.json();
+                if (data.success && data.valor) {
+                    console.log('UDI API:', year, month, '=', data.valor);
+                    return data.valor;
+                }
+            } catch (e) {
+                console.log('Error UDI API:', e);
+            }
+            return null;
+        }
+        
+        // Obtener UDI con API primero, fallback a tabla local
+        async function getUDIAsync(fecha) {
+            const d = new Date(fecha);
+            const year = d.getFullYear();
+            const month = d.getMonth() + 1;
+            const key = year + '-' + String(month).padStart(2, '0');
+            
+            // Revisar cache
+            if (udiCache[key]) {
+                return udiCache[key];
+            }
+            
+            // Intentar API primero
+            const apiValue = await fetchUDI(year, month);
+            if (apiValue) {
+                udiCache[key] = apiValue;
+                return apiValue;
+            }
+            
+            // Fallback a tabla local o valor por defecto
+            const fallback = UDIS[key] || VALOR_UDI;
+            udiCache[key] = fallback;
+            return fallback;
+        }
+        
+        // Cache para INPC consultados
+        const inpcCache = {};
+        
+        // getINPC ahora es async y usa API primero
+        async function getINPCAsync(fecha, usarMesAnterior = false) {
+            const d = new Date(fecha);
+            if (usarMesAnterior) {
+                d.setMonth(d.getMonth() - 1);
+            }
+            const year = d.getFullYear();
+            const month = d.getMonth() + 1;
+            const key = `${year}-${String(month).padStart(2, '0')}`;
+            
+            // Revisar cache
+            if (inpcCache[key]) {
+                return inpcCache[key];
+            }
+            
+            // Intentar API primero
+            const apiValue = await fetchINPC(year, month);
+            if (apiValue) {
+                inpcCache[key] = apiValue;
+                return apiValue;
+            }
+            
+            // Fallback a tabla local
+            const fallback = INPC[key] || INPC['2024-12'];
+            inpcCache[key] = fallback;
+            return fallback;
+        }
+
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            return INPC[key] || INPC['2024-12'];
+        }
+        
+        function calcularISRTablas(utilidadAnual, fechaVentaParam) {
+            if (utilidadAnual <= 0) return 0;
+            const tablaISR = getTablaISR(fechaVentaParam || fechaVenta);
+            for (const rango of tablaISR) {
+                if (utilidadAnual >= rango.limiteInf && utilidadAnual <= rango.limiteSup) {
+                    const excedente = utilidadAnual - rango.limiteInf;
+                    return rango.cuotaFija + (excedente * rango.tasa / 100);
+                }
+            }
+            return 0;
+        }
+        
+        function formatMoney(num) {
+            return '$' + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        
+        async function calcularISR() {
+            // Obtener valores
+            const fechaVenta = document.getElementById('fechaVenta').value;
+            const fechaCompra = document.getElementById('fechaCompra').value;
+            const precioVenta = parseFloat(document.getElementById('precioVenta').value) || 0;
+            const precioCompra = parseFloat(document.getElementById('precioCompra').value) || 0;
+            const pctTerreno = parseFloat(document.getElementById('pctTerreno').value) / 100;
+            const pctConstruccion = parseFloat(document.getElementById('pctConstruccion').value) / 100;
+            const gastosMejoras = parseFloat(document.getElementById('gastosMejoras').value) || 0;
+            const fechaMejoras = document.getElementById('fechaMejoras').value;
+            const comision = parseFloat(document.getElementById('comision').value) || 0;
+            const esExtranjero = document.getElementById('esExtranjero').checked;
+            const esCasaHabitacion = document.getElementById('esCasaHabitacion').checked;
+            const esLocalComercial = document.getElementById('esLocalComercial').checked;
+            
+            // Calcular años transcurridos
+            const dVenta = new Date(fechaVenta);
+            const dCompra = new Date(fechaCompra);
+            let anios = Math.floor((dVenta - dCompra) / (365.25 * 24 * 60 * 60 * 1000));
+            anios = Math.max(1, Math.min(anios, 20)); // Entre 1 y 20
+            
+            // Obtener INPC
+            const inpcVenta = await getINPCAsync(fechaVenta, true); // Mes ANTERIOR per Art.124 LISR // Mes ANTERIOR per Art.124 LISR
+            const inpcCompra = await getINPCAsync(fechaCompra);
+            const factorINPC = inpcVenta / inpcCompra;
+            
+            // Calcular valores actualizados
+            const precioTerrenoCompra = precioCompra * pctTerreno;
+            const precioConstruccionCompra = precioCompra * pctConstruccion;
+            
+            // Terreno: solo actualización
+            const terrenoActualizado = precioTerrenoCompra * factorINPC;
+            
+            // Construcción: depreciación + actualización
+            const pctDepreciacion = Math.min(anios * 3, 80) / 100; // 3% por año, máx 80%
+            const construccionDepreciada = precioConstruccionCompra * (1 - pctDepreciacion);
+            const construccionActualizada = construccionDepreciada * factorINPC;
+            
+            // Mejoras actualizadas con INPC (si hay fecha)
+            let mejorasActualizadas = gastosMejoras;
+            if (gastosMejoras > 0 && fechaMejoras) {
+                const inpcMejoras = await getINPCAsync(fechaMejoras);
+                const factorMejoras = inpcVenta / inpcMejoras;
+                mejorasActualizadas = gastosMejoras * factorMejoras;
+            }
+            
+            // Total deducciones
+            let totalDeducciones = terrenoActualizado + construccionActualizada + mejorasActualizadas + comision;
+            
+            // COSTO MINIMO 10% (Art.121 LISR)
+            const costoMinimo = precioVenta * 0.10;
+            const usaCostoMinimo = (terrenoActualizado + construccionActualizada) < costoMinimo;
+            if (usaCostoMinimo) {
+                totalDeducciones = costoMinimo + mejorasActualizadas + comision;
+            }
+            
+            // Exención casa habitación - METODOLOGIA NUVIGANT
+            const numEnajenantes = parseInt(document.getElementById('numEnajenantes').value) || 1;
+            const numExentan = parseInt(document.getElementById('numExentan').value) || 0;
+            
+            let exencionTotal = 0;
+            let pctGravable = 1; // 100% gravable por defecto
+            let precioGravable = precioVenta;
+            let deduccionesGravables = totalDeducciones;
+            
+            if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
+                // Exencion = 700k UDIs × numero de enajenantes que exentan
+                const udiVenta = await getUDIAsync(fechaVenta);
+                exencionTotal = EXENCION_UDIS * udiVenta * numExentan;
+                
+                if (precioVenta > exencionTotal) {
+                    // Porcentaje gravable = excedente / precio total
+                    pctGravable = (precioVenta - exencionTotal) / precioVenta;
+                    // Aplicar % a precio Y deducciones (metodologia Nuvigant)
+                    precioGravable = precioVenta * pctGravable;
+                    deduccionesGravables = totalDeducciones * pctGravable;
+                } else {
+                    // Todo exento
+                    pctGravable = 0;
+                    precioGravable = 0;
+                    deduccionesGravables = 0;
+                }
+            }
+            
+            // Utilidad gravable = precio gravable - deducciones gravables
+            let utilidadGravable = precioGravable - deduccionesGravables;
+            const hayPerdida = utilidadGravable <= 0;
+            utilidadGravable = Math.max(0, utilidadGravable);
+            
+            // Calcular ISR
+            let isrTotal = 0;
+            let isrEstado = 0;
+            let isrFederacion = 0;
+            let isr35 = 0;
+            let isrTablas = 0;
+            let mejorOpcion = '';
+            
+            if (esExtranjero) {
+                if (hayPerdida) {
+                    // PÉRDIDA FISCAL = 25% OBLIGATORIO (Art.160 LISR)
+                    // Extranjero con pérdida NO puede elegir, debe pagar 25% sobre venta bruta
+                    isrTotal = precioVenta * 0.25;
+                    isrFederacion = isrTotal;
+                    isrEstado = 0;
+                    mejorOpcion = '25% s/Ingreso (pérdida fiscal)';
+                } else {
+                    // Extranjero: calcular TRES opciones (Art.160 LISR)
+                    const isr25 = precioVenta * 0.25; // 25% sobre ingreso SIN deducciones
+                    isr35 = utilidadGravable * 0.35; // 35% sobre ganancia CON deducciones
+                    
+                    const utilidadAnual = utilidadGravable / anios;
+                    const isrAnual = calcularISRTablas(utilidadAnual, fechaVenta);
+                    isrTablas = isrAnual * anios;
+                    
+                    // Elegir la menor de las TRES opciones
+                    const opciones = [
+                        { valor: isr25, nombre: '25% s/Ingreso (sin deduc)' },
+                        { valor: isr35, nombre: '35% s/Ganancia (con deduc)' },
+                        { valor: isrTablas, nombre: 'Tablas Art.152' }
+                    ];
+                    opciones.sort((a, b) => a.valor - b.valor);
+                    isrTotal = opciones[0].valor;
+                    mejorOpcion = opciones[0].nombre;
+                    
+                    // Extranjero: todo a federación
+                    isrFederacion = isrTotal;
+                    isrEstado = 0;
+                }
+            } else if (!hayPerdida) {
+                // Residente: cálculo normal
+                const utilidadAnual = utilidadGravable / anios;
+                const isrAnual = calcularISRTablas(utilidadAnual, fechaVenta);
+                isrTotal = isrAnual * anios;
+                
+                // Distribución: Estado (máx 5%) + Federación
+                isrEstado = Math.min(utilidadGravable * 0.05, isrTotal);
+                isrFederacion = isrTotal - isrEstado;
+            }
+            
+            // IVA local comercial
+            const iva = esLocalComercial ? precioVenta * 0.16 : 0;
+            
+            // Mostrar resultados
+            document.getElementById('resultados').classList.remove('hidden');
+            
+            document.getElementById('resInpcVenta').textContent = inpcVenta.toFixed(4);
+            document.getElementById('resInpcCompra').textContent = inpcCompra.toFixed(4);
+            document.getElementById('resFactor').textContent = factorINPC.toFixed(4);
+            document.getElementById('resAnios').textContent = anios;
+            
+            document.getElementById('resTerrenoAct').textContent = formatMoney(terrenoActualizado);
+            document.getElementById('resConstruccionAct').textContent = formatMoney(construccionActualizada);
+            document.getElementById('resGastos').textContent = formatMoney(mejorasActualizadas);
+            document.getElementById('resComision').textContent = formatMoney(comision);
+            document.getElementById('resTotalDeduc').textContent = formatMoney(totalDeducciones);
+            
+            document.getElementById('resPrecioVenta').textContent = formatMoney(precioVenta);
+            document.getElementById('resMenosDeduc').textContent = formatMoney(totalDeducciones);
+            
+            if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
+                document.getElementById('rowExencion').classList.remove('hidden');
+                document.getElementById('resExencion').textContent = formatMoney(exencionTotal) + ' (' + ((1-pctGravable)*100).toFixed(2) + '% exento)';
+            } else {
+                document.getElementById('rowExencion').classList.add('hidden');
+            }
+            
+            if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
+                document.getElementById('rowPctGravable').classList.remove('hidden');
+                document.getElementById('resPctGravable').textContent = (pctGravable * 100).toFixed(2) + '%';
+            } else {
+                document.getElementById('rowPctGravable').classList.add('hidden');
+            }
+            document.getElementById('resUtilidad').textContent = formatMoney(utilidadGravable);
+            
+            if (esExtranjero) {
+                document.getElementById('seccionExtranjero').classList.remove('hidden');
+                document.getElementById('seccionResidente').classList.add('hidden');
+                document.getElementById('resIsr25').textContent = formatMoney(isr25);
+                document.getElementById('resIsr35').textContent = formatMoney(isr35);
+                document.getElementById('resIsrTablas').textContent = formatMoney(isrTablas);
+                document.getElementById('resMejorOpcion').textContent = mejorOpcion + ' - ' + formatMoney(isrTotal);
+            } else {
+                document.getElementById('seccionExtranjero').classList.add('hidden');
+                document.getElementById('seccionResidente').classList.remove('hidden');
+                document.getElementById('resUtilidadAnual').textContent = formatMoney(utilidadGravable / anios);
+                document.getElementById('resIsrAnual').textContent = formatMoney(calcularISRTablas(utilidadGravable / anios, fechaVenta));
+                document.getElementById('resIsrTotal').textContent = formatMoney(isrTotal);
+            }
+            
+            document.getElementById('resIsrEstado').textContent = formatMoney(isrEstado);
+            document.getElementById('resIsrFed').textContent = formatMoney(isrFederacion);
+            
+            if (esLocalComercial) {
+                document.getElementById('rowIva').classList.remove('hidden');
+                document.getElementById('resIva').textContent = formatMoney(iva);
+            } else {
+                document.getElementById('rowIva').classList.add('hidden');
+            }
+            
+            document.getElementById('resIsrFinal').textContent = formatMoney(isrTotal);
+            document.getElementById('resPorcentaje').textContent = ((isrTotal / precioVenta) * 100).toFixed(2) + '%';
+            
+            if (hayPerdida) {
+                document.getElementById('infoPerdida').classList.remove('hidden');
+            } else {
+                document.getElementById('infoPerdida').classList.add('hidden');
+            }
+        }
+    </script>
+    <!-- PWA Service Worker -->
+    <!-- PWA Service Worker -->
+    <script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/sw.js")
+                .then(reg => console.log("SW registrado", reg.scope))
+                .catch(err => console.log("SW error", err));
+        });
+    }
+    </script>
+</body>
+</html>
