@@ -2340,8 +2340,34 @@
             var expedientes = getExpedientes();
             expedientes.splice(idx, 1);
             saveExpedientes(expedientes);
-            renderExpedientes();
-            showPanel('expedientes');
+            
+            // Guardar archivos adjuntos en IndexedDB
+            var archivosInput = document.getElementById('expArchivos');
+            var expIdx = expedienteActualId !== null ? expedienteActualId : expedientes.length - 1;
+            
+            if (archivosInput && archivosInput.files.length > 0) {
+                var files = archivosInput.files;
+                var promesas = [];
+                for (var i = 0; i < files.length; i++) {
+                    if (files[i].size > 10485760) {
+                        alert('Archivo ' + files[i].name + ' excede 10MB');
+                        continue;
+                    }
+                    promesas.push(guardarArchivo(expIdx, files[i]));
+                }
+                Promise.all(promesas).then(function() {
+                    archivosInput.value = '';
+                    renderExpedientes();
+                    showPanel('expedientes');
+                }).catch(function(e) {
+                    console.error('Error guardando archivos:', e);
+                    renderExpedientes();
+                    showPanel('expedientes');
+                });
+            } else {
+                renderExpedientes();
+                showPanel('expedientes');
+            }
         }
 
 
@@ -3026,139 +3052,7 @@
             cargarMensajes(chatActual);
         }
 
-    
-        // ========== INDEXEDDB ARCHIVOS ==========
-        var dbArchivos = null;
-        var DB_NAME = 'notaria_archivos_db';
-        var DB_VERSION = 1;
-        var STORE_NAME = 'archivos';
-        
-        function initIndexedDB() {
-            return new Promise(function(resolve, reject) {
-                var request = indexedDB.open(DB_NAME, DB_VERSION);
-                
-                request.onerror = function(e) {
-                    console.error('Error abriendo IndexedDB:', e);
-                    reject(e);
-                };
-                
-                request.onsuccess = function(e) {
-                    dbArchivos = e.target.result;
-                    console.log('IndexedDB inicializado');
-                    resolve(dbArchivos);
-                };
-                
-                request.onupgradeneeded = function(e) {
-                    var db = e.target.result;
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        var store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-                        store.createIndex('expedienteId', 'expedienteId', { unique: false });
-                    }
-                };
-            });
-        }
-        
-        function guardarArchivo(expedienteId, file) {
-            return new Promise(function(resolve, reject) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var archivo = {
-                        expedienteId: expedienteId,
-                        nombre: file.name,
-                        tipo: file.type,
-                        tamano: file.size,
-                        data: e.target.result,
-                        fecha: new Date().toISOString()
-                    };
-                    
-                    var tx = dbArchivos.transaction([STORE_NAME], 'readwrite');
-                    var store = tx.objectStore(STORE_NAME);
-                    var request = store.add(archivo);
-                    
-                    request.onsuccess = function() { resolve(request.result); };
-                    request.onerror = function() { reject(request.error); };
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-        
-        function obtenerArchivos(expedienteId) {
-            return new Promise(function(resolve, reject) {
-                if (!dbArchivos) { resolve([]); return; }
-                var tx = dbArchivos.transaction([STORE_NAME], 'readonly');
-                var store = tx.objectStore(STORE_NAME);
-                var index = store.index('expedienteId');
-                var request = index.getAll(expedienteId);
-                
-                request.onsuccess = function() { resolve(request.result || []); };
-                request.onerror = function() { reject(request.error); };
-            });
-        }
-        
-        function eliminarArchivo(id) {
-            return new Promise(function(resolve, reject) {
-                var tx = dbArchivos.transaction([STORE_NAME], 'readwrite');
-                var store = tx.objectStore(STORE_NAME);
-                var request = store.delete(id);
-                
-                request.onsuccess = function() { resolve(); };
-                request.onerror = function() { reject(request.error); };
-            });
-        }
-        
-        function descargarArchivo(id) {
-            var tx = dbArchivos.transaction([STORE_NAME], 'readonly');
-            var store = tx.objectStore(STORE_NAME);
-            var request = store.get(id);
-            
-            request.onsuccess = function() {
-                var archivo = request.result;
-                if (archivo) {
-                    var link = document.createElement('a');
-                    link.href = archivo.data;
-                    link.download = archivo.nombre;
-                    link.click();
-                }
-            };
-        }
-        
-        function renderArchivosExpediente(expedienteId) {
-            obtenerArchivos(expedienteId).then(function(archivos) {
-                var container = document.getElementById('archivosExpediente');
-                if (!container) return;
-                
-                if (archivos.length === 0) {
-                    container.innerHTML = '<p style="color:#888;">Sin archivos adjuntos</p>';
-                    return;
-                }
-                
-                var html = '<h4 style="margin-bottom:10px;">Archivos (' + archivos.length + ')</h4>';
-                archivos.forEach(function(a) {
-                    var tamano = (a.tamano / 1024).toFixed(1) + ' KB';
-                    if (a.tamano > 1048576) tamano = (a.tamano / 1048576).toFixed(1) + ' MB';
-                    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#f5f5f5;border-radius:6px;margin-bottom:6px;">';
-                    html += '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;">' + a.nombre + ' <small>(' + tamano + ')</small></span>';
-                    html += '<div style="display:flex;gap:5px;">';
-                    html += '<button onclick="descargarArchivo(' + a.id + ')" style="padding:4px 8px;border:none;background:#3B82F6;color:white;border-radius:4px;cursor:pointer;">Descargar</button>';
-                    html += '<button onclick="eliminarArchivoExp(' + a.id + ',' + expedienteId + ')" style="padding:4px 8px;border:none;background:#dc3545;color:white;border-radius:4px;cursor:pointer;">X</button>';
-                    html += '</div></div>';
-                });
-                container.innerHTML = html;
-            });
-        }
-        
-        function eliminarArchivoExp(id, expId) {
-            if (confirm('Eliminar este archivo?')) {
-                eliminarArchivo(id).then(function() {
-                    renderArchivosExpediente(expId);
-                });
-            }
-        }
-        
-        // Inicializar IndexedDB al cargar
-        initIndexedDB().catch(function(e) { console.error('IndexedDB no disponible'); });
-        // ========== FIN INDEXEDDB ==========
-    </script>
+        </script>
 </body>
 </html>
 <!-- deploy fix -->
