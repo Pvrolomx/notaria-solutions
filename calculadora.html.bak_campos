@@ -246,11 +246,7 @@
                 </label>
                 <label class="checkbox-item">
                     <input type="checkbox" id="esCasaHabitacion" onchange="if(this.checked) document.getElementById('esLocalComercial').checked=false">
-                    <span>Tipo: Casa Habitación</span>
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" id="aplicaExencion">
-                    <span>Aplica Exención Art.93 LISR</span>
+                    <span>Casa Habitación (exención)</span>
                 </label>
                 <label class="checkbox-item">
                     <input type="checkbox" id="esLocalComercial" onchange="if(this.checked) document.getElementById('esCasaHabitacion').checked=false">
@@ -774,7 +770,6 @@
             const comision = parseFloat(document.getElementById('comision').value) || 0;
             const esExtranjero = document.getElementById('esExtranjero').checked;
             const esCasaHabitacion = document.getElementById('esCasaHabitacion').checked;
-            const aplicaExencion = document.getElementById('aplicaExencion').checked;
             const esLocalComercial = document.getElementById('esLocalComercial').checked;
             
             // Calcular años transcurridos
@@ -827,7 +822,7 @@
             let precioGravable = precioVenta;
             let deduccionesGravables = totalDeducciones;
             
-            if (aplicaExencion && !esExtranjero && numExentan > 0) {
+            if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
                 // Exencion = 700k UDIs × numero de enajenantes que exentan
                 const udiVenta = await getUDIAsync(fechaVenta);
                 exencionTotal = EXENCION_UDIS * udiVenta * numExentan;
@@ -916,14 +911,14 @@
             document.getElementById('resPrecioVenta').textContent = formatMoney(precioVenta);
             document.getElementById('resMenosDeduc').textContent = formatMoney(totalDeducciones);
             
-            if (aplicaExencion && !esExtranjero && numExentan > 0) {
+            if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
                 document.getElementById('rowExencion').classList.remove('hidden');
                 document.getElementById('resExencion').textContent = formatMoney(exencionTotal) + ' (' + ((1-pctGravable)*100).toFixed(2) + '% exento)';
             } else {
                 document.getElementById('rowExencion').classList.add('hidden');
             }
             
-            if (aplicaExencion && !esExtranjero && numExentan > 0) {
+            if (esCasaHabitacion && !esExtranjero && numExentan > 0) {
                 document.getElementById('rowPctGravable').classList.remove('hidden');
                 document.getElementById('resPctGravable').textContent = (pctGravable * 100).toFixed(2) + '%';
             } else {
