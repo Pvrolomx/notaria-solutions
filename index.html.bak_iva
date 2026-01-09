@@ -1292,15 +1292,46 @@
                         <p>Jalisco / Nayarit - Tabla 2025</p>
                     </div>
                 </a>
-                <a href="iva.html" class="calc-menu-btn" style="text-decoration:none;color:inherit;">
+                <div class="calc-menu-btn" onclick="showCalc('iva')">
                     <div class="calc-menu-icon iva">🧾</div>
                     <div class="calc-menu-text">
                         <h4>IVA</h4>
                         <p>Impuesto al Valor Agregado</p>
                     </div>
-                </a>
+                </div>
             </div>
             
+            
+            <!-- Calculadora IVA -->
+            <div id="calc-iva" class="calc-panel" style="display:none;">
+                <button class="calc-back" onclick="showCalcMenu()">← Volver</button>
+                <div class="calc-card">
+                    <h3>🧾 Calculadora IVA</h3>
+                    <div class="calc-field">
+                        <label>Tipo de Operación</label>
+                        <select id="ivaOperacion">
+                            <option value="local">Local Comercial</option>
+                            <option value="terreno">Terreno Comercial</option>
+                            <option value="arrendamiento">Arrendamiento</option>
+                            <option value="construccion">Construcción</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label>Valor de la Operación $</label>
+                        <input type="number" id="ivaValor" value="1000000">
+                    </div>
+                    <div class="calc-field">
+                        <label>Tasa</label>
+                        <select id="ivaTasa">
+                            <option value="16">16% General</option>
+                            <option value="8">8% Frontera</option>
+                            <option value="0">0% Exento</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="calcularIVA()">Calcular IVA</button>
+                    <div id="ivaResultado" class="calc-result" style="display:none;"></div>
+                </div>
+            </div>
         </div>
 
         <!-- CHAT -->
@@ -2508,13 +2539,6 @@
             renderClientes();
             renderExpedientes();
             renderCitas();
-            
-            // Detectar parámetro ?panel= para navegación desde calculadoras
-            var urlParams = new URLSearchParams(window.location.search);
-            var panel = urlParams.get('panel');
-            if (panel) {
-                showPanel(panel);
-            }
         });
 
 
