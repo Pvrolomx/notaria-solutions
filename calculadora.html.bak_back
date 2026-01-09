@@ -20,25 +20,6 @@
             --warning: #F59E0B;
             --danger: #EF4444;
         }
-        .back-btn {
-            position: absolute;
-            left: 1rem;
-            top: 1rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        .back-btn:hover {
-            background: var(--primary-light);
-        }
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg);
@@ -47,7 +28,6 @@
             padding: 1rem;
         }
         .container {
-            position: relative;
             max-width: 900px;
             margin: 0 auto;
         }
@@ -241,8 +221,7 @@
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back-btn">← Regresar</a>
-        <div class="header" style="padding-top: 1.5rem;">
+        <div class="header">
             <h1>🧮 Calculadora ISR por Enajenación</h1>
             <p>Cálculo de Impuesto Sobre la Renta en venta de inmuebles</p>
         </div>
