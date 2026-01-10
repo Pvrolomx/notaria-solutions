@@ -828,6 +828,14 @@
     <main class="app-main">
         <!-- HOME -->
         <div id="panel-home" class="panel active">
+            <!-- Banner Instalación PWA -->
+            <div id="installBanner" style="display:none;background:linear-gradient(135deg,#d4af37,#b8860b);color:white;padding:12px 16px;border-radius:12px;margin:10px 15px 15px 15px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 15px rgba(212,175,55,0.3);">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:1.5rem;">📲</span>
+                    <span style="font-weight:600;">Instalar Notaria Solutions</span>
+                </div>
+                <button onclick="installApp()" style="background:white;color:#b8860b;border:none;padding:8px 16px;border-radius:8px;font-weight:600;cursor:pointer;">Instalar</button>
+            </div>
             <div class="main-menu">
                 <button class="menu-btn" onclick="showPanel('clientes')">
                     <div class="menu-btn-icon"><img src="/icon-clientes.jpeg" alt="Clientes"></div>
@@ -902,12 +910,12 @@
             </div>
             <div style="padding:15px;max-height:calc(100vh - 120px);overflow-y:auto;">
                 <div style="margin-bottom:15px;padding:15px;background:#f5f5f5;border-radius:8px;">
-                    <label style="display:block;margin-bottom:8px;font-weight:600;">Subir Documento (OCR)</label>
-                    <input type="file" id="clienteOCR" accept="image/*,.pdf" style="width:100%;">
-                    <small style="color:#666;">PDF o imagen para extraer datos</small>
+                    <label style="display:none;margin-bottom:8px;font-weight:600;">Subir Documento (OCR)</label>
+                    <input type="file" id="clienteOCR" accept="image/*,.pdf" style="display:none;width:100%;">
+                    <small style="display:none;color:#666;">PDF o imagen para extraer datos</small>
                     <canvas id="pdfCanvasCliente" style="display:none;"></canvas>
-                    <button type="button" id="btnScanCliente" onclick="scanClienteDoc()" style="margin-top:8px;padding:10px 20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;" disabled>🔍 Escanear Documento</button>
-                    <div id="ocrStatusCliente" style="margin-top:5px;font-size:12px;color:#666;"></div>
+                    <button type="button" id="btnScanCliente" onclick="scanClienteDoc()" style="display:none;margin-top:8px;padding:10px 20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;" disabled>🔍 Escanear Documento</button>
+                    <div id="ocrStatusCliente" style="display:none;margin-top:5px;font-size:12px;color:#666;"></div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                     <div style="grid-column:1/-1;">
@@ -3335,6 +3343,48 @@ function subirDocCliente(idx, tipo, input) {
         // Inicializar IndexedDB al cargar
         initIndexedDB().catch(function(e) { console.error('IndexedDB no disponible'); });
         // ========== FIN INDEXEDDB ==========
+        
+        // ========== PWA INSTALL ==========
+        var deferredPrompt;
+        
+        // Detectar si ya está instalado (standalone)
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            // Ya está instalado, ocultar banner
+            var banner = document.getElementById('installBanner');
+            if (banner) banner.style.display = 'none';
+        }
+        
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Mostrar banner
+            var banner = document.getElementById('installBanner');
+            if (banner) banner.style.display = 'flex';
+        });
+        
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(function(result) {
+                    if (result.outcome === 'accepted') {
+                        var banner = document.getElementById('installBanner');
+                        if (banner) banner.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                // Fallback para iOS
+                alert('Para instalar:\n1. Toca el botón Compartir\n2. Selecciona "Añadir a pantalla de inicio"');
+            }
+        }
+        
+        // Ocultar banner si se instala mientras usa la app
+        window.addEventListener('appinstalled', function() {
+            var banner = document.getElementById('installBanner');
+            if (banner) banner.style.display = 'none';
+            deferredPrompt = null;
+        });
+        // ========== FIN PWA INSTALL ==========
     </script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 {
-  "name": "Notaria Solutions - Calculadora ISR",
+  "name": "Notaria Solutions",
   "short_name": "NotariaSol",
-  "description": "Calculadora de ISR para enajenación de inmuebles",
-  "start_url": "/calculadora.html",
+  "description": "Sistema integral para notarías - Clientes, Expedientes, Agenda, Calculadoras",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#1a1a2e",
   "theme_color": "#d4af37",
