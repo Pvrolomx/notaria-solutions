@@ -1,0 +1,3142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <meta name="theme-color" content="#d4af37">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="NotariaSol">
+    <title>Notarial Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1E3A5F;
+            --primary-light: #2D5A8B;
+            --accent: #C9A227;
+            --bg: #F5F7FA;
+            --white: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #E1E5EB;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        /* Header Mobile-First */
+        .app-header {
+            background: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .app-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .app-logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        .app-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .app-logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .app-logo-text p {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        .user-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        .user-bar button {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        
+        /* Main Container */
+        .app-main {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        /* Main Menu Grid - 4 botones grandes */
+        .main-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .menu-btn {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .menu-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .menu-btn:active {
+            transform: scale(0.98);
+        }
+        .menu-btn-icon {
+            height: 120px;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+        }
+        .menu-btn-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .menu-btn-content {
+            padding: 1rem;
+        }
+        .menu-btn-content h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+        .menu-btn-content p {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        .menu-btn-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--primary);
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            margin-left: 0.5rem;
+        }
+        
+        /* Secondary Menu - Chat y Llamadas */
+        .secondary-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .secondary-btn {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .secondary-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.1);
+        }
+        .secondary-btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .secondary-btn-icon.chat { background: #DBEAFE; }
+        .secondary-btn-icon.llamadas { background: #D1FAE5; }
+        .secondary-btn-text h4 { font-size: 0.85rem; font-weight: 500; }
+        .secondary-btn-text p { font-size: 0.65rem; color: var(--text-light); }
+        .secondary-btn-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 600;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Panels */
+        .panel { display: none; }
+        .panel.active { display: block; }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+        .back-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .panel-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .panel-header p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        
+        /* Stats Cards */
+        .stats-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 120px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-card-label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        
+        /* List Items */
+        .list-container {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .list-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .list-header h3 { font-size: 0.9rem; font-weight: 600; }
+        .list-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .list-item:last-child { border-bottom: none; }
+        .list-item-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .list-item-info { flex: 1; }
+        .list-item-info h4 { font-size: 0.9rem; font-weight: 500; }
+        .list-item-info p { font-size: 0.75rem; color: var(--text-light); }
+        
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 500;
+        }
+        .status-badge.pending { background: #FEF3C7; color: #92400E; }
+        .status-badge.progress { background: #DBEAFE; color: #1E40AF; }
+        .status-badge.complete { background: #D1FAE5; color: #065F46; }
+        .status-badge.urgent { background: #FEE2E2; color: #991B1B; }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-primary { background: var(--primary); color: var(--white); }
+        .btn-primary:hover { background: var(--primary-light); }
+        .btn-outline { background: var(--white); border: 1px solid var(--border); color: var(--text); }
+        .btn-full { width: 100%; }
+        
+        
+        /* Chat Contactos */
+        .chat-contactos {
+            padding: 0.5rem;
+        }
+        .contacto-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .contacto-item:hover {
+            background: var(--bg-light);
+        }
+        .contacto-info {
+            flex: 1;
+        }
+        .contacto-nombre {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        .contacto-ultimo {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        /* Chat Panel */
+        .chat-container {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            height: calc(100vh - 250px);
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+        }
+        .message.sent {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .message.received {
+            background: var(--bg);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.75rem;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .chat-input button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        /* Call Panel */
+        .call-container {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .call-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0 auto 1.5rem;
+        }
+        .call-name { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .call-status { color: var(--text-light); margin-bottom: 2rem; font-size: 0.85rem; }
+        .call-actions { display: flex; justify-content: center; gap: 1.5rem; }
+        .call-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.2s;
+        }
+        .call-btn.mute { background: var(--bg); }
+        .call-btn.video { background: var(--bg); }
+        .call-btn.call { background: var(--success); color: white; }
+        .call-btn.end { background: var(--danger); color: white; }
+        
+        /* Calculadora */
+        .calc-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .calc-card h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; }
+        .calc-field { margin-bottom: 1rem; }
+        .calc-field label { display: block; font-size: 0.75rem; color: var(--text-light); margin-bottom: 0.4rem; }
+        .calc-field input, .calc-field select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .calc-result { background: var(--bg); padding: 1rem; border-radius: 10px; margin-top: 1rem; }
+        .calc-result-row { display: flex; justify-content: space-between; padding: 0.4rem 0; font-size: 0.85rem; }
+        .calc-result-row.total { border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.75rem; font-weight: 600; }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        .quick-action {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 100px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .quick-action-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .quick-action-text { font-size: 0.7rem; color: var(--text-light); }
+    
+        /* Calculadoras Menu */
+        .calc-menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .calc-menu-btn {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+        .calc-menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+        .calc-menu-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .calc-menu-icon.isr { background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%); }
+        .calc-menu-icon.istp { background: linear-gradient(135deg, #059669 0%, #34D399 100%); }
+        .calc-menu-icon.iva { background: linear-gradient(135deg, #D97706 0%, #FBBF24 100%); }
+        .calc-menu-text h4 { font-size: 1rem; font-weight: 600; }
+        .calc-menu-text p { font-size: 0.75rem; color: var(--text-light); }
+        .calc-panel { margin-top: 1rem; }
+        .calc-back {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .calc-checks {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        .calc-checks label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Enajenantes */
+        
+        /* PDF Export */
+        .btn-export-pdf {
+            background: var(--accent);
+            color: var(--primary);
+            margin-top: 1rem;
+        }
+        .btn-export-pdf:hover {
+            background: #B8911F;
+        }
+        .pdf-header {
+            text-align: center;
+            padding: 1rem;
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: 1rem;
+        }
+        .pdf-header h2 {
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+        .pdf-header p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .pdf-footer {
+            text-align: center;
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            margin-top: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        @media print {
+            .calc-back, .btn-export-pdf, .btn-primary { display: none !important; }
+        }
+
+        
+        /* Calc Tabs */
+        
+        /* Guardar en Expediente */
+        .expediente-selector {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px dashed var(--border);
+        }
+        .expediente-selector h4 {
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .expediente-selector select {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+        .expediente-nuevo {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .expediente-nuevo input {
+            flex: 1;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        .btn-guardar-exp {
+            background: var(--success);
+            color: white;
+        }
+        .btn-guardar-exp:hover {
+            background: #1DAA54;
+        }
+        .guardado-ok {
+            background: #D1FAE5;
+            color: #065F46;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .expedientes-guardados {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .calc-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .calc-tab {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .calc-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .calc-tab:hover:not(.active) {
+            border-color: var(--primary);
+        }
+        .info-excedente {
+            background: #EBF5FF;
+            border-left: 3px solid var(--primary);
+            padding: 0.75rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .enajenantes-section {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .enajenantes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .enajenantes-header label {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .btn-add-enajenante {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .enajenante-row {
+            display: grid;
+            grid-template-columns: 1fr 60px 100px auto auto;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background: var(--white);
+            border-radius: 8px;
+        }
+        .enajenante-row input, .enajenante-row select {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+        .enajenante-nombre { min-width: 0; }
+        .enajenante-pct { width: 60px; text-align: center; }
+        .enajenante-tipo { width: 100px; }
+        .enajenante-casa { font-size: 0.7rem; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; }
+        .enajenante-casa input { width: 14px; height: 14px; }
+        .btn-remove-enajenante {
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .enajenantes-total {
+            text-align: right;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+        }
+        @media (max-width: 500px) {
+            .enajenante-row {
+                grid-template-columns: 1fr 50px;
+                gap: 0.4rem;
+            }
+            .enajenante-tipo, .enajenante-casa, .btn-remove-enajenante {
+                grid-column: span 1;
+            }
+        }
+
+        .calc-checks input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <header class="app-header">
+        <div style="display:flex;justify-content:center;align-items:center;width:100%;">
+            <div class="app-logo" style="flex-direction:column;text-align:center;">
+                <img src="logo.jpeg" alt="Notarial Solutions" style="width:350px;height:auto;border-radius:12px;">
+            </div>
+            
+        </div>
+    </header>
+    
+    <main class="app-main">
+        <!-- HOME -->
+        <div id="panel-home" class="panel active">
+            <div class="main-menu">
+                <button class="menu-btn" onclick="showPanel('clientes')">
+                    <div class="menu-btn-icon"><img src="/icon-clientes.jpeg" alt="Clientes"></div>
+                    <div class="menu-btn-content">
+                        <h3>Clientes</h3>
+                        <p></p>
+                    </div>
+                </button>
+                <button class="menu-btn" onclick="showPanel('expedientes')">
+                    <div class="menu-btn-icon"><img src="/icon-expedientes.jpeg" alt="Expedientes"></div>
+                    <div class="menu-btn-content">
+                        <h3>Expedientes</h3>
+                        <p></p>
+                    </div>
+                </button>
+                <button class="menu-btn" onclick="showPanel('agenda')">
+                    <div class="menu-btn-icon"><img src="/icon-agenda.jpeg" alt="Agenda"></div>
+                    <div class="menu-btn-content">
+                        <h3>Agenda</h3>
+                        <p></p>
+                    </div>
+                </button>
+                <button class="menu-btn" onclick="showPanel('calculadoras')">
+                    <div class="menu-btn-icon"><img src="/icon-calculadora.png" alt="Calculadoras"></div>
+                    <div class="menu-btn-content">
+                        <h3>Calculadoras</h3>
+                        <p>Honorarios, ISR</p>
+                    </div>
+                </button>
+            </div>
+            
+            <div class="secondary-menu">
+                <button class="secondary-btn" onclick="showPanel('chat')">
+                    <div class="secondary-btn-icon chat">💬</div>
+                    <div class="secondary-btn-text">
+                        <h4>Chat</h4>
+                        <p>Mensajes</p>
+                    </div>
+                    
+                </button>
+                <button class="secondary-btn" onclick="showPanel('llamadas')">
+                    <div class="secondary-btn-icon llamadas">📞</div>
+                    <div class="secondary-btn-text">
+                        <h4>Llamadas</h4>
+                        <p>Voz y video</p>
+                    </div>
+                </button>
+            </div>
+            
+            
+        </div>
+        
+        <!-- CLIENTES -->
+                        <div id="panel-clientes" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <button class="btn btn-primary" onclick="showNuevoCliente()" style="margin-left:auto;">+ Nuevo</button>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-card-value" id="totalClientes">0</div>
+                    <div class="stat-card-label">Total</div>
+                </div>
+            </div>
+            <div id="listaClientes" class="list-container"></div>
+        </div>
+        
+        <div id="panel-nuevo-cliente" class="panel">
+            <div class="panel-header">
+                                <button class="back-btn" onclick="showPanel('clientes')">←</button>
+                <h2 id="tituloFormCliente">Agregar Cliente</h2>
+            </div>
+            <div style="padding:15px;max-height:calc(100vh - 120px);overflow-y:auto;">
+                <div style="margin-bottom:15px;padding:15px;background:#f5f5f5;border-radius:8px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;">Subir Documento (OCR)</label>
+                    <input type="file" id="clienteOCR" accept="image/*,.pdf" style="width:100%;">
+                    <small style="color:#666;">PDF o imagen para extraer datos</small>
+                    <canvas id="pdfCanvasCliente" style="display:none;"></canvas>
+                    <button type="button" id="btnScanCliente" onclick="scanClienteDoc()" style="margin-top:8px;padding:10px 20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;" disabled>🔍 Escanear Documento</button>
+                    <div id="ocrStatusCliente" style="margin-top:5px;font-size:12px;color:#666;"></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Nombre Completo *</label>
+                        <input type="text" id="clienteNombre" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha Nacimiento</label>
+                        <input type="date" id="clienteFechaNac" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Lugar Nacimiento</label>
+                        <input type="text" id="clienteLugarNac" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Nacionalidad</label>
+                        <select id="clienteNacionalidad" onchange="toggleIdentificacion()" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Mexicana">Mexicana</option>
+                            <option value="Estadounidense">Estadounidense</option>
+                            <option value="Canadiense">Canadiense</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+                    <div id="divTipoID">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Tipo de Identificación</label>
+                        <select id="clienteTipoID" onchange="toggleTipoID()" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="INE">INE</option>
+                            <option value="Pasaporte">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div id="divINE">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Número INE</label>
+                        <input type="text" id="clienteINE" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;" maxlength="18">
+                    </div>
+                    <div id="divPasaporte" style="display:none;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Número Pasaporte</label>
+                        <input type="text" id="clientePasaporte" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div id="divPasaporteExp" style="display:none;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Expedición</label>
+                        <input type="date" id="clientePasaporteExp" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div id="divPasaporteVenc" style="display:none;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Vencimiento</label>
+                        <input type="date" id="clientePasaporteVenc" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Estado Civil</label>
+                        <select id="clienteEstadoCivil" onchange="toggleRegimen()" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Soltero">Soltero(a)</option>
+                            <option value="Casado">Casado(a)</option>
+                            <option value="Divorciado">Divorciado(a)</option>
+                            <option value="Viudo">Viudo(a)</option>
+                            <option value="Union Libre">Unión Libre</option>
+                        </select>
+                    </div>
+                    <div id="divRegimen" style="display:none;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Régimen Matrimonial</label>
+                        <select id="clienteRegimen" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="">Seleccionar...</option>
+                            <option value="Sociedad Conyugal">Sociedad Conyugal</option>
+                            <option value="Separacion de Bienes">Separación de Bienes</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-top:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Dirección en México</label>
+                    <input type="text" id="clienteDirMx" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                </div>
+                <div style="margin-top:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Dirección en Extranjero</label>
+                    <input type="text" id="clienteDirExt" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Ocupación</label>
+                        <select id="clienteOcupacion" onchange="toggleDatosLaborales()" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Empleado">Empleado</option>
+                            <option value="Independiente">Profesionista Independiente</option>
+                            <option value="Empresario">Empresario</option>
+                            <option value="Retirado">Retirado/Jubilado</option>
+                            <option value="Hogar">Hogar</option>
+                            <option value="Estudiante">Estudiante</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="divDatosLaborales" style="margin-top:12px;padding:15px;background:#f9f9f9;border-radius:8px;">
+                    <h4 style="margin:0 0 12px 0;color:#333;">Datos Laborales</h4>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                        <div>
+                            <label style="display:block;margin-bottom:5px;font-weight:600;">Puesto</label>
+                            <input type="text" id="clientePuesto" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                        </div>
+                        <div>
+                            <label style="display:block;margin-bottom:5px;font-weight:600;">Empresa</label>
+                            <input type="text" id="clienteEmpresa" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                        </div>
+                        <div>
+                            <label style="display:block;margin-bottom:5px;font-weight:600;">Tipo de Empresa</label>
+                            <select id="clienteTipoEmpresa" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                                <option value="">Seleccionar...</option>
+                                <option value="Privada">Privada</option>
+                                <option value="Gobierno">Gobierno</option>
+                                <option value="ONG">ONG</option>
+                                <option value="Propia">Propia</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display:block;margin-bottom:5px;font-weight:600;">Teléfono Empresa</label>
+                            <input type="tel" id="clienteTelEmpresa" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                        </div>
+                        <div style="grid-column:1/-1;">
+                            <label style="display:block;margin-bottom:5px;font-weight:600;">Dirección Empresa</label>
+                            <input type="text" id="clienteDirEmpresa" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                        </div>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">CURP</label>
+                        <input type="text" id="clienteCURP" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;text-transform:uppercase;" maxlength="18">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">RFC</label>
+                        <input type="text" id="clienteRFC" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;text-transform:uppercase;" maxlength="13">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Email</label>
+                        <input type="email" id="clienteEmail" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Teléfono *</label>
+                        <input type="tel" id="clienteTel1" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">SS# / SIN#</label>
+                        <input type="text" id="clienteSSN" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                </div>
+                <div style="margin-top:12px;">
+                    <label style="display:block;margin-bottom:5px;font-weight:600;">Notas</label>
+                    <textarea id="clienteNotas" rows="3" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:15px;">
+                    <button class="btn btn-primary" onclick="guardarCliente()" style="flex:1;padding:15px;font-size:16px;">Guardar</button>
+                    <button class="btn" onclick="showPanel('clientes')" style="padding:15px;font-size:16px;background:#6b7280;color:white;border-radius:8px;">← Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        
+        <div id="panel-ver-cliente" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('clientes')">←</button>
+                <h2>Detalle Cliente</h2>
+            </div>
+            <div id="detalleCliente" style="padding:15px;"></div>
+        </div>
+        
+        <!-- EXPEDIENTES -->
+        <div id="panel-expedientes" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <button class="btn btn-primary" onclick="showNuevoExpediente()" style="margin-left:auto;">+ Nuevo</button>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-card-value" id="totalExpedientes">0</div>
+                    <div class="stat-card-label">Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="expActivos">0</div>
+                    <div class="stat-card-label">Activos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="expFirmados">0</div>
+                    <div class="stat-card-label">Firmados</div>
+                </div>
+            </div>
+            <div id="listaExpedientes" class="list-container"></div>
+        </div>
+        
+        <div id="panel-nuevo-expediente" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('expedientes')">←</button>
+                <h2 id="tituloFormExpediente">Nuevo Expediente</h2>
+            </div>
+            <div style="padding:15px;max-height:calc(100vh - 120px);overflow-y:auto;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Número *</label>
+                        <input type="text" id="expNumero" placeholder="EXP-2025-001" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Tipo *</label>
+                        <select id="expTipo" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Compraventa">Compraventa</option>
+                            <option value="Poder Notarial">Poder Notarial</option>
+                            <option value="Testamento">Testamento</option>
+                            <option value="Constitución SA">Constitución SA</option>
+                            <option value="Fideicomiso">Fideicomiso</option>
+                            <option value="Donación">Donación</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Cliente Principal *</label>
+                        <select id="expCliente" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="">Seleccionar cliente...</option>
+                        </select>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Partes Involucradas</label>
+                        <textarea id="expPartes" rows="2" placeholder="Otras partes del acto (compradores, vendedores, apoderados...)" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Estado</label>
+                        <select id="expEstado" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Activo">Activo</option>
+                            <option value="Pendiente">Pendiente Docs</option>
+                            <option value="Firma">Listo para Firma</option>
+                            <option value="Firmado">Firmado</option>
+                            <option value="Cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Presupuesto</label>
+                        <input type="number" id="expPresupuesto" placeholder="0.00" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha Apertura</label>
+                        <input type="date" id="expFecha" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Notas Adicionales</label>
+                        <textarea id="expDescripcion" rows="3" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Archivos Adjuntos</label>
+                        <input type="file" id="expArchivos" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" 
+                               style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;background:white;">
+                        <small style="color:#666;display:block;margin-top:5px;">PDF, imagenes, Word (max 10MB c/u)</small>
+                        <div id="archivosPreview" style="margin-top:10px;"></div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:15px;">
+                    <button class="btn btn-primary" onclick="guardarExpediente()" style="flex:1;padding:15px;font-size:16px;">Guardar</button>
+                    <button class="btn" onclick="showPanel('expedientes')" style="padding:15px;font-size:16px;background:#6b7280;color:white;border-radius:8px;">← Cancelar</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="panel-ver-expediente" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('expedientes')">←</button>
+                <h2>Detalle Expediente</h2>
+            </div>
+            <div id="detalleExpediente" style="padding:15px;"></div>
+        </div>
+        
+        <!-- AGENDA -->
+        <div id="panel-agenda" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <button class="btn btn-primary" onclick="showNuevaCita()" style="margin-left:auto;">+ Nueva Cita</button>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-card-value" id="citasHoy">0</div>
+                    <div class="stat-card-label">Hoy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="citasSemana">0</div>
+                    <div class="stat-card-label">Semana</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="totalCitas">0</div>
+                    <div class="stat-card-label">Total</div>
+                </div>
+            </div>
+            <div id="listaCitas" class="list-container"></div>
+        </div>
+        
+        <div id="panel-nueva-cita" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('agenda')">←</button>
+                <h2 id="tituloFormCita">Nueva Cita</h2>
+            </div>
+            <div style="padding:15px;max-height:calc(100vh - 120px);overflow-y:auto;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha *</label>
+                        <input type="date" id="citaFecha" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Hora *</label>
+                        <input type="time" id="citaHora" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Cliente</label>
+                        <select id="citaCliente" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="">Seleccionar cliente...</option>
+                        </select>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Título / Asunto *</label>
+                        <select id="citaTitulo" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="">-- Seleccionar --</option>
+                            <option value="Compraventa">Compraventa</option>
+                            <option value="Poder Notarial">Poder Notarial</option>
+                            <option value="Testamento">Testamento</option>
+                            <option value="Constitución SA">Constitución SA</option>
+                            <option value="Fideicomiso">Fideicomiso</option>
+                            <option value="Donación">Donación</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Tipo</label>
+                        <select id="citaTipo" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Consulta">Consulta</option>
+                            <option value="Firma">Firma</option>
+                            <option value="Entrega">Entrega Documentos</option>
+                            <option value="Revision">Revisión</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Estado</label>
+                        <select id="citaEstado" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Confirmada">Confirmada</option>
+                            <option value="Completada">Completada</option>
+                            <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+                    <div style="grid-column:1/-1;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Notas</label>
+                        <textarea id="citaNotas" rows="3" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:15px;">
+                    <button class="btn btn-primary" onclick="guardarCita()" style="flex:1;padding:15px;font-size:16px;">Guardar</button>
+                    <button class="btn" onclick="showPanel('agenda')" style="padding:15px;font-size:16px;background:#6b7280;color:white;border-radius:8px;">← Cancelar</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="panel-ver-cita" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('agenda')">←</button>
+                <h2>Detalle Cita</h2>
+            </div>
+            <div id="detalleCita" style="padding:15px;"></div>
+        </div>
+        
+        <!-- CALCULADORAS -->
+                <div id="panel-calculadoras" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">←</button>
+                <div>
+                    <h2>Calculadoras</h2>
+                    <p>Herramientas de cálculo notarial</p>
+                </div>
+            </div>
+            
+            <!-- Menu de Calculadoras -->
+            <div id="calc-menu" class="calc-menu-grid">
+                <a href="calculadora.html" class="calc-menu-btn" style="text-decoration:none;color:inherit;">
+                    <div class="calc-menu-icon" style="background:linear-gradient(135deg, #1E3A5F 0%, #3B82F6 100%);">📊</div>
+                    <div class="calc-menu-text">
+                        <h4>ISR</h4>
+                        <p>Múltiples enajenantes, INPC, UDI</p>
+                    </div>
+                </a>
+                <a href="calculadora-isabi.html" class="calc-menu-btn" style="text-decoration:none;color:inherit;">
+                    <div class="calc-menu-icon" style="background:linear-gradient(135deg, #DC2626 0%, #F87171 100%);">🏛️</div>
+                    <div class="calc-menu-text">
+                        <h4>ISABI/ISTP</h4>
+                        <p>Jalisco / Nayarit - Tabla 2026</p>
+                    </div>
+                </a>
+                <a href="iva.html" class="calc-menu-btn" style="text-decoration:none;color:inherit;">
+                    <div class="calc-menu-icon iva">🧾</div>
+                    <div class="calc-menu-text">
+                        <h4>IVA</h4>
+                        <p>Impuesto al Valor Agregado</p>
+                    </div>
+                </a>
+            </div>
+            
+        </div>
+
+        <!-- CHAT -->
+        <div id="panel-chat" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="volverDeChat()">←</button>
+                <div>
+                    <h2 id="chatTitulo">Chat</h2>
+                    <p id="chatSubtitulo">Mensajería interna</p>
+                </div>
+            </div>
+            
+            <!-- Lista de contactos -->
+            <div id="chatContactos" class="chat-contactos">
+                <div class="contacto-item" onclick="abrirChat('ana', 'Ana García', 'AG')">
+                    <div class="chat-avatar">AG</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">Ana García</div>
+                        <div class="contacto-ultimo">Asistente Legal</div>
+                    </div>
+                </div>
+                <div class="contacto-item" onclick="abrirChat('carlos', 'Carlos López', 'CL')">
+                    <div class="chat-avatar">CL</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">Carlos López</div>
+                        <div class="contacto-ultimo">Notario Auxiliar</div>
+                    </div>
+                </div>
+                <div class="contacto-item" onclick="abrirChat('maria', 'María Sánchez', 'MS')">
+                    <div class="chat-avatar">MS</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">María Sánchez</div>
+                        <div class="contacto-ultimo">Recepción</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Conversación -->
+            <div id="chatConversacion" class="chat-container" style="display:none;">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Escribe un mensaje..." onkeypress="if(event.key==='Enter')enviarMensaje()">
+                    <button onclick="enviarMensaje()">➤</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LLAMADAS -->
+        <div id="panel-llamadas" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">&#8592;</button>
+                <div>
+                    <h2>Llamadas</h2>
+                    <p>Contactos y comunicaciones</p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="margin-bottom: 1rem;">Contactos Frecuentes</h3>
+                <div id="contactos-frecuentes">
+                    <p style="color: #888; text-align: center;">
+                        Los contactos de tus clientes apareceran aqui
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="margin-bottom: 1rem;">Llamada Rapida</h3>
+                <div class="field" style="margin-bottom: 1rem;">
+                    <label>Numero de telefono</label>
+                    <input type="tel" id="llamada-tel" placeholder="322 xxx xxxx">
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-primary" onclick="iniciarLlamada()" style="flex: 1;">
+                        Llamar
+                    </button>
+                    <button class="btn" onclick="iniciarWhatsApp()" style="flex: 1; background: #25D366; color: white;">
+                        WhatsApp
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">Historial Reciente</h3>
+                <div id="historial-llamadas">
+                    <p style="color: #888; text-align: center;">
+                        No hay llamadas recientes
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+        <script>
+        // === NAVEGACION ===
+        function showPanel(panelId) {
+            var panels = document.querySelectorAll('.panel');
+            for (var i = 0; i < panels.length; i++) {
+                panels[i].classList.remove('active');
+            }
+            var target = document.getElementById('panel-' + panelId);
+            if (target) {
+                target.classList.add('active');
+            }
+            // Render data when showing panels
+            if (panelId === 'clientes') renderClientes();
+            if (panelId === 'expedientes') renderExpedientes();
+            if (panelId === 'agenda') renderCitas();
+        }
+        
+        // === CALCULADORAS MENU ===
+        function showCalc(tipo) {
+            document.getElementById('calc-menu').style.display = 'none';
+            document.getElementById('calc-iva').style.display = 'none';
+            var target = document.getElementById('calc-' + tipo);
+            if (target) {
+                target.style.display = 'block';
+            }
+        }
+        
+        function showCalcMenu() {
+            document.getElementById('calc-iva').style.display = 'none';
+            document.getElementById('calc-menu').style.display = 'flex';
+        }
+        
+        // === HONORARIOS ===
+        function calcularHonorarios() {
+            var valor = parseFloat(document.getElementById('calcValor').value) || 0;
+            var tipo = document.getElementById('calcTipo').value;
+            var honorarios = tipo === 'poder' ? 3500 : tipo === 'testamento' ? 5000 : Math.max(valor * 0.005, 5000);
+            var iva = honorarios * 0.16;
+            var total = honorarios + iva;
+            document.getElementById('resHonorarios').textContent = '$' + honorarios.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById('resIVA').textContent = '$' + iva.toLocaleString('es-MX', {minimumFractionDigits: 2});
+            document.getElementById('resTotal').textContent = '$' + total.toLocaleString('es-MX', {minimumFractionDigits: 2});
+        }
+        
+        // === DATOS ISR ===
+        var INPC = {
+            '2015': 87.5, '2016': 90.4, '2017': 94.5, '2018': 98.0, '2019': 101.5,
+            '2020': 104.5, '2021': 109.5, '2022': 117.5, '2023': 124.0, '2024': 131.0, '2025': 141.0
+        };
+        
+        var INPC_MENSUAL = {};
+        var INPC_CARGADO = false;
+        
+        // Cargar INPC desde API al inicio
+        function cargarINPC() {
+            fetch('/api/inpc')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.anual) {
+                        INPC = data.anual;
+                        INPC_CARGADO = true;
+                        console.log('INPC cargado desde API:', data.fuente);
+                    }
+                    if (data.mensual) {
+                        INPC_MENSUAL = data.mensual;
+                    }
+                })
+                .catch(function(err) {
+                    console.log('Usando INPC hardcodeado (fallback)');
+                });
+        }
+        
+        // Obtener INPC por fecha (intenta mensual primero, luego anual)
+        function getINPC(fecha) {
+            var d = new Date(fecha);
+            var year = d.getFullYear();
+            var month = String(d.getMonth() + 1).padStart(2, '0');
+            var key = year + '-' + month;
+            
+            // Intentar mensual primero
+            if (INPC_MENSUAL[key]) {
+                return INPC_MENSUAL[key];
+            }
+            // Fallback a anual
+            return INPC[year] || 141;
+        }
+        
+        // Cargar al inicio
+        document.addEventListener('DOMContentLoaded', cargarINPC);
+        
+        var TABLAS_ISR = [
+            { lim: 0, cuota: 0, tasa: 1.92 },
+            { lim: 8952.50, cuota: 171.88, tasa: 6.40 },
+            { lim: 75984.56, cuota: 4461.94, tasa: 10.88 },
+            { lim: 133536.08, cuota: 10723.55, tasa: 16.00 },
+            { lim: 155229.81, cuota: 14194.54, tasa: 17.92 },
+            { lim: 185852.58, cuota: 19682.13, tasa: 21.36 },
+            { lim: 374837.89, cuota: 60049.40, tasa: 23.52 },
+            { lim: 590796.00, cuota: 110842.74, tasa: 30.00 },
+            { lim: 1127926.85, cuota: 271981.99, tasa: 32.00 },
+            { lim: 1503902.47, cuota: 392294.17, tasa: 34.00 },
+            { lim: 4511707.38, cuota: 1414947.85, tasa: 35.00 }
+        ];
+        
+        function fmt(n) { 
+            return '$' + n.toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2}); 
+        }
+        
+        function calcISRTabla(util) {
+            if (util <= 0) return 0;
+            for (var i = TABLAS_ISR.length - 1; i >= 0; i--) {
+                if (util >= TABLAS_ISR[i].lim) {
+                    return TABLAS_ISR[i].cuota + ((util - TABLAS_ISR[i].lim) * TABLAS_ISR[i].tasa / 100);
+                }
+            }
+            return 0;
+        }
+        
+        // === TIPO CALCULO ISR ===
+        var tipoCalculo = 'normal';
+        // Tipo de Cambio y UDI - Banxico
+        var TC_USD = 20.50;
+        var VALOR_UDI = 8.46;
+        var EXENCION_PESOS = 5922000;
+        
+        function cargarTipoCambio() {
+            fetch('/api/tipocambio')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        TC_USD = data.tipoCambio.valor;
+                        VALOR_UDI = data.udi.valor;
+                        EXENCION_PESOS = data.exencionCasaHabitacion.pesos;
+                        var tcEl = document.getElementById('tcValor');
+                        var udiEl = document.getElementById('udiValor');
+                        var exEl = document.getElementById('exencionValor');
+                        if (tcEl) tcEl.textContent = '$' + TC_USD.toFixed(2);
+                        if (udiEl) udiEl.textContent = '$' + VALOR_UDI.toFixed(4);
+                        if (exEl) exEl.textContent = '$' + (EXENCION_PESOS/1000000).toFixed(2) + 'M';
+                    }
+                })
+                .catch(function(e) { console.log('TC fallback'); });
+        }
+        cargarTipoCambio();
+
+        
+        function setTipoCalculo(tipo, btn) {
+            tipoCalculo = tipo;
+            var tabs = document.querySelectorAll('.calc-tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            btn.classList.add('active');
+            
+            if (tipo === 'normal') {
+                document.getElementById('fechasNormal').style.display = 'block';
+                document.getElementById('fechasExcedente').style.display = 'none';
+            } else {
+                document.getElementById('fechasNormal').style.display = 'none';
+                document.getElementById('fechasExcedente').style.display = 'block';
+            }
+        }
+        
+        // === ENAJENANTES ===
+        var enajenanteIndex = 1;
+        
+        function agregarEnajenante() {
+            var container = document.getElementById('enajenantesContainer');
+            var div = document.createElement('div');
+            div.className = 'enajenante-row';
+            div.innerHTML = '<input type="text" placeholder="Nombre" class="enajenante-nombre" value="Enajenante ' + (enajenanteIndex + 1) + '">' +
+                '<input type="number" placeholder="%" class="enajenante-pct" value="0" min="0" max="100" onchange="actualizarTotalPct()">' +
+                '<select class="enajenante-tipo"><option value="residente">Residente</option><option value="extranjero">Extranjero</option></select>' +
+                '<label class="enajenante-casa"><input type="checkbox" class="enajenante-casa-check"> Casa</label>' +
+                '<button type="button" class="btn-remove-enajenante" onclick="quitarEnajenante(this)">X</button>';
+            container.appendChild(div);
+            enajenanteIndex++;
+            actualizarBotonesRemove();
+            actualizarTotalPct();
+        }
+        
+        function quitarEnajenante(btn) {
+            btn.parentElement.remove();
+            actualizarBotonesRemove();
+            actualizarTotalPct();
+        }
+        
+        function actualizarBotonesRemove() {
+            var rows = document.querySelectorAll('.enajenante-row');
+            for (var i = 0; i < rows.length; i++) {
+                var btn = rows[i].querySelector('.btn-remove-enajenante');
+                if (btn) btn.style.display = rows.length > 1 ? 'block' : 'none';
+            }
+        }
+        
+        function actualizarTotalPct() {
+            var inputs = document.querySelectorAll('.enajenante-pct');
+            var total = 0;
+            for (var i = 0; i < inputs.length; i++) {
+                total += parseFloat(inputs[i].value) || 0;
+            }
+            var el = document.getElementById('totalPorcentaje');
+            if (el) {
+                el.textContent = total;
+                el.style.color = total === 100 ? '#22C55E' : '#EF4444';
+            }
+        }
+        
+        // === CALCULAR ISR ===
+        function calcularISR() {
+            var fV, fCTerreno, fCConst, aniosTerreno, aniosConst, factorTerreno, factorConst;
+            
+            var pV = parseFloat(document.getElementById('isrPrecioVenta').value) || 0;
+            var pC = parseFloat(document.getElementById('isrPrecioCompra').value) || 0;
+            var pctT = parseFloat(document.getElementById('isrPctTerreno').value) / 100;
+            var pctCo = parseFloat(document.getElementById('isrPctConst').value) / 100;
+            
+            if (tipoCalculo === 'normal') {
+                fV = new Date(document.getElementById('isrFechaVenta').value);
+                fCTerreno = new Date(document.getElementById('isrFechaCompra').value);
+                fCConst = fCTerreno;
+            } else {
+                fV = new Date(document.getElementById('isrFechaVentaExc').value);
+                fCTerreno = new Date(document.getElementById('isrFechaCompraTerreno').value);
+                fCConst = new Date(document.getElementById('isrFechaConstruccion').value);
+            }
+            
+            aniosTerreno = Math.floor((fV - fCTerreno) / (365.25 * 24 * 60 * 60 * 1000));
+            aniosTerreno = Math.max(1, Math.min(aniosTerreno, 20));
+            
+            aniosConst = Math.floor((fV - fCConst) / (365.25 * 24 * 60 * 60 * 1000));
+            aniosConst = Math.max(1, Math.min(aniosConst, 20));
+            
+            var inpcV = getINPC(fV);
+            var inpcCTerreno = getINPC(fCTerreno);
+            var inpcCConst = getINPC(fCConst);
+            
+            factorTerreno = inpcV / inpcCTerreno;
+            factorConst = inpcV / inpcCConst;
+            
+            var terrenoAct = pC * pctT * factorTerreno;
+            var pctDep = Math.min(aniosConst * 3, 80) / 100;
+            var constAct = pC * pctCo * (1 - pctDep) * factorConst;
+            var deduc = terrenoAct + constAct;
+            var anios = Math.max(aniosTerreno, aniosConst);
+            
+            var rows = document.querySelectorAll('.enajenante-row');
+            var resultHTML = '';
+            
+            if (tipoCalculo === 'excedente') {
+                resultHTML += '<div style="background:#EBF5FF;padding:0.75rem;border-radius:8px;margin-bottom:0.75rem;font-size:0.8rem;">' +
+                    '<strong>Excedente de Terreno</strong><br>' +
+                    'Terreno: ' + aniosTerreno + ' años, Factor ' + factorTerreno.toFixed(4) + '<br>' +
+                    'Construccion: ' + aniosConst + ' años, Factor ' + factorConst.toFixed(4) + '</div>';
+            }
+            
+            resultHTML += '<div class="calc-result-row"><span>Factor INPC</span><span>' + ((factorTerreno + factorConst) / 2).toFixed(4) + '</span></div>' +
+                '<div class="calc-result-row"><span>Anos</span><span>' + anios + '</span></div>' +
+                '<div class="calc-result-row"><span>Terreno Act.</span><span>' + fmt(terrenoAct) + '</span></div>' +
+                '<div class="calc-result-row"><span>Const. Act.</span><span>' + fmt(constAct) + '</span></div>' +
+                '<div class="calc-result-row"><span>Deducciones</span><span>' + fmt(deduc) + '</span></div>' +
+                '<hr style="margin:0.75rem 0;border:none;border-top:1px solid #E1E5EB;">';
+            
+            var isrTotalGlobal = 0;
+            var isrEstadoGlobal = 0;
+            var isrFedGlobal = 0;
+            
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var nombre = row.querySelector('.enajenante-nombre').value;
+                var pct = parseFloat(row.querySelector('.enajenante-pct').value) / 100;
+                var tipo = row.querySelector('.enajenante-tipo').value;
+                var esCasa = row.querySelector('.enajenante-casa-check').checked;
+                var esExt = tipo === 'extranjero';
+                
+                var precioVentaEn = pV * pct;
+                var deducEn = deduc * pct;
+                
+                // METODOLOGÍA NUVIGANT: Exención sobre INGRESO, no sobre ganancia
+                var exen = 0;
+                var pctGravado = 1.0;
+                
+                if (esCasa && !esExt) {
+                    // Calcular exención total (cada enajenante con casa hab. aporta 700k UDIs)
+                    var exencionEnajenante = EXENCION_PESOS; // 700k UDIs en pesos
+                    
+                    // Si precio venta <= exención, 100% exento
+                    if (precioVentaEn <= exencionEnajenante) {
+                        pctGravado = 0;
+                        exen = precioVentaEn;
+                    } else {
+                        // Calcular porción gravada
+                        pctGravado = (precioVentaEn - exencionEnajenante) / precioVentaEn;
+                        exen = exencionEnajenante;
+                    }
+                }
+                
+                // Aplicar % gravado a precio y deducciones
+                var precioGravado = precioVentaEn * pctGravado;
+                var deducGravado = deducEn * pctGravado;
+                
+                var util = Math.max(0, precioGravado - deducGravado);
+                var isr = 0, mejor = '';
+                
+                if (util > 0) {
+                    if (esExt) {
+                        var isr35 = util * 0.35;
+                        var isrTab = calcISRTabla(util / anios) * anios;
+                        if (isr35 <= isrTab) { isr = isr35; mejor = '35%'; }
+                        else { isr = isrTab; mejor = 'Tablas'; }
+                    } else {
+                        isr = calcISRTabla(util / anios) * anios;
+                    }
+                }
+                
+                var isrEst = esExt ? 0 : Math.min(util * 0.05, isr);
+                var isrFed = isr - isrEst;
+                
+                isrTotalGlobal += isr;
+                isrEstadoGlobal += isrEst;
+                isrFedGlobal += isrFed;
+                
+                var bgColor = esExt ? '#FEF3C7' : '#DBEAFE';
+                var icon = esExt ? '🌎' : '🇲🇽';
+                
+                resultHTML += '<div style="background:' + bgColor + ';margin:0.5rem -1rem;padding:0.75rem 1rem;border-radius:8px;">' +
+                    '<div style="font-weight:600;margin-bottom:0.5rem;">' + nombre + ' (' + (pct*100).toFixed(0) + '%) ' + icon + '</div>' +
+                    '<div class="calc-result-row"><span>Utilidad</span><span>' + fmt(util) + '</span></div>';
+                
+                if (exen > 0) {
+                    resultHTML += '<div class="calc-result-row"><span>Exencion</span><span>-' + fmt(exen) + '</span></div>';
+                }
+                if (esExt && util > 0) {
+                    resultHTML += '<div class="calc-result-row"><span>Mejor</span><span>' + mejor + '</span></div>';
+                }
+                
+                resultHTML += '<div class="calc-result-row"><span>ISR Est.</span><span>' + fmt(isrEst) + '</span></div>' +
+                    '<div class="calc-result-row"><span>ISR Fed.</span><span>' + fmt(isrFed) + '</span></div>' +
+                    '<div class="calc-result-row" style="font-weight:600;"><span>ISR Total</span><span>' + fmt(isr) + '</span></div></div>';
+            }
+            
+            resultHTML += '<hr style="margin:0.75rem 0;border:none;border-top:2px solid #1E3A5F;">' +
+                '<div class="calc-result-row"><span>ISR Estado</span><span>' + fmt(isrEstadoGlobal) + '</span></div>' +
+                '<div class="calc-result-row"><span>ISR Fed.</span><span>' + fmt(isrFedGlobal) + '</span></div>' +
+                '<div class="calc-result-row total"><span>TOTAL ISR</span><span>' + fmt(isrTotalGlobal) + '</span></div>' +
+                '<button class="btn btn-export-pdf btn-full" onclick="exportarPDF()">PDF</button>';
+            
+            document.getElementById('isrResultado').style.display = 'block';
+            document.getElementById('isrResultado').innerHTML = resultHTML;
+        }
+        
+        // === EXPORTAR PDF ===
+        function exportarPDF() {
+            var resultado = document.getElementById('isrResultado');
+            if (!resultado || resultado.style.display === 'none') {
+                alert('Primero calcula el ISR');
+                return;
+            }
+            
+            var pdfContent = document.createElement('div');
+            pdfContent.style.padding = '20px';
+            pdfContent.style.fontFamily = 'Inter, sans-serif';
+            
+            pdfContent.innerHTML = '<div style="text-align:center;padding:1rem;border-bottom:2px solid #1E3A5F;margin-bottom:1rem;">' +
+                '<h2 style="color:#1E3A5F;">Notarial Solutions - Calculo ISR</h2></div>' +
+                '<div style="background:#F5F7FA;padding:1rem;border-radius:8px;">' + resultado.innerHTML + '</div>' +
+                '<div style="text-align:center;margin-top:1rem;font-size:0.8rem;color:#666;">Generado: ' + new Date().toLocaleString('es-MX') + '</div>';
+            
+            var opt = {
+                margin: 10,
+                filename: 'ISR_Calculo.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            html2pdf().set(opt).from(pdfContent).save();
+        }
+        
+        // === IVA ===
+        function calcularIVA() {
+            var valor = parseFloat(document.getElementById('ivaValor').value) || 0;
+            var tasa = parseFloat(document.getElementById('ivaTasa').value);
+            var iva = valor * (tasa / 100);
+            
+            document.getElementById('ivaResultado').style.display = 'block';
+            document.getElementById('ivaResultado').innerHTML = 
+                '<div class="calc-result-row"><span>Base</span><span>' + fmt(valor) + '</span></div>' +
+                '<div class="calc-result-row"><span>Tasa</span><span>' + tasa + '%</span></div>' +
+                '<div class="calc-result-row"><span>IVA</span><span>' + fmt(iva) + '</span></div>' +
+                '<div class="calc-result-row total"><span>TOTAL</span><span>' + fmt(valor + iva) + '</span></div>';
+        }
+
+        // === CLIENTES localStorage ===
+        var clienteActualId = null;
+        
+        function getClientes() {
+            var data = localStorage.getItem('notaria_clientes');
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function saveClientes(clientes) {
+            localStorage.setItem('notaria_clientes', JSON.stringify(clientes));
+        }
+        
+        function renderClientes() {
+            var clientes = getClientes();
+            var container = document.getElementById('listaClientes');
+            var total = document.getElementById('totalClientes');
+            
+            if (total) total.textContent = clientes.length;
+            
+            if (!container) return;
+            
+            if (clientes.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--text-light);">No hay clientes. Agrega uno nuevo.</p>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = 0; i < clientes.length; i++) {
+                var c = clientes[i];
+                html += '<div class="list-item" onclick="verCliente(' + i + ')" style="cursor:pointer;">' +
+                    '<div class="list-item-avatar">👤</div>' +
+                    '<div class="list-item-info">' +
+                    '<h4>' + c.nombre + '</h4>' +
+                    '<p>' + (c.rfc || 'Sin RFC') + ' • ' + c.tel1 + '</p>' +
+                    '</div></div>';
+            }
+            container.innerHTML = html;
+        }
+        
+
+        function toggleRegimen() {
+            var estadoCivil = document.getElementById('clienteEstadoCivil').value;
+            var divRegimen = document.getElementById('divRegimen');
+            if (estadoCivil === 'Casado' || estadoCivil === 'Union Libre') {
+                divRegimen.style.display = 'block';
+            } else {
+                divRegimen.style.display = 'none';
+            }
+        }
+        
+        function toggleDatosLaborales() {
+            var ocupacion = document.getElementById('clienteOcupacion').value;
+            var divDatos = document.getElementById('divDatosLaborales');
+            if (ocupacion === 'Retirado' || ocupacion === 'Hogar' || ocupacion === 'Estudiante') {
+                divDatos.style.display = 'none';
+            } else {
+                divDatos.style.display = 'block';
+            }
+        }
+        function toggleIdentificacion() {
+            var nac = document.getElementById('clienteNacionalidad').value;
+            var divTipoID = document.getElementById('divTipoID');
+            var divINE = document.getElementById('divINE');
+            var divPasaporte = document.getElementById('divPasaporte');
+            var divPasaporteExp = document.getElementById('divPasaporteExp');
+            var divPasaporteVenc = document.getElementById('divPasaporteVenc');
+            
+            if (nac === 'Mexicana') {
+                divTipoID.style.display = 'block';
+                toggleTipoID();
+            } else {
+                // Extranjeros solo pasaporte
+                divTipoID.style.display = 'none';
+                divINE.style.display = 'none';
+                divPasaporte.style.display = 'block';
+                divPasaporteExp.style.display = 'block';
+                divPasaporteVenc.style.display = 'block';
+            }
+        }
+        
+        function toggleTipoID() {
+            var tipo = document.getElementById('clienteTipoID').value;
+            var divINE = document.getElementById('divINE');
+            var divPasaporte = document.getElementById('divPasaporte');
+            var divPasaporteExp = document.getElementById('divPasaporteExp');
+            var divPasaporteVenc = document.getElementById('divPasaporteVenc');
+            
+            if (tipo === 'INE') {
+                divINE.style.display = 'block';
+                divPasaporte.style.display = 'none';
+                divPasaporteExp.style.display = 'none';
+                divPasaporteVenc.style.display = 'none';
+            } else {
+                divINE.style.display = 'none';
+                divPasaporte.style.display = 'block';
+                divPasaporteExp.style.display = 'block';
+                divPasaporteVenc.style.display = 'block';
+            }
+        }
+
+
+        function showNuevoCliente() {
+            clienteActualId = null;
+            // Limpiar todos los campos del formulario
+            var campos = ['clienteNombre', 'clienteTel1', 'clienteFechaNac', 'clienteLugarNac', 'clienteINE', 
+                          'clientePasaporte', 'clientePasaporteExp', 'clientePasaporteVenc',
+                          'clienteDirMx', 'clienteDirExt', 'clientePuesto', 'clienteEmpresa',
+                          'clienteTelEmpresa', 'clienteDirEmpresa', 'clienteCURP', 'clienteRFC',
+                          'clienteEmail', 'clienteSSN', 'clienteNotas'];
+            for (var i = 0; i < campos.length; i++) {
+                var el = document.getElementById(campos[i]);
+                if (el) el.value = '';
+            }
+            // Reset selects
+            var selects = ['clienteNacionalidad', 'clienteTipoID', 'clienteEstadoCivil', 'clienteRegimen', 
+                           'clienteOcupacion', 'clienteTipoEmpresa'];
+            for (var i = 0; i < selects.length; i++) {
+                var el = document.getElementById(selects[i]);
+                if (el) el.selectedIndex = 0;
+            }
+            // Ocultar regimen y mostrar datos laborales por defecto
+            var divRegimen = document.getElementById('divRegimen');
+            if (divRegimen) divRegimen.style.display = 'none';
+            // Reset identificación (mexicana por defecto = INE visible)
+            var divTipoID = document.getElementById('divTipoID');
+            if (divTipoID) divTipoID.style.display = 'block';
+            var divINE = document.getElementById('divINE');
+            if (divINE) divINE.style.display = 'block';
+            var divPasaporte = document.getElementById('divPasaporte');
+            if (divPasaporte) divPasaporte.style.display = 'none';
+            var divPasaporteExp = document.getElementById('divPasaporteExp');
+            if (divPasaporteExp) divPasaporteExp.style.display = 'none';
+            var divPasaporteVenc = document.getElementById('divPasaporteVenc');
+            if (divPasaporteVenc) divPasaporteVenc.style.display = 'none';
+            var divDatos = document.getElementById('divDatosLaborales');
+            if (divDatos) divDatos.style.display = 'block';
+            
+            document.getElementById('tituloFormCliente').textContent = 'Agregar Cliente';
+            showPanel('nuevo-cliente');
+        }
+        
+        function guardarCliente() {
+            var nombre = document.getElementById('clienteNombre').value.trim();
+            var tel1 = document.getElementById('clienteTel1').value.trim();
+            
+            if (!nombre || !tel1) {
+                alert('Nombre y Teléfono son obligatorios');
+                return;
+            }
+            
+            var cliente = {
+                nombre: nombre,
+                tel1: tel1,
+                fechaNac: document.getElementById('clienteFechaNac') ? document.getElementById('clienteFechaNac').value : '',
+                lugarNac: document.getElementById('clienteLugarNac') ? document.getElementById('clienteLugarNac').value.trim() : '',
+                nacionalidad: document.getElementById('clienteNacionalidad') ? document.getElementById('clienteNacionalidad').value : '',
+                tipoID: document.getElementById('clienteTipoID') ? document.getElementById('clienteTipoID').value : '',
+                ine: document.getElementById('clienteINE') ? document.getElementById('clienteINE').value.trim() : '',
+                pasaporte: document.getElementById('clientePasaporte') ? document.getElementById('clientePasaporte').value.trim() : '',
+                pasaporteExp: document.getElementById('clientePasaporteExp') ? document.getElementById('clientePasaporteExp').value : '',
+                pasaporteVenc: document.getElementById('clientePasaporteVenc') ? document.getElementById('clientePasaporteVenc').value : '',
+                estadoCivil: document.getElementById('clienteEstadoCivil') ? document.getElementById('clienteEstadoCivil').value : '',
+                regimen: document.getElementById('clienteRegimen') ? document.getElementById('clienteRegimen').value : '',
+                dirMx: document.getElementById('clienteDirMx') ? document.getElementById('clienteDirMx').value.trim() : '',
+                dirExt: document.getElementById('clienteDirExt') ? document.getElementById('clienteDirExt').value.trim() : '',
+                ocupacion: document.getElementById('clienteOcupacion') ? document.getElementById('clienteOcupacion').value : '',
+                puesto: document.getElementById('clientePuesto') ? document.getElementById('clientePuesto').value.trim() : '',
+                empresa: document.getElementById('clienteEmpresa') ? document.getElementById('clienteEmpresa').value.trim() : '',
+                tipoEmpresa: document.getElementById('clienteTipoEmpresa') ? document.getElementById('clienteTipoEmpresa').value : '',
+                telEmpresa: document.getElementById('clienteTelEmpresa') ? document.getElementById('clienteTelEmpresa').value.trim() : '',
+                dirEmpresa: document.getElementById('clienteDirEmpresa') ? document.getElementById('clienteDirEmpresa').value.trim() : '',
+                curp: document.getElementById('clienteCURP') ? document.getElementById('clienteCURP').value.trim().toUpperCase() : '',
+                rfc: document.getElementById('clienteRFC') ? document.getElementById('clienteRFC').value.trim().toUpperCase() : '',
+                email: document.getElementById('clienteEmail') ? document.getElementById('clienteEmail').value.trim() : '',
+                ssn: document.getElementById('clienteSSN') ? document.getElementById('clienteSSN').value.trim() : '',
+                notas: document.getElementById('clienteNotas') ? document.getElementById('clienteNotas').value.trim() : '',
+                fecha: new Date().toISOString()
+            };
+            
+            var clientes = getClientes();
+            
+            if (clienteActualId !== null) {
+                clientes[clienteActualId] = cliente;
+            } else {
+                clientes.push(cliente);
+            }
+            
+            saveClientes(clientes);
+            renderClientes();
+            showPanel('clientes');
+        }
+        
+        function verCliente(idx) {
+            var clientes = getClientes();
+            var c = clientes[idx];
+            if (!c) return;
+            
+            clienteActualId = idx;
+            
+            var html = '<h3>' + c.nombre + '</h3>' +
+                '<div style="margin-top:1rem;">' +
+                '<p><strong>Teléfono 1:</strong> <a href="tel:' + c.tel1 + '">' + c.tel1 + '</a></p>' +
+                (c.tel2 ? '<p><strong>Teléfono 2:</strong> <a href="tel:' + c.tel2 + '">' + c.tel2 + '</a></p>' : '') +
+                (c.email ? '<p><strong>Email:</strong> <a href="mailto:' + c.email + '">' + c.email + '</a></p>' : '') +
+                (c.rfc ? '<p><strong>RFC:</strong> ' + c.rfc + '</p>' : '') +
+                (c.notas ? '<p style="margin-top:1rem;"><strong>Notas:</strong><br>' + c.notas + '</p>' : '') +
+                '</div>' +
+                '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap;">' +
+                '<a href="https://wa.me/52' + c.tel1.replace(/\D/g,'') + '" class="btn btn-primary" style="flex:1;text-decoration:none;">WhatsApp</a>' +
+                '<button class="btn btn-outline" style="color:var(--primary);" onclick="editarClienteActual()">✏️ Modificar</button>' +
+                '<button class="btn btn-outline" style="color:var(--danger);" onclick="eliminarCliente(' + idx + ')">Eliminar</button>' +
+                '</div>' +
+                '<div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);">' +
+                '<h4 style="margin-bottom:1rem;color:var(--primary);">📁 Documentos</h4>' +
+                '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">' +
+                '<label class="btn btn-outline" style="text-align:center;cursor:pointer;font-size:0.85rem;">' +
+                '📄 INE<input type="file" accept="image/*,.pdf" style="display:none" onchange="subirDocCliente(' + idx + ',\'ine\',this)">' +
+                '</label>' +
+                '<label class="btn btn-outline" style="text-align:center;cursor:pointer;font-size:0.85rem;">' +
+                '🛂 Pasaporte<input type="file" accept="image/*,.pdf" style="display:none" onchange="subirDocCliente(' + idx + ',\'pasaporte\',this)">' +
+                '</label>' +
+                '<label class="btn btn-outline" style="text-align:center;cursor:pointer;font-size:0.85rem;">' +
+                '🆔 CURP<input type="file" accept="image/*,.pdf" style="display:none" onchange="subirDocCliente(' + idx + ',\'curp\',this)">' +
+                '</label>' +
+                '<label class="btn btn-outline" style="text-align:center;cursor:pointer;font-size:0.85rem;">' +
+                '🏠 Domicilio<input type="file" accept="image/*,.pdf" style="display:none" onchange="subirDocCliente(' + idx + ',\'domicilio\',this)">' +
+                '</label>' +
+                '</div>' +
+                '<div id="listaDocsCliente' + idx + '" style="margin-top:1rem;"></div>' +
+                '</div>';
+            
+            document.getElementById('detalleCliente').innerHTML = html;
+            showPanel('ver-cliente');
+            setTimeout(function() { mostrarDocsCliente(idx); }, 100);
+        }
+        
+        function editarClienteActual() {
+            if (clienteActualId === null) return;
+            var clientes = getClientes();
+            var c = clientes[clienteActualId];
+            
+            document.getElementById('clienteNombre').value = c.nombre || '';
+            document.getElementById('clienteTel1').value = c.tel1 || '';
+            document.getElementById('clienteTel2').value = c.tel2 || '';
+            document.getElementById('clienteEmail').value = c.email || '';
+            document.getElementById('clienteRFC').value = c.rfc || '';
+            document.getElementById('clienteNotas').value = c.notas || '';
+            showPanel('nuevo-cliente');
+        }
+        
+        function eliminarCliente(idx) {
+            if (!confirm('¿Eliminar este cliente?')) return;
+            var clientes = getClientes();
+            clientes.splice(idx, 1);
+            saveClientes(clientes);
+            renderClientes();
+            showPanel('clientes');
+        }
+        
+        function subirDocCliente(idx, tipo, input) {
+            if (!input.files || !input.files[0]) return;
+            var file = input.files[0];
+            var clientes = getClientes();
+            var c = clientes[idx];
+            if (!c.documentos) c.documentos = {};
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                c.documentos[tipo] = {
+                    nombre: file.name,
+                    tipo: file.type,
+                    fecha: new Date().toISOString(),
+                    data: e.target.result
+                };
+                saveClientes(clientes);
+                mostrarDocsCliente(idx);
+                showToast('Documento ' + tipo.toUpperCase() + ' guardado');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function mostrarDocsCliente(idx) {
+            var clientes = getClientes();
+            var c = clientes[idx];
+            var container = document.getElementById('listaDocsCliente' + idx);
+            if (!container) return;
+            if (!c.documentos || Object.keys(c.documentos).length === 0) {
+                container.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem;">Sin documentos</p>';
+                return;
+            }
+            var html = '';
+            var tipos = {ine: '📄 INE', pasaporte: '🛂 Pasaporte', curp: '🆔 CURP', domicilio: '🏠 Domicilio'};
+            for (var tipo in c.documentos) {
+                var doc = c.documentos[tipo];
+                html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem;background:var(--bg);border-radius:6px;margin-bottom:0.25rem;">' +
+                    '<span style="font-size:0.8rem;">' + (tipos[tipo] || tipo) + '</span>' +
+                    '<div><button onclick="verDocCliente(' + idx + ',\'' + tipo + '\')" style="padding:3px 6px;border:none;background:var(--primary);color:white;border-radius:4px;cursor:pointer;font-size:0.7rem;margin-right:4px;">Ver</button>' +
+                    '<button onclick="borrarDocCliente(' + idx + ',\'' + tipo + '\')" style="padding:3px 6px;border:none;background:var(--danger);color:white;border-radius:4px;cursor:pointer;font-size:0.7rem;">✕</button></div></div>';
+            }
+            container.innerHTML = html;
+        }
+        
+        function verDocCliente(idx, tipo) {
+            var clientes = getClientes();
+            var doc = clientes[idx].documentos[tipo];
+            if (!doc) return;
+            var win = window.open();
+            if (doc.tipo.startsWith('image/')) {
+                win.document.write('<img src="' + doc.data + '" style="max-width:100%;">');
+            } else {
+                win.document.write('<embed src="' + doc.data + '" type="application/pdf" width="100%" height="100%">');
+            }
+        }
+        
+        function borrarDocCliente(idx, tipo) {
+            if (!confirm('¿Eliminar documento?')) return;
+            var clientes = getClientes();
+            delete clientes[idx].documentos[tipo];
+            saveClientes(clientes);
+            mostrarDocsCliente(idx);
+        }
+        
+        // ========== EXPEDIENTES ==========
+        var expedienteActualId = null;
+        
+        function getExpedientes() {
+            var data = localStorage.getItem('notaria_expedientes');
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function saveExpedientes(expedientes) {
+            localStorage.setItem('notaria_expedientes', JSON.stringify(expedientes));
+        }
+        
+        function renderExpedientes() {
+            var expedientes = getExpedientes();
+            var container = document.getElementById('listaExpedientes');
+            var total = document.getElementById('totalExpedientes');
+            var activos = document.getElementById('expActivos');
+            var firmados = document.getElementById('expFirmados');
+            
+            if (total) total.textContent = expedientes.length;
+            
+            var countActivos = 0, countFirmados = 0;
+            for (var i = 0; i < expedientes.length; i++) {
+                if (expedientes[i].estado === 'Activo' || expedientes[i].estado === 'Pendiente') countActivos++;
+                if (expedientes[i].estado === 'Firmado' || expedientes[i].estado === 'Cerrado') countFirmados++;
+            }
+            if (activos) activos.textContent = countActivos;
+            if (firmados) firmados.textContent = countFirmados;
+            
+            if (!container) return;
+            if (expedientes.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--text-light);">No hay expedientes. Crea uno nuevo.</p>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = expedientes.length - 1; i >= 0; i--) {
+                var e = expedientes[i];
+                var badgeClass = 'progress';
+                if (e.estado === 'Pendiente') badgeClass = 'pending';
+                if (e.estado === 'Firmado' || e.estado === 'Cerrado') badgeClass = 'success';
+                if (e.estado === 'Firma') badgeClass = 'urgent';
+                
+                html += '<div class="list-item" onclick="verExpediente(' + i + ')" style="cursor:pointer;">' +
+                    '<div class="list-item-avatar">📁</div>' +
+                    '<div class="list-item-info">' +
+                    '<h4>' + e.numero + '</h4>' +
+                    '<p>' + e.tipo + ' • ' + (e.clienteNombre || 'Sin cliente') + '</p>' +
+                    '</div>' +
+                    '<span class="status-badge ' + badgeClass + '">' + e.estado + '</span>' +
+                    '</div>';
+            }
+            container.innerHTML = html;
+        }
+        
+        function showNuevoExpediente() {
+            expedienteActualId = null;
+            document.getElementById('expNumero').value = generarNumeroExp();
+            document.getElementById('expTipo').selectedIndex = 0;
+            document.getElementById('expEstado').selectedIndex = 0;
+            document.getElementById('expFecha').value = new Date().toISOString().split('T')[0];
+            document.getElementById('expDescripcion').value = '';
+            document.getElementById('expPartes').value = '';
+            document.getElementById('expPresupuesto').value = '';
+            cargarClientesEnSelect();
+            document.getElementById('tituloFormExpediente').textContent = 'Nuevo Expediente';
+            showPanel('nuevo-expediente');
+        }
+        
+        function generarNumeroExp() {
+            var year = new Date().getFullYear();
+            var expedientes = getExpedientes();
+            var num = expedientes.length + 1;
+            return 'EXP-' + year + '-' + String(num).padStart(4, '0');
+        }
+        
+        function cargarClientesEnSelect() {
+            var clientes = getClientes();
+            var select = document.getElementById('expCliente');
+            select.innerHTML = '<option value="">Seleccionar cliente...</option>';
+            for (var i = 0; i < clientes.length; i++) {
+                select.innerHTML += '<option value="' + i + '">' + clientes[i].nombre + '</option>';
+            }
+        }
+        
+        function guardarExpediente() {
+            var numero = document.getElementById('expNumero').value.trim();
+            var tipo = document.getElementById('expTipo').value;
+            var clienteIdx = document.getElementById('expCliente').value;
+            
+            if (!numero || !tipo) {
+                alert('Número y Tipo son obligatorios');
+                return;
+            }
+            
+            var clientes = getClientes();
+            var clienteNombre = clienteIdx !== '' ? clientes[parseInt(clienteIdx)].nombre : '';
+            
+            var expediente = {
+                numero: numero,
+                tipo: tipo,
+                clienteIdx: clienteIdx,
+                clienteNombre: clienteNombre,
+                estado: document.getElementById('expEstado').value,
+                fecha: document.getElementById('expFecha').value,
+                descripcion: document.getElementById('expDescripcion').value.trim(),
+                partes: document.getElementById('expPartes').value.trim(),
+                presupuesto: document.getElementById('expPresupuesto').value,
+                fechaCreacion: new Date().toISOString()
+            };
+            
+            var expedientes = getExpedientes();
+            
+            if (expedienteActualId !== null) {
+                expedientes[expedienteActualId] = expediente;
+            } else {
+                expedientes.push(expediente);
+            }
+            
+            saveExpedientes(expedientes);
+            
+            // Guardar archivos adjuntos en IndexedDB
+            var archivosInput = document.getElementById('expArchivos');
+            var expIdx = expedienteActualId !== null ? expedienteActualId : expedientes.length - 1;
+            
+            if (archivosInput && archivosInput.files.length > 0) {
+                var files = archivosInput.files;
+                var promesas = [];
+                for (var i = 0; i < files.length; i++) {
+                    if (files[i].size > 10485760) {
+                        alert('Archivo ' + files[i].name + ' excede 10MB');
+                        continue;
+                    }
+                    promesas.push(guardarArchivo(expIdx, files[i]));
+                }
+                Promise.all(promesas).then(function() {
+                    archivosInput.value = '';
+                    renderExpedientes();
+                    showPanel('expedientes');
+                }).catch(function(e) {
+                    console.error('Error guardando archivos:', e);
+                    renderExpedientes();
+                    showPanel('expedientes');
+                });
+            } else {
+                renderExpedientes();
+                showPanel('expedientes');
+            }
+        }
+        
+        function verExpediente(idx) {
+            var expedientes = getExpedientes();
+            var e = expedientes[idx];
+            if (!e) return;
+            
+            expedienteActualId = idx;
+            
+            var html = '<h3>' + e.numero + '</h3>' +
+                '<div style="margin-top:1rem;">' +
+                '<p><strong>Tipo:</strong> ' + e.tipo + '</p>' +
+                '<p><strong>Cliente:</strong> ' + (e.clienteNombre || 'N/A') + '</p>' +
+                '<p><strong>Estado:</strong> ' + e.estado + '</p>' +
+                '<p><strong>Fecha:</strong> ' + (e.fecha || 'N/A') + '</p>' +
+                (e.descripcion ? '<p style="margin-top:1rem;"><strong>Descripción:</strong><br>' + e.descripcion + '</p>' : '') +
+                '</div>' +
+                '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;">' +
+                '<button class="btn btn-primary" onclick="editarExpediente(' + idx + ')">Editar</button>' +
+                '<button class="btn" style="background:#dc3545;color:white;" onclick="eliminarExpediente(' + idx + ')">Eliminar</button>' +
+                '</div>';
+            
+            document.getElementById('detalleExpediente').innerHTML = html;
+            showPanel('ver-expediente');
+            renderArchivosExpediente(idx);
+        }
+        
+        function editarExpediente(idx) {
+            var expedientes = getExpedientes();
+            var e = expedientes[idx];
+            if (!e) return;
+            
+            expedienteActualId = idx;
+            cargarClientesEnSelect();
+            
+            document.getElementById('expNumero').value = e.numero;
+            document.getElementById('expTipo').value = e.tipo;
+            document.getElementById('expCliente').value = e.clienteIdx || '';
+            document.getElementById('expEstado').value = e.estado;
+            document.getElementById('expFecha').value = e.fecha || '';
+            document.getElementById('expDescripcion').value = e.descripcion || '';
+            document.getElementById('expPartes').value = e.partes || '';
+            document.getElementById('expPresupuesto').value = e.presupuesto || '';
+            
+            document.getElementById('tituloFormExpediente').textContent = 'Editar Expediente';
+            showPanel('nuevo-expediente');
+        }
+        
+        function eliminarExpediente(idx) {
+            if (!confirm('¿Eliminar este expediente?')) return;
+            var expedientes = getExpedientes();
+            expedientes.splice(idx, 1);
+            saveExpedientes(expedientes);
+            renderExpedientes();
+            showPanel('expedientes');
+        }
+
+
+        // ========== AGENDA / CITAS ==========
+        var citaActualId = null;
+        
+        function getCitas() {
+            var data = localStorage.getItem('notaria_citas');
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function saveCitas(citas) {
+            localStorage.setItem('notaria_citas', JSON.stringify(citas));
+        }
+        
+        function renderCitas() {
+            var citas = getCitas();
+            var container = document.getElementById('listaCitas');
+            var totalEl = document.getElementById('totalCitas');
+            var hoyEl = document.getElementById('citasHoy');
+            var semanaEl = document.getElementById('citasSemana');
+            
+            if (totalEl) totalEl.textContent = citas.length;
+            
+            var hoy = new Date().toISOString().split('T')[0];
+            var inicioSemana = new Date();
+            inicioSemana.setDate(inicioSemana.getDate() - inicioSemana.getDay());
+            var finSemana = new Date(inicioSemana);
+            finSemana.setDate(finSemana.getDate() + 6);
+            
+            var countHoy = 0, countSemana = 0;
+            for (var i = 0; i < citas.length; i++) {
+                var fechaCita = citas[i].fecha;
+                if (fechaCita === hoy) countHoy++;
+                if (fechaCita >= inicioSemana.toISOString().split('T')[0] && 
+                    fechaCita <= finSemana.toISOString().split('T')[0]) countSemana++;
+            }
+            if (hoyEl) hoyEl.textContent = countHoy;
+            if (semanaEl) semanaEl.textContent = countSemana;
+            
+            if (!container) return;
+            if (citas.length === 0) {
+                container.innerHTML = '<p style="text-align:center;padding:2rem;color:var(--text-light);">No hay citas. Agenda una nueva.</p>';
+                return;
+            }
+            
+            // Ordenar por fecha y hora
+            citas.sort(function(a, b) {
+                var dateA = a.fecha + 'T' + (a.hora || '00:00');
+                var dateB = b.fecha + 'T' + (b.hora || '00:00');
+                return dateA.localeCompare(dateB);
+            });
+            
+            var html = '';
+            for (var i = 0; i < citas.length; i++) {
+                var c = citas[i];
+                var badgeClass = 'pending';
+                if (c.estado === 'Confirmada') badgeClass = 'progress';
+                if (c.estado === 'Completada') badgeClass = 'success';
+                if (c.estado === 'Cancelada') badgeClass = 'urgent';
+                
+                var fechaStr = c.fecha ? new Date(c.fecha + 'T12:00:00').toLocaleDateString('es-MX', {weekday:'short', day:'numeric', month:'short'}) : '';
+                var horaStr = c.hora || '';
+                
+                html += '<div class="list-item" onclick="verCita(' + i + ')" style="cursor:pointer;">' +
+                    '<div class="list-item-avatar">📅</div>' +
+                    '<div class="list-item-info">' +
+                    '<h4>' + horaStr + ' - ' + (c.clienteNombre || c.titulo) + '</h4>' +
+                    '<p>' + c.tipo + ' • ' + fechaStr + '</p>' +
+                    '</div>' +
+                    '<span class="status-badge ' + badgeClass + '">' + c.estado + '</span>' +
+                    '</div>';
+            }
+            container.innerHTML = html;
+        }
+        
+        function showNuevaCita() {
+            citaActualId = null;
+            document.getElementById('citaFecha').value = new Date().toISOString().split('T')[0];
+            document.getElementById('citaHora').value = '10:00';
+            document.getElementById('citaTitulo').selectedIndex = 0;
+            document.getElementById('citaTipo').selectedIndex = 0;
+            document.getElementById('citaEstado').selectedIndex = 0;
+            document.getElementById('citaNotas').value = '';
+            cargarClientesEnSelectCita();
+            document.getElementById('tituloFormCita').textContent = 'Nueva Cita';
+            showPanel('nueva-cita');
+        }
+        
+        function cargarClientesEnSelectCita() {
+            var clientes = getClientes();
+            var select = document.getElementById('citaCliente');
+            select.innerHTML = '<option value="">Seleccionar cliente...</option>';
+            for (var i = 0; i < clientes.length; i++) {
+                select.innerHTML += '<option value="' + i + '">' + clientes[i].nombre + '</option>';
+            }
+        }
+        
+        function guardarCita() {
+            var fecha = document.getElementById('citaFecha').value;
+            var hora = document.getElementById('citaHora').value;
+            var titulo = document.getElementById('citaTitulo').value.trim();
+            
+            if (!fecha || !hora || !titulo) {
+                alert('Fecha, Hora y Título son obligatorios');
+                return;
+            }
+            
+            var clienteIdx = document.getElementById('citaCliente').value;
+            var clientes = getClientes();
+            var clienteNombre = clienteIdx !== '' ? clientes[parseInt(clienteIdx)].nombre : '';
+            
+            var cita = {
+                fecha: fecha,
+                hora: hora,
+                titulo: titulo,
+                clienteIdx: clienteIdx,
+                clienteNombre: clienteNombre,
+                tipo: document.getElementById('citaTipo').value,
+                estado: document.getElementById('citaEstado').value,
+                notas: document.getElementById('citaNotas').value.trim(),
+                fechaCreacion: new Date().toISOString()
+            };
+            
+            var citas = getCitas();
+            
+            if (citaActualId !== null) {
+                citas[citaActualId] = cita;
+            } else {
+                citas.push(cita);
+            }
+            
+            saveCitas(citas);
+            renderCitas();
+            showPanel('agenda');
+        }
+        
+        function verCita(idx) {
+            var citas = getCitas();
+            var c = citas[idx];
+            if (!c) return;
+            
+            citaActualId = idx;
+            var fechaStr = c.fecha ? new Date(c.fecha + 'T12:00:00').toLocaleDateString('es-MX', {weekday:'long', day:'numeric', month:'long', year:'numeric'}) : '';
+            
+            var html = '<h3>' + c.titulo + '</h3>' +
+                '<div style="margin-top:1rem;">' +
+                '<p><strong>Fecha:</strong> ' + fechaStr + '</p>' +
+                '<p><strong>Hora:</strong> ' + (c.hora || 'N/A') + '</p>' +
+                '<p><strong>Cliente:</strong> ' + (c.clienteNombre || 'N/A') + '</p>' +
+                '<p><strong>Tipo:</strong> ' + c.tipo + '</p>' +
+                '<p><strong>Estado:</strong> ' + c.estado + '</p>' +
+                (c.notas ? '<p style="margin-top:1rem;"><strong>Notas:</strong><br>' + c.notas + '</p>' : '') +
+                '</div>' +
+                '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;">' +
+                '<button class="btn btn-primary" onclick="editarCita(' + idx + ')">Editar</button>' +
+                '<button class="btn" style="background:#dc3545;color:white;" onclick="eliminarCita(' + idx + ')">Eliminar</button>' +
+                '</div>';
+            
+            document.getElementById('detalleCita').innerHTML = html;
+            showPanel('ver-cita');
+        }
+        
+        function editarCita(idx) {
+            var citas = getCitas();
+            var c = citas[idx];
+            if (!c) return;
+            
+            citaActualId = idx;
+            cargarClientesEnSelectCita();
+            
+            document.getElementById('citaFecha').value = c.fecha || '';
+            document.getElementById('citaHora').value = c.hora || '';
+            document.getElementById('citaTitulo').value = c.titulo || '';
+            document.getElementById('citaCliente').value = c.clienteIdx || '';
+            document.getElementById('citaTipo').value = c.tipo || 'Consulta';
+            document.getElementById('citaEstado').value = c.estado || 'Pendiente';
+            document.getElementById('citaNotas').value = c.notas || '';
+            
+            document.getElementById('tituloFormCita').textContent = 'Editar Cita';
+            showPanel('nueva-cita');
+        }
+        
+        function eliminarCita(idx) {
+            if (!confirm('¿Eliminar esta cita?')) return;
+            var citas = getCitas();
+            citas.splice(idx, 1);
+            saveCitas(citas);
+            renderCitas();
+            showPanel('agenda');
+        }
+
+// Render on load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderClientes();
+            renderExpedientes();
+            renderCitas();
+            
+            // Detectar parámetro ?panel= para navegación desde calculadoras
+            var urlParams = new URLSearchParams(window.location.search);
+            var panel = urlParams.get('panel');
+            if (panel) {
+                showPanel(panel);
+            }
+        });
+
+
+        // ========== OCR CLIENTES CON SOPORTE PDF + FALLBACKS ==========
+        
+        // Fallback: verificar si pdf.js está disponible
+        let pdfJsAvailable = false;
+        try {
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                pdfJsAvailable = true;
+            }
+        } catch (e) {
+            console.warn('pdf.js no disponible:', e);
+        }
+        
+        let clienteOCRData = { imageBase64: null, isPdf: false };
+        
+        document.getElementById('clienteOCR').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const statusEl = document.getElementById('ocrStatusCliente');
+            const btnScan = document.getElementById('btnScanCliente');
+            
+            // Validar tamaño (máx 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                statusEl.textContent = 'Error: archivo muy grande (máx 10MB)';
+                statusEl.style.color = '#ef4444';
+                btnScan.disabled = true;
+                return;
+            }
+            
+            clienteOCRData.isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+            
+            if (clienteOCRData.isPdf) {
+                if (!pdfJsAvailable) {
+                    statusEl.textContent = 'PDFs no soportados. Sube una imagen (JPG/PNG).';
+                    statusEl.style.color = '#f59e0b';
+                    btnScan.disabled = true;
+                    return;
+                }
+                
+                statusEl.textContent = 'Convirtiendo PDF...';
+                statusEl.style.color = '#6366f1';
+                
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                    const page = await pdf.getPage(1);
+                    const scale = 2;
+                    const viewport = page.getViewport({ scale });
+                    const canvas = document.getElementById('pdfCanvasCliente');
+                    if (!canvas) throw new Error('Canvas no encontrado');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    await page.render({ canvasContext: context, viewport: viewport }).promise;
+                    clienteOCRData.imageBase64 = canvas.toDataURL('image/png').split(',')[1];
+                    statusEl.textContent = 'PDF listo ✓';
+                    statusEl.style.color = '#10b981';
+                    btnScan.disabled = false;
+                } catch (err) {
+                    console.error('Error PDF:', err);
+                    statusEl.textContent = 'Error PDF. Intenta con imagen o screenshot.';
+                    statusEl.style.color = '#ef4444';
+                    btnScan.disabled = true;
+                }
+            } else {
+                // Validar que sea imagen
+                if (!file.type.startsWith('image/')) {
+                    statusEl.textContent = 'Formato no soportado. Usa JPG, PNG o PDF.';
+                    statusEl.style.color = '#ef4444';
+                    btnScan.disabled = true;
+                    return;
+                }
+                
+                statusEl.textContent = 'Cargando imagen...';
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    clienteOCRData.imageBase64 = ev.target.result.split(',')[1];
+                    statusEl.textContent = 'Imagen lista ✓';
+                    statusEl.style.color = '#10b981';
+                    btnScan.disabled = false;
+                };
+                reader.onerror = () => {
+                    statusEl.textContent = 'Error al leer archivo';
+                    statusEl.style.color = '#ef4444';
+                    btnScan.disabled = true;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        async function scanClienteDoc() {
+            if (!clienteOCRData.imageBase64) { 
+                alert('Primero sube un documento'); 
+                return; 
+            }
+            
+            const statusEl = document.getElementById('ocrStatusCliente');
+            const btnScan = document.getElementById('btnScanCliente');
+            btnScan.disabled = true;
+            statusEl.textContent = 'Escaneando con Google Vision...';
+            statusEl.style.color = '#6366f1';
+            
+            // Timeout de 30 segundos
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
+            
+            try {
+                const response = await fetch('/api/vision', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: clienteOCRData.imageBase64 }),
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                if (!data.responses || !data.responses[0]) {
+                    throw new Error('Respuesta vacía de Vision API');
+                }
+                
+                const fullText = data.responses[0].fullTextAnnotation;
+                const textAnnotations = data.responses[0].textAnnotations;
+                let text = '';
+                
+                if (fullText && fullText.text) {
+                    text = fullText.text;
+                } else if (textAnnotations && textAnnotations.length > 0) {
+                    text = textAnnotations[0].description;
+                }
+                
+                if (!text) {
+                    statusEl.textContent = 'No se detectó texto. Intenta con mejor imagen.';
+                    statusEl.style.color = '#f59e0b';
+                    btnScan.disabled = false;
+                    return;
+                }
+                
+                const filledCount = parseClienteOCR(text);
+                statusEl.textContent = `✓ ${filledCount} campos extraídos`;
+                statusEl.style.color = '#10b981';
+                
+            } catch (err) {
+                console.error('OCR Error:', err);
+                
+                if (err.name === 'AbortError') {
+                    statusEl.textContent = 'Timeout. Intenta de nuevo.';
+                } else if (err.message.includes('Failed to fetch')) {
+                    statusEl.textContent = 'Sin conexión. Verifica internet.';
+                } else {
+                    statusEl.textContent = 'Error: ' + err.message;
+                }
+                statusEl.style.color = '#ef4444';
+            }
+            
+            btnScan.disabled = false;
+        }
+        
+        function parseClienteOCR(text) {
+            let filledCount = 0;
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+            
+            function findValue(patterns) {
+                for (const line of lines) {
+                    for (const pattern of patterns) {
+                        const regex = new RegExp(pattern + '[:\\s]+(.+)', 'i');
+                        const match = line.match(regex);
+                        if (match) return match[1].trim();
+                    }
+                }
+                return null;
+            }
+            
+            function safeSetValue(id, value) {
+                try {
+                    const el = document.getElementById(id);
+                    if (el && value) {
+                        el.value = value;
+                        return true;
+                    }
+                } catch (e) {
+                    console.warn('Error setting', id, e);
+                }
+                return false;
+            }
+            
+            // Nombre
+            const name = findValue(['Name', 'Nombre', 'Nombre Completo']);
+            if (safeSetValue('clienteNombre', name)) filledCount++;
+            
+            // Fecha nacimiento
+            const dob = findValue(['Date of Birth', 'Fecha de Nacimiento', 'Fecha Nac', 'DOB']);
+            if (dob) {
+                const dateMatch = dob.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+                if (dateMatch) {
+                    const [, d, m, y] = dateMatch;
+                    if (safeSetValue('clienteFechaNac', `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`)) filledCount++;
+                }
+            }
+            
+            // Lugar nacimiento
+            const pob = findValue(['Place of Birth', 'Lugar de Nacimiento', 'Lugar Nac']);
+            if (safeSetValue('clienteLugarNac', pob)) filledCount++;
+            
+            // Nacionalidad
+            const nationality = findValue(['Nationality', 'Nacionalidad']);
+            if (nationality) {
+                try {
+                    const sel = document.getElementById('clienteNacionalidad');
+                    if (sel) {
+                        const opt = Array.from(sel.options).find(o => 
+                            o.text.toLowerCase().includes(nationality.toLowerCase()) ||
+                            nationality.toLowerCase().includes(o.text.toLowerCase())
+                        );
+                        if (opt) { sel.value = opt.value; filledCount++; }
+                    }
+                } catch (e) {}
+            }
+            
+            // Pasaporte
+            const passport = findValue(['Passport', 'Pasaporte', 'Passport Number']);
+            if (passport) {
+                try {
+                    const tipoId = document.getElementById('clienteTipoID');
+                    if (tipoId) { tipoId.value = 'Pasaporte'; if(typeof toggleTipoID === 'function') toggleTipoID(); }
+                    if (safeSetValue('clientePasaporte', passport.split(/\s+/)[0])) filledCount++;
+                } catch (e) {}
+            }
+            
+            // Estado civil
+            const marital = findValue(['Marital Status', 'Estado Civil', 'Marital']);
+            if (marital) {
+                try {
+                    const sel = document.getElementById('clienteEstadoCivil');
+                    if (sel) {
+                        const m = marital.toLowerCase();
+                        if (m.includes('married') || m.includes('casad')) { sel.value = 'Casado(a)'; filledCount++; }
+                        else if (m.includes('single') || m.includes('solter')) { sel.value = 'Soltero(a)'; filledCount++; }
+                        else if (m.includes('divorced') || m.includes('divorciad')) { sel.value = 'Divorciado(a)'; filledCount++; }
+                        else if (m.includes('widow') || m.includes('viud')) { sel.value = 'Viudo(a)'; filledCount++; }
+                    }
+                } catch (e) {}
+            }
+            
+            // Direcciones
+            const addrMX = findValue(['Address in Mexico', 'Domicilio en Mexico', 'Direccion Mexico', 'Domicilio']);
+            if (safeSetValue('clienteDirMx', addrMX)) filledCount++;
+            
+            const addrExt = findValue(['Address Abroad', 'Direccion Extranjero', 'Domicilio Extranjero']);
+            if (safeSetValue('clienteDirExt', addrExt)) filledCount++;
+            
+            // Ocupación
+            const occupation = findValue(['Occupation', 'Ocupacion', 'Profesion']);
+            if (occupation) {
+                try {
+                    const sel = document.getElementById('clienteOcupacion');
+                    if (sel) {
+                        const o = occupation.toLowerCase();
+                        if (o.includes('retired') || o.includes('jubilad') || o.includes('retirad')) { 
+                            sel.value = 'Jubilado'; filledCount++; 
+                        } else if (o.includes('employ') || o.includes('emplead')) { 
+                            sel.value = 'Empleado'; filledCount++; 
+                        }
+                        if(typeof toggleDatosLaborales === 'function') toggleDatosLaborales();
+                    }
+                } catch (e) {}
+            }
+            
+            // Regex patterns
+            const curpMatch = text.match(/[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z\d]\d/);
+            if (curpMatch && safeSetValue('clienteCURP', curpMatch[0])) filledCount++;
+            
+            const rfcMatch = text.match(/[A-Z&Ñ]{3,4}\d{6}[A-Z0-9]{3}/);
+            if (rfcMatch && safeSetValue('clienteRFC', rfcMatch[0])) filledCount++;
+            
+            const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+            if (emailMatch && safeSetValue('clienteEmail', emailMatch[0])) filledCount++;
+            
+            const telMatch = text.match(/\b\d{10}\b/);
+            if (telMatch && safeSetValue('clienteTelefono', telMatch[0])) filledCount++;
+            
+            return filledCount;
+        }
+        // ========== FIN OCR CLIENTES ==========
+        
+        // ========== LLAMADAS ==========
+        function iniciarLlamada() {
+            var tel = document.getElementById('llamada-tel').value.replace(/\s/g, '');
+            if (!tel) {
+                alert('Ingresa un numero de telefono');
+                return;
+            }
+            // Guardar en historial
+            guardarHistorialLlamada(tel, 'llamada');
+            // Abrir enlace tel:
+            window.location.href = 'tel:' + tel;
+        }
+        
+        function iniciarWhatsApp() {
+            var tel = document.getElementById('llamada-tel').value.replace(/\s/g, '');
+            if (!tel) {
+                alert('Ingresa un numero de telefono');
+                return;
+            }
+            // Limpiar numero (quitar +52 si tiene, agregar 52 si no)
+            tel = tel.replace(/^\+/, '');
+            if (!tel.startsWith('52') && tel.length === 10) {
+                tel = '52' + tel;
+            }
+            // Guardar en historial
+            guardarHistorialLlamada(tel, 'whatsapp');
+            // Abrir WhatsApp
+            window.open('https://wa.me/' + tel, '_blank');
+        }
+        
+        function guardarHistorialLlamada(tel, tipo) {
+            var historial = JSON.parse(localStorage.getItem('historial_llamadas') || '[]');
+            historial.unshift({
+                tel: tel,
+                tipo: tipo,
+                fecha: new Date().toISOString()
+            });
+            // Mantener solo las ultimas 20
+            historial = historial.slice(0, 20);
+            localStorage.setItem('historial_llamadas', JSON.stringify(historial));
+            renderHistorialLlamadas();
+        }
+        
+        function renderHistorialLlamadas() {
+            var historial = JSON.parse(localStorage.getItem('historial_llamadas') || '[]');
+            var container = document.getElementById('historial-llamadas');
+            if (!container) return;
+            
+            if (historial.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center;">No hay llamadas recientes</p>';
+                return;
+            }
+            
+            var html = '';
+            historial.forEach(function(item) {
+                var fecha = new Date(item.fecha);
+                var fechaStr = fecha.toLocaleDateString() + ' ' + fecha.toLocaleTimeString().slice(0,5);
+                var icono = item.tipo === 'whatsapp' ? '💬' : '📞';
+                html += '<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #eee;">';
+                html += '<span>' + icono + ' ' + item.tel + '</span>';
+                html += '<span style="color: #888; font-size: 0.8rem;">' + fechaStr + '</span>';
+                html += '</div>';
+            });
+            container.innerHTML = html;
+        }
+        
+        function renderContactosFrecuentes() {
+            var clientes = JSON.parse(localStorage.getItem('notaria_clientes') || '[]');
+            var container = document.getElementById('contactos-frecuentes');
+            if (!container) return;
+            
+            // Filtrar clientes que tienen telefono
+            var conTel = clientes.filter(function(c) { return c.telefono; });
+            
+            if (conTel.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center;">Los contactos de tus clientes apareceran aqui</p>';
+                return;
+            }
+            
+            var html = '';
+            conTel.slice(0, 10).forEach(function(cliente) {
+                html += '<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #eee;">';
+                html += '<span style="font-weight: 500;">' + cliente.nombre + '</span>';
+                html += '<div style="display: flex; gap: 0.5rem;">';
+                html += '<button onclick="llamarContacto(\'' + cliente.telefono + '\')" style="padding: 0.25rem 0.5rem; border: none; background: #3B82F6; color: white; border-radius: 4px; cursor: pointer;">📞</button>';
+                html += '<button onclick="whatsappContacto(\'' + cliente.telefono + '\')" style="padding: 0.25rem 0.5rem; border: none; background: #25D366; color: white; border-radius: 4px; cursor: pointer;">💬</button>';
+                html += '</div>';
+                html += '</div>';
+            });
+            container.innerHTML = html;
+        }
+        
+        function llamarContacto(tel) {
+            guardarHistorialLlamada(tel, 'llamada');
+            window.location.href = 'tel:' + tel;
+        }
+        
+        function whatsappContacto(tel) {
+            tel = tel.replace(/^\+/, '').replace(/\s/g, '');
+            if (!tel.startsWith('52') && tel.length === 10) {
+                tel = '52' + tel;
+            }
+            guardarHistorialLlamada(tel, 'whatsapp');
+            window.open('https://wa.me/' + tel, '_blank');
+        }
+        
+        // Inicializar al cargar panel de llamadas
+        var originalShowPanel = showPanel;
+        showPanel = function(panelId) {
+            originalShowPanel(panelId);
+            if (panelId === 'llamadas') {
+                renderHistorialLlamadas();
+                renderContactosFrecuentes();
+            }
+        };
+        // ========== FIN LLAMADAS ==========
+    
+        // ===== CHAT INTERNO =====
+        let chatActual = null;
+        let chatNombreActual = '';
+        
+        function abrirChat(id, nombre, iniciales) {
+            chatActual = id;
+            chatNombreActual = nombre;
+            
+            // Cambiar título
+            document.getElementById('chatTitulo').textContent = nombre;
+            document.getElementById('chatSubtitulo').textContent = 'Conversación';
+            
+            // Mostrar conversación, ocultar contactos
+            document.getElementById('chatContactos').style.display = 'none';
+            document.getElementById('chatConversacion').style.display = 'flex';
+            
+            // Cargar mensajes
+            cargarMensajes(id);
+        }
+        
+        function volverDeChat() {
+            if (chatActual) {
+                // Volver a lista de contactos
+                chatActual = null;
+                document.getElementById('chatTitulo').textContent = 'Chat';
+                document.getElementById('chatSubtitulo').textContent = 'Mensajería interna';
+                document.getElementById('chatContactos').style.display = 'block';
+                document.getElementById('chatConversacion').style.display = 'none';
+            } else {
+                // Volver al home
+                showPanel('home');
+            }
+        }
+        
+        function cargarMensajes(contactoId) {
+            const key = 'notaria_chat_' + contactoId;
+            const mensajes = JSON.parse(localStorage.getItem(key) || '[]');
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+            
+            mensajes.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'message ' + (msg.enviado ? 'sent' : 'received');
+                div.innerHTML = msg.texto + '<div style="font-size:0.6rem;opacity:0.7;margin-top:2px;">' + msg.hora + '</div>';
+                container.appendChild(div);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function enviarMensaje() {
+            const input = document.getElementById('chatInput');
+            const texto = input.value.trim();
+            if (!texto || !chatActual) return;
+            
+            const key = 'notaria_chat_' + chatActual;
+            const mensajes = JSON.parse(localStorage.getItem(key) || '[]');
+            
+            const ahora = new Date();
+            const hora = ahora.getHours().toString().padStart(2,'0') + ':' + ahora.getMinutes().toString().padStart(2,'0');
+            
+            mensajes.push({
+                texto: texto,
+                enviado: true,
+                hora: hora
+            });
+            
+            localStorage.setItem(key, JSON.stringify(mensajes));
+            input.value = '';
+            cargarMensajes(chatActual);
+        }
+
+    
+        // ========== INDEXEDDB ARCHIVOS ==========
+        var dbArchivos = null;
+        var DB_NAME = 'notaria_archivos_db';
+        var DB_VERSION = 1;
+        var STORE_NAME = 'archivos';
+        
+        function initIndexedDB() {
+            return new Promise(function(resolve, reject) {
+                var request = indexedDB.open(DB_NAME, DB_VERSION);
+                
+                request.onerror = function(e) {
+                    console.error('Error abriendo IndexedDB:', e);
+                    reject(e);
+                };
+                
+                request.onsuccess = function(e) {
+                    dbArchivos = e.target.result;
+                    console.log('IndexedDB inicializado');
+                    resolve(dbArchivos);
+                };
+                
+                request.onupgradeneeded = function(e) {
+                    var db = e.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        var store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                        store.createIndex('expedienteId', 'expedienteId', { unique: false });
+                    }
+                };
+            });
+        }
+        
+        function guardarArchivo(expedienteId, file) {
+            return new Promise(function(resolve, reject) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var archivo = {
+                        expedienteId: expedienteId,
+                        nombre: file.name,
+                        tipo: file.type,
+                        tamano: file.size,
+                        data: e.target.result,
+                        fecha: new Date().toISOString()
+                    };
+                    
+                    var tx = dbArchivos.transaction([STORE_NAME], 'readwrite');
+                    var store = tx.objectStore(STORE_NAME);
+                    var request = store.add(archivo);
+                    
+                    request.onsuccess = function() { resolve(request.result); };
+                    request.onerror = function() { reject(request.error); };
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        function obtenerArchivos(expedienteId) {
+            return new Promise(function(resolve, reject) {
+                if (!dbArchivos) { resolve([]); return; }
+                var tx = dbArchivos.transaction([STORE_NAME], 'readonly');
+                var store = tx.objectStore(STORE_NAME);
+                var index = store.index('expedienteId');
+                var request = index.getAll(expedienteId);
+                
+                request.onsuccess = function() { resolve(request.result || []); };
+                request.onerror = function() { reject(request.error); };
+            });
+        }
+        
+        function eliminarArchivo(id) {
+            return new Promise(function(resolve, reject) {
+                var tx = dbArchivos.transaction([STORE_NAME], 'readwrite');
+                var store = tx.objectStore(STORE_NAME);
+                var request = store.delete(id);
+                
+                request.onsuccess = function() { resolve(); };
+                request.onerror = function() { reject(request.error); };
+            });
+        }
+        
+        function descargarArchivo(id) {
+            var tx = dbArchivos.transaction([STORE_NAME], 'readonly');
+            var store = tx.objectStore(STORE_NAME);
+            var request = store.get(id);
+            
+            request.onsuccess = function() {
+                var archivo = request.result;
+                if (archivo) {
+                    var link = document.createElement('a');
+                    link.href = archivo.data;
+                    link.download = archivo.nombre;
+                    link.click();
+                }
+            };
+        }
+        
+        function renderArchivosExpediente(expedienteId) {
+            obtenerArchivos(expedienteId).then(function(archivos) {
+                var container = document.getElementById('archivosExpediente');
+                if (!container) return;
+                
+                if (archivos.length === 0) {
+                    container.innerHTML = '<p style="color:#888;">Sin archivos adjuntos</p>';
+                    return;
+                }
+                
+                var html = '<h4 style="margin-bottom:10px;">Archivos (' + archivos.length + ')</h4>';
+                archivos.forEach(function(a) {
+                    var tamano = (a.tamano / 1024).toFixed(1) + ' KB';
+                    if (a.tamano > 1048576) tamano = (a.tamano / 1048576).toFixed(1) + ' MB';
+                    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#f5f5f5;border-radius:6px;margin-bottom:6px;">';
+                    html += '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;">' + a.nombre + ' <small>(' + tamano + ')</small></span>';
+                    html += '<div style="display:flex;gap:5px;">';
+                    html += '<button onclick="descargarArchivo(' + a.id + ')" style="padding:4px 8px;border:none;background:#3B82F6;color:white;border-radius:4px;cursor:pointer;">Descargar</button>';
+                    html += '<button onclick="eliminarArchivoExp(' + a.id + ',' + expedienteId + ')" style="padding:4px 8px;border:none;background:#dc3545;color:white;border-radius:4px;cursor:pointer;">X</button>';
+                    html += '</div></div>';
+                });
+                container.innerHTML = html;
+            });
+        }
+        
+        function eliminarArchivoExp(id, expId) {
+            if (confirm('Eliminar este archivo?')) {
+                eliminarArchivo(id).then(function() {
+                    renderArchivosExpediente(expId);
+                });
+            }
+        }
+        
+        // Inicializar IndexedDB al cargar
+        initIndexedDB().catch(function(e) { console.error('IndexedDB no disponible'); });
+        // ========== FIN INDEXEDDB ==========
+    </script>
+</body>
+</html>
+<!-- deploy fix -->
+<!-- clientes v5 -->
+<!-- v6 -->
