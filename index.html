@@ -3460,6 +3460,20 @@ function subirDocCliente(idx, tipo, input) {
             deferredPrompt = null;
         });
         // ========== FIN PWA INSTALL ==========
+        
+        // ========== SERVICE WORKER REGISTER ==========
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('SW registrado:', registration.scope);
+                    })
+                    .catch(function(err) {
+                        console.log('SW error:', err);
+                    });
+            });
+        }
+        // ========== FIN SW REGISTER ==========
     </script>
 </body>
 </html>

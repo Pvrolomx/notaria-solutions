@@ -1,15 +1,21 @@
 // Service Worker para Notaria Solutions PWA
-const CACHE_NAME = 'notaria-solutions-v4';
+const CACHE_NAME = 'notaria-solutions-v5';
 const urlsToCache = [
   '/',
-  '/calculadora.html',
   '/index.html',
+  '/calculadora.html',
+  '/calculadora-isabi.html',
+  '/iva.html',
+  '/kyc.html',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-512.png',
+  '/logo.jpeg',
+  '/manifest.json'
 ];
 
 // Instalación
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -19,17 +25,23 @@ self.addEventListener('install', event => {
   );
 });
 
-// Fetch - Cache first, then network
+// Fetch - Network first, fallback to cache
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(response => {
-        if (response) {
-          return response;
+        // Cache la respuesta
+        if (response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
         }
-        return fetch(event.request);
-      }
-    )
+        return response;
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
   );
 });
 
@@ -44,6 +56,8 @@ self.addEventListener('activate', event => {
           }
         })
       );
+    }).then(() => {
+      return self.clients.claim();
     })
   );
 });
