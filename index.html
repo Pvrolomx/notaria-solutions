@@ -2083,7 +2083,7 @@
             html += '<div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);">';
             html += '<h4 style="margin-bottom:1rem;color:var(--primary);">📁 Documentos</h4>';
             html += '<label class="btn btn-primary" style="display:block;text-align:center;cursor:pointer;margin-bottom:1rem;">';
-            html += '📤 Subir documento<input type="file" accept="image/*,.pdf" style="display:none" onchange="subirDocGenerico(' + idx + ',this)">';
+            html += '📤 Subir documento<input type="file" accept="image/*,.pdf" capture="environment" style="display:none" onchange="subirDocGenerico(' + idx + ',this)">';
             html += '</label>';
             html += '<div id="listaDocsCliente' + idx + '" style="margin-top:1rem;"></div>';
             html += '</div>';
