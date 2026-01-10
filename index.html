@@ -1147,6 +1147,9 @@
                     <div>
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Presupuesto</label>
                         <input type="number" id="expPresupuesto" placeholder="0.00" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                        <button type="button" onclick="generarPresupuesto()" style="margin-top:8px;width:100%;padding:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                            📊 Generar Presupuesto
+                        </button>
                     </div>
                     <div>
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha Apertura</label>
@@ -2393,6 +2396,22 @@ function subirDocCliente(idx, tipo, input) {
             }
         }
         
+        
+        function generarPresupuesto() {
+            // Coming Soon modal
+            var modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;';
+            modal.innerHTML = '<div style="background:white;border-radius:16px;padding:2rem;text-align:center;max-width:90%;width:350px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">' +
+                '<div style="font-size:3rem;margin-bottom:1rem;">🚧</div>' +
+                '<h3 style="margin-bottom:0.5rem;color:#1f2937;">Próximamente</h3>' +
+                '<p style="color:#6b7280;margin-bottom:1.5rem;font-size:0.9rem;">El generador de presupuestos estará disponible pronto.</p>' +
+                '<p style="color:#9ca3af;font-size:0.8rem;margin-bottom:1.5rem;">Incluirá formatos para:<br>• Compraventa<br>• Fideicomiso<br>• Poderes<br>• Y más...</p>' +
+                '<button onclick="this.parentElement.parentElement.remove()" style="padding:12px 24px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Entendido</button>' +
+                '</div>';
+            modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
+            document.body.appendChild(modal);
+        }
+
         function guardarExpediente() {
             var numero = document.getElementById('expNumero').value.trim();
             var tipo = document.getElementById('expTipo').value;
