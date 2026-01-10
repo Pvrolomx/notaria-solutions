@@ -2133,6 +2133,7 @@
                 c.documentos[tipoFinal] = {
                     data: e.target.result,
                     name: nombreArchivo,
+                    tipo: file.type,
                     fecha: new Date().toISOString()
                 };
                 saveClientes(clientes);
@@ -2208,10 +2209,11 @@ function subirDocCliente(idx, tipo, input) {
             var doc = clientes[idx].documentos[tipo];
             if (!doc) return;
             var win = window.open();
-            if (doc.tipo.startsWith('image/')) {
-                win.document.write('<img src="' + doc.data + '" style="max-width:100%;">');
+            var esImagen = (doc.tipo && doc.tipo.startsWith('image/')) || doc.data.startsWith('data:image/');
+            if (esImagen) {
+                win.document.write('<html><head><title>' + (doc.name || tipo) + '</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#222;"><img src="' + doc.data + '" style="max-width:100%;max-height:100vh;"></body></html>');
             } else {
-                win.document.write('<embed src="' + doc.data + '" type="application/pdf" width="100%" height="100%">');
+                win.document.write('<html><head><title>' + (doc.name || tipo) + '</title></head><body style="margin:0;"><embed src="' + doc.data + '" type="application/pdf" width="100%" height="100%" style="position:absolute;top:0;left:0;right:0;bottom:0;"></body></html>');
             }
         }
         
