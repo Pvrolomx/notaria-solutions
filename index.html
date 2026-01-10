@@ -2124,11 +2124,8 @@
             var c = clientes[idx];
             if (!c.documentos) c.documentos = {};
             
-            // Usar nombre del archivo sin extensión como tipo
             var nombreArchivo = file.name;
-            var tipo = nombreArchivo.replace(/\.[^/.]+$/, ''); // Sin extensión
-            
-            // Si ya existe un doc con ese nombre, agregar número
+            var tipo = nombreArchivo.replace(/\.[^/.]+$/, '');
             var tipoFinal = tipo;
             var contador = 1;
             while (c.documentos[tipoFinal]) {
@@ -2136,19 +2133,97 @@
                 contador++;
             }
             
+            var MAX_SIZE = 1.5 * 1024 * 1024; // 1.5MB limite para guardar
+            
+            // Si es imagen y muy grande, comprimir
+            if (file.type.startsWith('image/') && file.size > 500000) {
+                comprimirYGuardar(file, idx, tipoFinal, nombreArchivo, MAX_SIZE);
+            } else if (file.size > MAX_SIZE) {
+                // Archivo muy grande - descargar al dispositivo
+                if (confirm('Documento muy grande (' + (file.size/1024/1024).toFixed(1) + 'MB).\n\n¿Descargar al dispositivo en lugar de guardar en la app?')) {
+                    descargarAlDispositivo(file, nombreArchivo);
+                } else {
+                    alert('El documento excede el límite de almacenamiento.');
+                }
+            } else {
+                // Tamaño normal - guardar directo
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    guardarDocumento(idx, tipoFinal, e.target.result, nombreArchivo, file.type);
+                };
+                reader.readAsDataURL(file);
+            }
+            input.value = '';
+        }
+        
+        function comprimirYGuardar(file, idx, tipoFinal, nombreArchivo, maxSize) {
             var reader = new FileReader();
             reader.onload = function(e) {
-                c.documentos[tipoFinal] = {
-                    data: e.target.result,
-                    name: nombreArchivo,
-                    tipo: file.type,
-                    fecha: new Date().toISOString()
+                var img = new Image();
+                img.onload = function() {
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    
+                    // Calcular nuevo tamaño (max 1200px)
+                    var maxDim = 1200;
+                    var w = img.width;
+                    var h = img.height;
+                    if (w > maxDim || h > maxDim) {
+                        if (w > h) {
+                            h = h * (maxDim / w);
+                            w = maxDim;
+                        } else {
+                            w = w * (maxDim / h);
+                            h = maxDim;
+                        }
+                    }
+                    
+                    canvas.width = w;
+                    canvas.height = h;
+                    ctx.drawImage(img, 0, 0, w, h);
+                    
+                    // Comprimir a JPEG 70%
+                    var dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    
+                    // Verificar tamaño resultante
+                    var sizeKB = (dataUrl.length * 0.75) / 1024;
+                    if (sizeKB > maxSize / 1024) {
+                        if (confirm('Imagen aún muy grande después de comprimir.\n\n¿Descargar al dispositivo?')) {
+                            var link = document.createElement('a');
+                            link.href = dataUrl;
+                            link.download = nombreArchivo.replace(/\.[^/.]+$/, '') + '_comprimido.jpg';
+                            link.click();
+                        }
+                    } else {
+                        guardarDocumento(idx, tipoFinal, dataUrl, nombreArchivo, 'image/jpeg');
+                    }
                 };
-                saveClientes(clientes);
-                mostrarDocsCliente(idx);
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
-            input.value = '';
+        }
+        
+        function descargarAlDispositivo(file, nombreArchivo) {
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(file);
+            link.download = nombreArchivo;
+            link.click();
+            URL.revokeObjectURL(link.href);
+            alert('Documento descargado a tu dispositivo.');
+        }
+        
+        function guardarDocumento(idx, tipoFinal, data, nombreArchivo, tipo) {
+            var clientes = getClientes();
+            var c = clientes[idx];
+            if (!c.documentos) c.documentos = {};
+            c.documentos[tipoFinal] = {
+                data: data,
+                name: nombreArchivo,
+                tipo: tipo,
+                fecha: new Date().toISOString()
+            };
+            saveClientes(clientes);
+            mostrarDocsCliente(idx);
         }
         
         function renombrarDoc(idx, tipoViejo) {
