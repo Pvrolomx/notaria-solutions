@@ -208,11 +208,11 @@
             <div class="grid-2">
                 <div class="field">
                     <label>Valor de Operación (Precio de Venta)</label>
-                    <input type="text" id="valorOperacion" placeholder="$0.00" oninput="formatCurrency(this)">
+                    <input type="text" id="valorOperacion" placeholder="Ej: 1500000" onfocus="clearFormat(this)" onblur="formatCurrency(this)">
                 </div>
                 <div class="field">
                     <label>Valor Fiscal / Catastral</label>
-                    <input type="text" id="valorFiscal" placeholder="$0.00" oninput="formatCurrency(this)">
+                    <input type="text" id="valorFiscal" placeholder="Ej: 1200000" onfocus="clearFormat(this)" onblur="formatCurrency(this)">
                 </div>
             </div>
             <button class="btn-calcular" onclick="calcular()">Calcular ISABI/ISTP</button>
@@ -292,13 +292,24 @@
             document.getElementById('resultado').classList.remove('visible');
         }
 
+        function clearFormat(input) {
+            // Al hacer focus, quitar formato para editar fácil
+            let value = input.value.replace(/[^0-9.]/g, '');
+            if (value) {
+                input.value = value;
+            }
+        }
+        
         function formatCurrency(input) {
+            // Al salir del campo, aplicar formato
             let value = input.value.replace(/[^0-9.]/g, '');
             if (value) {
                 const num = parseFloat(value);
                 if (!isNaN(num)) {
                     input.value = '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 }
+            } else {
+                input.value = '';
             }
         }
 
