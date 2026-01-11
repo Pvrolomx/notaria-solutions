@@ -257,7 +257,7 @@
                 </div>
                 <div class="field">
                     <label>Precio de Adquisición $</label>
-                    <input type="text" id="precioCompra" placeholder="0" oninput="formatInputMoney(this)">
+                    <input type="text" id="precioCompra" placeholder="$0.00" oninput="formatInputMoney(this)" onblur="formatInputMoneyFull(this)">
                 </div>
             </div>
             <div class="grid-2">
@@ -267,7 +267,7 @@
                 </div>
                 <div class="field">
                     <label>Precio de Enajenación $</label>
-                    <input type="text" id="precioVenta" placeholder="0" oninput="formatInputMoney(this)">
+                    <input type="text" id="precioVenta" placeholder="$0.00" oninput="formatInputMoney(this)" onblur="formatInputMoneyFull(this)">
                 </div>
             </div>
             <div class="checkbox-group">
@@ -330,7 +330,7 @@
             
             <div class="field">
                 <label>Gastos/Mejoras Deducibles (opcional) $</label>
-                <input type="text" id="gastosMejoras" placeholder="$0.00" oninput="formatInputMoney(this)">
+                <input type="text" id="gastosMejoras" placeholder="$0.00" oninput="formatInputMoney(this)" onblur="formatInputMoneyFull(this)">
             </div>
             <div class="field">
                 <label>Fecha de Mejoras (si aplica)</label>
@@ -338,7 +338,7 @@
             </div>
             <div class="field">
                 <label>Comisión Inmobiliaria (opcional) $</label>
-                <input type="text" id="comision" placeholder="$0.00" oninput="formatInputMoney(this)">
+                <input type="text" id="comision" placeholder="$0.00" oninput="formatInputMoney(this)" onblur="formatInputMoneyFull(this)">
             </div>
         </div>
 
@@ -804,8 +804,14 @@
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             input.value = parts.join('.');
         }
+        function formatInputMoneyFull(input) {
+            let val = input.value.replace(/[^0-9.]/g, '');
+            if (val === '') { input.value = ''; return; }
+            let num = parseFloat(val) || 0;
+            input.value = '$' + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
         function parseInputMoney(val) {
-            return parseFloat(val.replace(/,/g, '')) || 0;
+            return parseFloat(val.replace(/[$,]/g, '')) || 0;
         }
 
         
