@@ -2250,7 +2250,6 @@ function subirDocCliente(idx, tipo, input) {
             document.getElementById('expFecha').value = new Date().toISOString().split('T')[0];
             document.getElementById('expDescripcion').value = '';
             document.getElementById('expPartes').value = '';
-            document.getElementById('expPresupuesto').value = '';
             cargarClientesEnSelect();
             document.getElementById('tituloFormExpediente').textContent = 'Nuevo Expediente';
             showPanel('nuevo-expediente');
@@ -2310,7 +2309,7 @@ function subirDocCliente(idx, tipo, input) {
                 fecha: document.getElementById('expFecha').value,
                 descripcion: document.getElementById('expDescripcion').value.trim(),
                 partes: document.getElementById('expPartes').value.trim(),
-                presupuesto: document.getElementById('expPresupuesto').value,
+                presupuesto: '',
                 fechaCreacion: new Date().toISOString()
             };
             
@@ -2404,7 +2403,7 @@ function subirDocCliente(idx, tipo, input) {
             document.getElementById('expFecha').value = e.fecha || '';
             document.getElementById('expDescripcion').value = e.descripcion || '';
             document.getElementById('expPartes').value = e.partes || '';
-            document.getElementById('expPresupuesto').value = e.presupuesto || '';
+
             
             document.getElementById('tituloFormExpediente').textContent = 'Editar Expediente';
             showPanel('nuevo-expediente');
