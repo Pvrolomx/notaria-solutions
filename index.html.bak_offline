@@ -158,6 +158,55 @@
             margin-left: 0.5rem;
         }
         
+        /* Secondary Menu - Chat y Llamadas */
+        .secondary-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .secondary-btn {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .secondary-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.1);
+        }
+        .secondary-btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .secondary-btn-icon.chat { background: #DBEAFE; }
+        .secondary-btn-icon.llamadas { background: #D1FAE5; }
+        .secondary-btn-text h4 { font-size: 0.85rem; font-weight: 500; }
+        .secondary-btn-text p { font-size: 0.65rem; color: var(--text-light); }
+        .secondary-btn-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 600;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         /* Panels */
         .panel { display: none; }
         .panel.active { display: block; }
@@ -293,6 +342,151 @@
         .btn-full { width: 100%; }
         
         
+        /* Chat Contactos */
+        .chat-contactos {
+            padding: 0.5rem;
+        }
+        .contacto-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .contacto-item:hover {
+            background: var(--bg-light);
+        }
+        .contacto-info {
+            flex: 1;
+        }
+        .contacto-nombre {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        .contacto-ultimo {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        /* Chat Panel */
+        .chat-container {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            height: calc(100vh - 250px);
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+        }
+        .message.sent {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .message.received {
+            background: var(--bg);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.75rem;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .chat-input button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        /* Call Panel */
+        .call-container {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .call-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0 auto 1.5rem;
+        }
+        .call-name { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .call-status { color: var(--text-light); margin-bottom: 2rem; font-size: 0.85rem; }
+        .call-actions { display: flex; justify-content: center; gap: 1.5rem; }
+        .call-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.2s;
+        }
+        .call-btn.mute { background: var(--bg); }
+        .call-btn.video { background: var(--bg); }
+        .call-btn.call { background: var(--success); color: white; }
+        .call-btn.end { background: var(--danger); color: white; }
+        
+        /* Calculadora */
         .calc-card {
             background: var(--white);
             border-radius: 16px;
@@ -674,6 +868,25 @@
                 </button>
             </div>
             
+            <div class="secondary-menu">
+                <button class="secondary-btn" onclick="showPanel('chat')">
+                    <div class="secondary-btn-icon chat">💬</div>
+                    <div class="secondary-btn-text">
+                        <h4>Chat</h4>
+                        <p>Mensajes</p>
+                    </div>
+                    
+                </button>
+                <button class="secondary-btn" onclick="showPanel('llamadas')">
+                    <div class="secondary-btn-icon llamadas">📞</div>
+                    <div class="secondary-btn-text">
+                        <h4>Llamadas</h4>
+                        <p>Voz y video</p>
+                    </div>
+                </button>
+            </div>
+            
+            
         </div>
         
         <!-- CLIENTES -->
@@ -948,40 +1161,11 @@
                         <textarea id="expDescripcion" rows="3" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;resize:vertical;"></textarea>
                     </div>
                     <div style="grid-column:1/-1;">
-                        <label style="display:block;margin-bottom:8px;font-weight:600;font-size:16px;">📎 Archivos Adjuntos</label>
-                        
-                        <!-- Zona de subida móvil-friendly -->
-                        <div id="dropZoneExp" onclick="document.getElementById('expArchivos').click()" 
-                             style="border:3px dashed #6366f1;border-radius:12px;padding:30px 20px;text-align:center;
-                                    background:linear-gradient(135deg,#f0f9ff,#e0f2fe);cursor:pointer;
-                                    transition:all 0.3s ease;min-height:120px;display:flex;flex-direction:column;
-                                    align-items:center;justify-content:center;gap:10px;">
-                            <div style="font-size:48px;">📁</div>
-                            <div style="font-size:16px;font-weight:600;color:#1e40af;">Toca para subir archivos</div>
-                            <div style="font-size:13px;color:#6b7280;">PDF, imágenes, Word (máx 10MB c/u)</div>
-                        </div>
-                        
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Archivos Adjuntos</label>
                         <input type="file" id="expArchivos" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" 
-                               style="display:none;">
-                        
-                        <!-- Botón cámara separado -->
-                        <button type="button" onclick="document.getElementById('expCamara').click()" 
-                                style="width:100%;margin-top:12px;padding:14px;background:linear-gradient(135deg,#10b981,#059669);
-                                       color:white;border:none;border-radius:10px;font-size:16px;font-weight:600;
-                                       cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-                            📷 Tomar Foto con Cámara
-                        </button>
-                        <input type="file" id="expCamara" accept="image/*" capture="environment" style="display:none;"
-                               onchange="agregarArchivoCamara(this)">
-                        
-                        <!-- Contador y espacio -->
-                        <div id="archivoStats" style="margin-top:12px;padding:10px;background:#f3f4f6;border-radius:8px;
-                                                      font-size:14px;color:#4b5563;display:none;">
-                            <span id="archivoCount">0 archivos</span> · <span id="archivoSize">0 KB</span>
-                        </div>
-                        
-                        <!-- Preview de archivos -->
-                        <div id="archivosPreview" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
+                               style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;background:white;">
+                        <small style="color:#666;display:block;margin-top:5px;">PDF, imagenes, Word (max 10MB c/u)</small>
+                        <div id="archivosPreview" style="margin-top:10px;"></div>
                     </div>
                 </div>
                 <div style="display:flex;gap:10px;margin-top:15px;">
@@ -1132,6 +1316,95 @@
             
         </div>
 
+        <!-- CHAT -->
+        <div id="panel-chat" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="volverDeChat()">←</button>
+                <div>
+                    <h2 id="chatTitulo">Chat</h2>
+                    <p id="chatSubtitulo">Mensajería interna</p>
+                </div>
+            </div>
+            
+            <!-- Lista de contactos -->
+            <div id="chatContactos" class="chat-contactos">
+                <div class="contacto-item" onclick="abrirChat('ana', 'Ana García', 'AG')">
+                    <div class="chat-avatar">AG</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">Ana García</div>
+                        <div class="contacto-ultimo">Asistente Legal</div>
+                    </div>
+                </div>
+                <div class="contacto-item" onclick="abrirChat('carlos', 'Carlos López', 'CL')">
+                    <div class="chat-avatar">CL</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">Carlos López</div>
+                        <div class="contacto-ultimo">Notario Auxiliar</div>
+                    </div>
+                </div>
+                <div class="contacto-item" onclick="abrirChat('maria', 'María Sánchez', 'MS')">
+                    <div class="chat-avatar">MS</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">María Sánchez</div>
+                        <div class="contacto-ultimo">Recepción</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Conversación -->
+            <div id="chatConversacion" class="chat-container" style="display:none;">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Escribe un mensaje..." onkeypress="if(event.key==='Enter')enviarMensaje()">
+                    <button onclick="enviarMensaje()">➤</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LLAMADAS -->
+        <div id="panel-llamadas" class="panel">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">&#8592;</button>
+                <div>
+                    <h2>Llamadas</h2>
+                    <p>Contactos y comunicaciones</p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="margin-bottom: 1rem;">Contactos Frecuentes</h3>
+                <div id="contactos-frecuentes">
+                    <p style="color: #888; text-align: center;">
+                        Los contactos de tus clientes apareceran aqui
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="margin-bottom: 1rem;">Llamada Rapida</h3>
+                <div class="field" style="margin-bottom: 1rem;">
+                    <label>Numero de telefono</label>
+                    <input type="tel" id="llamada-tel" placeholder="322 xxx xxxx">
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-primary" onclick="iniciarLlamada()" style="flex: 1;">
+                        Llamar
+                    </button>
+                    <button class="btn" onclick="iniciarWhatsApp()" style="flex: 1; background: #25D366; color: white;">
+                        WhatsApp
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">Historial Reciente</h3>
+                <div id="historial-llamadas">
+                    <p style="color: #888; text-align: center;">
+                        No hay llamadas recientes
+                    </p>
+                </div>
+            </div>
+        </div>
     </main>
     
         <script>
@@ -2027,9 +2300,11 @@ function subirDocCliente(idx, tipo, input) {
             var win = window.open();
             var esImagen = (doc.tipo && doc.tipo.startsWith('image/')) || doc.data.startsWith('data:image/');
             if (esImagen) {
-                win.document.write('<html><head><title>' + (doc.name || tipo) + '</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#222;"><img src="' + doc.data + '" style="max-width:100%;max-height:100vh;"></body></html>');
+                win.document.write('<html><head><title>' + (doc.name || tipo) + '</title>  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#222;"><img src="' + doc.data + '" style="max-width:100%;max-height:100vh;"></body></html>');
             } else {
-                win.document.write('<html><head><title>' + (doc.name || tipo) + '</title></head><body style="margin:0;"><embed src="' + doc.data + '" type="application/pdf" width="100%" height="100%" style="position:absolute;top:0;left:0;right:0;bottom:0;"></body></html>');
+                win.document.write('<html><head><title>' + (doc.name || tipo) + '</title>  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head><body style="margin:0;"><embed src="' + doc.data + '" type="application/pdf" width="100%" height="100%" style="position:absolute;top:0;left:0;right:0;bottom:0;"></body></html>');
             }
         }
         
@@ -2326,21 +2601,26 @@ function subirDocCliente(idx, tipo, input) {
             
             saveExpedientes(expedientes);
             
-            // Guardar archivos adjuntos en IndexedDB (usando archivosSeleccionados)
+            // Guardar archivos adjuntos en IndexedDB
+            var archivosInput = document.getElementById('expArchivos');
             var expIdx = expedienteActualId !== null ? expedienteActualId : expedientes.length - 1;
             
-            if (archivosSeleccionados && archivosSeleccionados.length > 0) {
+            if (archivosInput && archivosInput.files.length > 0) {
+                var files = archivosInput.files;
                 var promesas = [];
-                for (var i = 0; i < archivosSeleccionados.length; i++) {
-                    promesas.push(guardarArchivo(expIdx, archivosSeleccionados[i]));
+                for (var i = 0; i < files.length; i++) {
+                    if (files[i].size > 10485760) {
+                        alert('Archivo ' + files[i].name + ' excede 10MB');
+                        continue;
+                    }
+                    promesas.push(guardarArchivo(expIdx, files[i]));
                 }
                 Promise.all(promesas).then(function() {
-                    limpiarArchivosPreview();
+                    archivosInput.value = '';
                     renderExpedientes();
                     showPanel('expedientes');
                 }).catch(function(e) {
                     console.error('Error guardando archivos:', e);
-                    limpiarArchivosPreview();
                     renderExpedientes();
                     showPanel('expedientes');
                 });
@@ -3253,129 +3533,6 @@ function subirDocCliente(idx, tipo, input) {
         }
         
         // Función para subir múltiples archivos
-
-        // ========== MEJORAS MÓVIL - ARCHIVOS ==========
-        var archivosSeleccionados = [];
-        
-        function agregarArchivoCamara(input) {
-            if (!input.files || input.files.length === 0) return;
-            var file = input.files[0];
-            if (file.size > 10485760) {
-                alert('La foto excede 10MB');
-                return;
-            }
-            archivosSeleccionados.push(file);
-            actualizarPreviewArchivos();
-            input.value = '';
-        }
-        
-        function agregarArchivosExp(input) {
-            if (!input.files || input.files.length === 0) return;
-            for (var i = 0; i < input.files.length; i++) {
-                var file = input.files[i];
-                if (file.size > 10485760) {
-                    alert('Archivo ' + file.name + ' excede 10MB');
-                    continue;
-                }
-                archivosSeleccionados.push(file);
-            }
-            actualizarPreviewArchivos();
-            input.value = '';
-        }
-        
-        function actualizarPreviewArchivos() {
-            var preview = document.getElementById('archivosPreview');
-            var stats = document.getElementById('archivoStats');
-            var countEl = document.getElementById('archivoCount');
-            var sizeEl = document.getElementById('archivoSize');
-            
-            if (archivosSeleccionados.length === 0) {
-                preview.innerHTML = '';
-                stats.style.display = 'none';
-                return;
-            }
-            
-            var totalSize = 0;
-            var html = '';
-            archivosSeleccionados.forEach(function(file, idx) {
-                totalSize += file.size;
-                var sizeStr = (file.size / 1024).toFixed(1) + ' KB';
-                if (file.size > 1048576) sizeStr = (file.size / 1048576).toFixed(1) + ' MB';
-                
-                var icon = '📄';
-                if (file.type.includes('image')) icon = '🖼️';
-                else if (file.type.includes('pdf')) icon = '📕';
-                else if (file.type.includes('word') || file.name.endsWith('.doc')) icon = '📘';
-                
-                html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;">';
-                html += '<div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">';
-                html += '<span style="font-size:24px;">' + icon + '</span>';
-                html += '<div style="min-width:0;flex:1;">';
-                html += '<div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + file.name + '</div>';
-                html += '<div style="font-size:12px;color:#6b7280;">' + sizeStr + '</div>';
-                html += '</div></div>';
-                html += '<button type="button" onclick="quitarArchivoPreview(' + idx + ')" style="padding:8px 12px;background:#ef4444;color:white;border:none;border-radius:6px;font-size:14px;cursor:pointer;">✕</button>';
-                html += '</div>';
-            });
-            
-            preview.innerHTML = html;
-            stats.style.display = 'block';
-            countEl.textContent = archivosSeleccionados.length + ' archivo' + (archivosSeleccionados.length > 1 ? 's' : '');
-            var totalStr = (totalSize / 1024).toFixed(1) + ' KB';
-            if (totalSize > 1048576) totalStr = (totalSize / 1048576).toFixed(1) + ' MB';
-            sizeEl.textContent = totalStr;
-        }
-        
-        function quitarArchivoPreview(idx) {
-            archivosSeleccionados.splice(idx, 1);
-            actualizarPreviewArchivos();
-        }
-        
-        function limpiarArchivosPreview() {
-            archivosSeleccionados = [];
-            actualizarPreviewArchivos();
-        }
-        
-        // Evento para el input de archivos
-        document.addEventListener('DOMContentLoaded', function() {
-            var expArchivos = document.getElementById('expArchivos');
-            if (expArchivos) {
-                expArchivos.addEventListener('change', function() {
-                    agregarArchivosExp(this);
-                });
-            }
-            
-            // Drag and drop
-            var dropZone = document.getElementById('dropZoneExp');
-            if (dropZone) {
-                dropZone.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = '#10b981';
-                    this.style.background = 'linear-gradient(135deg,#d1fae5,#a7f3d0)';
-                });
-                dropZone.addEventListener('dragleave', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = '#6366f1';
-                    this.style.background = 'linear-gradient(135deg,#f0f9ff,#e0f2fe)';
-                });
-                dropZone.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = '#6366f1';
-                    this.style.background = 'linear-gradient(135deg,#f0f9ff,#e0f2fe)';
-                    var files = e.dataTransfer.files;
-                    for (var i = 0; i < files.length; i++) {
-                        if (files[i].size > 10485760) {
-                            alert('Archivo ' + files[i].name + ' excede 10MB');
-                            continue;
-                        }
-                        archivosSeleccionados.push(files[i]);
-                    }
-                    actualizarPreviewArchivos();
-                });
-            }
-        });
-        // ========== FIN MEJORAS MÓVIL ==========
-
         function subirArchivosExp(input, expId) {
             if (!input.files || input.files.length === 0) return;
             var files = input.files;
