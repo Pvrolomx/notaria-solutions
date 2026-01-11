@@ -158,6 +158,55 @@
             margin-left: 0.5rem;
         }
         
+        /* Secondary Menu - Chat y Llamadas */
+        .secondary-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .secondary-btn {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .secondary-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.1);
+        }
+        .secondary-btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .secondary-btn-icon.chat { background: #DBEAFE; }
+        .secondary-btn-icon.llamadas { background: #D1FAE5; }
+        .secondary-btn-text h4 { font-size: 0.85rem; font-weight: 500; }
+        .secondary-btn-text p { font-size: 0.65rem; color: var(--text-light); }
+        .secondary-btn-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 600;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         /* Panels */
         .panel { display: none; }
         .panel.active { display: block; }
@@ -293,6 +342,151 @@
         .btn-full { width: 100%; }
         
         
+        /* Chat Contactos */
+        .chat-contactos {
+            padding: 0.5rem;
+        }
+        .contacto-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .contacto-item:hover {
+            background: var(--bg-light);
+        }
+        .contacto-info {
+            flex: 1;
+        }
+        .contacto-nombre {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        .contacto-ultimo {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        /* Chat Panel */
+        .chat-container {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            height: calc(100vh - 250px);
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+        }
+        .message.sent {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .message.received {
+            background: var(--bg);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.75rem;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .chat-input button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        /* Call Panel */
+        .call-container {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .call-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0 auto 1.5rem;
+        }
+        .call-name { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .call-status { color: var(--text-light); margin-bottom: 2rem; font-size: 0.85rem; }
+        .call-actions { display: flex; justify-content: center; gap: 1.5rem; }
+        .call-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.2s;
+        }
+        .call-btn.mute { background: var(--bg); }
+        .call-btn.video { background: var(--bg); }
+        .call-btn.call { background: var(--success); color: white; }
+        .call-btn.end { background: var(--danger); color: white; }
+        
+        /* Calculadora */
         .calc-card {
             background: var(--white);
             border-radius: 16px;
@@ -674,6 +868,9 @@
                 </button>
             </div>
             
+
+            
+            
         </div>
         
         <!-- CLIENTES -->
@@ -933,13 +1130,15 @@
                         </select>
                     </div>
                     <div>
-                        <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha Apertura</label>
-                        <input type="date" id="expFecha" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
-                    </div>
-                    <div>
-                        <button type="button" onclick="generarPresupuesto()" style="width:100%;padding:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Presupuesto</label>
+                        <input type="number" id="expPresupuesto" placeholder="0.00" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
+                        <button type="button" onclick="generarPresupuesto()" style="margin-top:8px;width:100%;padding:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
                             📊 Generar Presupuesto
                         </button>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:5px;font-weight:600;">Fecha Apertura</label>
+                        <input type="date" id="expFecha" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;">
                     </div>
                     <div style="grid-column:1/-1;">
                         <label style="display:block;margin-bottom:5px;font-weight:600;">Notas Adicionales</label>
@@ -1130,6 +1329,95 @@
             
         </div>
 
+        <!-- CHAT -->
+        <div id="panel-chat" class="panel" style="display:none !important;">
+            <div class="panel-header">
+                <button class="back-btn" onclick="volverDeChat()">←</button>
+                <div>
+                    <h2 id="chatTitulo">Chat</h2>
+                    <p id="chatSubtitulo">Mensajería interna</p>
+                </div>
+            </div>
+            
+            <!-- Lista de contactos -->
+            <div id="chatContactos" class="chat-contactos">
+                <div class="contacto-item" onclick="abrirChat('ana', 'Ana García', 'AG')">
+                    <div class="chat-avatar">AG</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">Ana García</div>
+                        <div class="contacto-ultimo">Asistente Legal</div>
+                    </div>
+                </div>
+                <div class="contacto-item" onclick="abrirChat('carlos', 'Carlos López', 'CL')">
+                    <div class="chat-avatar">CL</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">Carlos López</div>
+                        <div class="contacto-ultimo">Notario Auxiliar</div>
+                    </div>
+                </div>
+                <div class="contacto-item" onclick="abrirChat('maria', 'María Sánchez', 'MS')">
+                    <div class="chat-avatar">MS</div>
+                    <div class="contacto-info">
+                        <div class="contacto-nombre">María Sánchez</div>
+                        <div class="contacto-ultimo">Recepción</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Conversación -->
+            <div id="chatConversacion" class="chat-container" style="display:none;">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Escribe un mensaje..." onkeypress="if(event.key==='Enter')enviarMensaje()">
+                    <button onclick="enviarMensaje()">➤</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- LLAMADAS -->
+        <div id="panel-llamadas" class="panel" style="display:none !important;">
+            <div class="panel-header">
+                <button class="back-btn" onclick="showPanel('home')">&#8592;</button>
+                <div>
+                    <h2>Llamadas</h2>
+                    <p>Contactos y comunicaciones</p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="margin-bottom: 1rem;">Contactos Frecuentes</h3>
+                <div id="contactos-frecuentes">
+                    <p style="color: #888; text-align: center;">
+                        Los contactos de tus clientes apareceran aqui
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 1rem;">
+                <h3 style="margin-bottom: 1rem;">Llamada Rapida</h3>
+                <div class="field" style="margin-bottom: 1rem;">
+                    <label>Numero de telefono</label>
+                    <input type="tel" id="llamada-tel" placeholder="322 xxx xxxx">
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-primary" onclick="iniciarLlamada()" style="flex: 1;">
+                        Llamar
+                    </button>
+                    <button class="btn" onclick="iniciarWhatsApp()" style="flex: 1; background: #25D366; color: white;">
+                        WhatsApp
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">Historial Reciente</h3>
+                <div id="historial-llamadas">
+                    <p style="color: #888; text-align: center;">
+                        No hay llamadas recientes
+                    </p>
+                </div>
+            </div>
+        </div>
     </main>
     
         <script>
@@ -2025,9 +2313,11 @@ function subirDocCliente(idx, tipo, input) {
             var win = window.open();
             var esImagen = (doc.tipo && doc.tipo.startsWith('image/')) || doc.data.startsWith('data:image/');
             if (esImagen) {
-                win.document.write('<html><head><title>' + (doc.name || tipo) + '</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#222;"><img src="' + doc.data + '" style="max-width:100%;max-height:100vh;"></body></html>');
+                win.document.write('<html><head><title>' + (doc.name || tipo) + '</title>  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#222;"><img src="' + doc.data + '" style="max-width:100%;max-height:100vh;"></body></html>');
             } else {
-                win.document.write('<html><head><title>' + (doc.name || tipo) + '</title></head><body style="margin:0;"><embed src="' + doc.data + '" type="application/pdf" width="100%" height="100%" style="position:absolute;top:0;left:0;right:0;bottom:0;"></body></html>');
+                win.document.write('<html><head><title>' + (doc.name || tipo) + '</title>  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head><body style="margin:0;"><embed src="' + doc.data + '" type="application/pdf" width="100%" height="100%" style="position:absolute;top:0;left:0;right:0;bottom:0;"></body></html>');
             }
         }
         
@@ -2250,6 +2540,7 @@ function subirDocCliente(idx, tipo, input) {
             document.getElementById('expFecha').value = new Date().toISOString().split('T')[0];
             document.getElementById('expDescripcion').value = '';
             document.getElementById('expPartes').value = '';
+            document.getElementById('expPresupuesto').value = '';
             cargarClientesEnSelect();
             document.getElementById('tituloFormExpediente').textContent = 'Nuevo Expediente';
             showPanel('nuevo-expediente');
@@ -2309,7 +2600,7 @@ function subirDocCliente(idx, tipo, input) {
                 fecha: document.getElementById('expFecha').value,
                 descripcion: document.getElementById('expDescripcion').value.trim(),
                 partes: document.getElementById('expPartes').value.trim(),
-                presupuesto: '',
+                presupuesto: document.getElementById('expPresupuesto').value,
                 fechaCreacion: new Date().toISOString()
             };
             
@@ -2403,7 +2694,7 @@ function subirDocCliente(idx, tipo, input) {
             document.getElementById('expFecha').value = e.fecha || '';
             document.getElementById('expDescripcion').value = e.descripcion || '';
             document.getElementById('expPartes').value = e.partes || '';
-
+            document.getElementById('expPresupuesto').value = e.presupuesto || '';
             
             document.getElementById('tituloFormExpediente').textContent = 'Editar Expediente';
             showPanel('nuevo-expediente');
@@ -3487,14 +3778,6 @@ function subirDocCliente(idx, tipo, input) {
         }
         // ========== FIN SW REGISTER ==========
     </script>
-
-    <!-- Footer Signature -->
-    <div id="colmena-signature" style="position:fixed;bottom:0;left:0;right:0;text-align:center;padding:8px;
-         background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(139,69,19,0.1));
-         border-top:1px solid rgba(212,175,55,0.3);font-size:11px;color:#8b7355;z-index:100;">
-        Hecho por <strong style="color:#d4af37;">Colmena</strong> - C6 (Mike) 2026 🐝
-    </div>
-
 </body>
 </html>
 <!-- deploy fix -->
