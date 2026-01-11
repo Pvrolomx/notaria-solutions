@@ -1,5 +1,5 @@
 // Service Worker para Notaria Solutions PWA
-const CACHE_NAME = 'notaria-solutions-v5';
+const CACHE_NAME = 'notaria-solutions-v6';
 const urlsToCache = [
   '/',
   '/index.html',
