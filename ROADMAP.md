@@ -1,10 +1,12 @@
 # NOTARIA-SOLUTIONS ROADMAP
 ## La App que Mata Notarias
 
-### FASE 1 - MVP (Actual)
+### FASE 1 - MVP ✅ COMPLETADA
 - [x] Calculadora ISR para enajenación de inmuebles
 - [x] Interfaz web responsive
 - [x] Deploy en Vercel
+- [x] PWA instalable
+- [x] Escáner de documentos (Fase 1)
 
 ### FASE 2 - KYC AutoFill 🆕
 - [ ] Auto-llenado de formularios KYC/Escrow
@@ -25,7 +27,15 @@
 - [ ] Subdominios por cliente
 
 ---
+
+## FUERA DE ALCANCE (No implementar)
+- ~~Chat interno~~ → WhatsApp es universal
+- ~~Llamadas VoIP~~ → Telcel/AT&T ya existen
+- ~~Videoconferencia~~ → Zoom/Meet ya existen
+
+---
 Generado por LAQCA 🐝 | Colmena 2026
+Actualizado: 10 Enero 2026
 
 ## ESTÁNDARES DE DESARROLLO
 
@@ -47,4 +57,3 @@ Generado por LAQCA 🐝 | Colmena 2026
 - Metadata (nombre, fecha, estado) → localStorage
 - Archivos binarios (PDF, imágenes) → IndexedDB
 - Escalabilidad → SD externa en Android
-
