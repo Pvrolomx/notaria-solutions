@@ -973,13 +973,6 @@
         
             }
             
-            // ISR Cedular (impuesto estatal ADICIONAL al ISR federal)
-            const entidad = document.getElementById('entidadFederativa').value;
-            const estadosConCedular = ['jalisco', 'guanajuato', 'chihuahua', 'quintana_roo', 'yucatan'];
-            let isrCedular = 0;
-            if (estadosConCedular.includes(entidad) && !hayPerdida) {
-                isrCedular = utilidadGravable * 0.05;
-            }
             // IVA local comercial
             const iva = esLocalComercial ? precioVenta * 0.16 : 0;
             
@@ -1040,16 +1033,10 @@
                 document.getElementById('rowIva').classList.add('hidden');
             }
             
-            // Mostrar ISR Cedular
-        if (typeof isrCedular !== 'undefined' && isrCedular > 0) {
-            document.getElementById('rowCedular').classList.remove('hidden');
-            document.getElementById('resIsrCedular').textContent = formatMoney(isrCedular);
-        } else {
-            document.getElementById('rowCedular').classList.add('hidden');
-        }
-        const totalFinal = isrTotal + (typeof isrCedular !== 'undefined' ? isrCedular : 0);
-        document.getElementById('resIsrFinal').textContent = formatMoney(totalFinal);
-            document.getElementById('resPorcentaje').textContent = ((totalFinal / precioVenta) * 100).toFixed(2) + '%';
+            // ISR Cedular ya esta incluido en ISR Estado (es el mecanismo de distribucion)
+        document.getElementById('rowCedular').classList.add('hidden');
+        document.getElementById('resIsrFinal').textContent = formatMoney(isrTotal);
+            document.getElementById('resPorcentaje').textContent = ((isrTotal / precioVenta) * 100).toFixed(2) + '%';
             
             if (hayPerdida) {
                 document.getElementById('infoPerdida').classList.remove('hidden');
