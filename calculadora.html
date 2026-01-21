@@ -302,6 +302,18 @@
                     <input type="number" id="numExentan" value="1" min="0" max="10">
                 </div>
             </div>
+            <div class="field" style="margin-top: 1rem;">
+                <label>Entidad Federativa (ubicacion del inmueble)</label>
+                <select id="entidadFederativa" style="width:100%;padding:0.75rem 1rem;border:1px solid var(--border);border-radius:10px;font-size:0.9rem;">
+                    <option value="sin_cedular">Sin Impuesto Cedular (CDMX, Edo. Mex, etc.)</option>
+                    <option value="jalisco" selected>Jalisco (5% cedular)</option>
+                    <option value="guanajuato">Guanajuato (5% cedular)</option>
+                    <option value="chihuahua">Chihuahua (5% cedular)</option>
+                    <option value="quintana_roo">Quintana Roo (5% cedular)</option>
+                    <option value="yucatan">Yucatan (5% cedular)</option>
+                </select>
+            </div>
+
         </div>
 
         <!-- VALORES -->
@@ -319,11 +331,11 @@
                 <div class="grid-2">
                     <div class="field">
                         <label>% Terreno</label>
-                        <input type="number" id="pctTerreno" value="20" min="0" max="100">
+                        <input type="number" id="pctTerreno" value="80" min="0" max="100">
                     </div>
                     <div class="field">
                         <label>% Construcción</label>
-                        <input type="number" id="pctConstruccion" value="80" min="0" max="100">
+                        <input type="number" id="pctConstruccion" value="20" min="0" max="100">
                     </div>
                 </div>
             </div>
@@ -469,7 +481,11 @@
                     <span class="label">IVA Local Comercial (16%)</span>
                     <span class="value" id="resIva">-</span>
                 </div>
-                <div class="result-row total">
+                <div id="rowCedular" class="result-row hidden">
+                <span class="label">ISR Cedular Estatal (5% s/ganancia)</span>
+                <span class="value" id="resIsrCedular">-</span>
+            </div>
+            <div class="result-row total">
                     <span class="label">💰 TOTAL ISR A PAGAR</span>
                     <span class="value" id="resIsrFinal">-</span>
                 </div>
@@ -954,6 +970,14 @@
                 const isrEstadoPorEnajenante = Math.min(utilidadPorEnajenante * 0.05, isrPorEnajenante);
                 isrEstado = isrEstadoPorEnajenante * numEnajenantes;
                 isrFederacion = isrTotal - isrEstado;
+        
+        // ISR Cedular (impuesto estatal ADICIONAL)
+        const entidad = document.getElementById('entidadFederativa').value;
+        const estadosConCedular = ['jalisco', 'guanajuato', 'chihuahua', 'quintana_roo', 'yucatan'];
+        let isrCedular = 0;
+        if (estadosConCedular.includes(entidad)) {
+            isrCedular = utilidadGravable * 0.05;
+        }
             }
             // IVA local comercial
             const iva = esLocalComercial ? precioVenta * 0.16 : 0;
@@ -1015,8 +1039,16 @@
                 document.getElementById('rowIva').classList.add('hidden');
             }
             
-            document.getElementById('resIsrFinal').textContent = formatMoney(isrTotal);
-            document.getElementById('resPorcentaje').textContent = ((isrTotal / precioVenta) * 100).toFixed(2) + '%';
+            // Mostrar ISR Cedular
+        if (typeof isrCedular !== 'undefined' && isrCedular > 0) {
+            document.getElementById('rowCedular').classList.remove('hidden');
+            document.getElementById('resIsrCedular').textContent = formatMoney(isrCedular);
+        } else {
+            document.getElementById('rowCedular').classList.add('hidden');
+        }
+        const totalFinal = isrTotal + (typeof isrCedular !== 'undefined' ? isrCedular : 0);
+        document.getElementById('resIsrFinal').textContent = formatMoney(totalFinal);
+            document.getElementById('resPorcentaje').textContent = ((totalFinal / precioVenta) * 100).toFixed(2) + '%';
             
             if (hayPerdida) {
                 document.getElementById('infoPerdida').classList.remove('hidden');
