@@ -1020,6 +1020,7 @@
             let isrTotal = 0;
             let isrEstado = 0;
             let isrFederacion = 0;
+            let isr25 = 0;
             let isr35 = 0;
             let isrTablas = 0;
             let mejorOpcion = '';
@@ -1033,18 +1034,24 @@
                     isrEstado = 0;
                     mejorOpcion = '25% s/Ingreso (pérdida fiscal)';
                 } else {
-                    // Extranjero: DOS opciones (Art.160 LISR)
-                    const isr25 = precioVenta * 0.25; // 25% sobre ingreso SIN deducciones
+                    // Extranjero: TRES opciones (Art.160 LISR)
+                    isr25 = precioVenta * 0.25; // 25% sobre ingreso SIN deducciones
                     isr35 = utilidadGravable * 0.35; // 35% sobre ganancia CON deducciones
                     
-                    // Elegir la menor de las DOS opciones
-                    if (isr25 <= isr35) {
-                        isrTotal = isr25;
-                        mejorOpcion = '25% s/Ingreso (sin deduc)';
-                    } else {
-                        isrTotal = isr35;
-                        mejorOpcion = '35% s/Ganancia (con deduc)';
-                    }
+                    // Opción 3: Tablas Art.152 (como residente)
+                    const utilidadAnualExt = utilidadGravable / anios;
+                    const isrAnualExt = calcularISRTablas(utilidadAnualExt, fechaVenta);
+                    isrTablas = isrAnualExt * anios;
+                    
+                    // Elegir la menor de las TRES opciones
+                    const opciones = [
+                        { valor: isr25, nombre: '25% s/Ingreso (sin deduc)' },
+                        { valor: isr35, nombre: '35% s/Ganancia (con deduc)' },
+                        { valor: isrTablas, nombre: 'Tablas Art.152' }
+                    ];
+                    const mejor = opciones.reduce((a, b) => a.valor < b.valor ? a : b);
+                    isrTotal = mejor.valor;
+                    mejorOpcion = mejor.nombre;
                     
                     // Extranjero: todo a federación
                     isrFederacion = isrTotal;
