@@ -782,7 +782,7 @@
         }
         
         function getINPC(fecha, usarMesAnterior = false) {
-            const d = new Date(fecha);
+            const d = new Date(fecha + 'T12:00:00');
             if (usarMesAnterior) {
                 d.setMonth(d.getMonth() - 1);
             }
@@ -856,14 +856,14 @@
             // Si toggle "Usar tabla local" esta activo, usar directamente la tabla
             const usarLocal = document.getElementById('usarTablaLocal')?.checked;
             if (usarLocal) {
-                const dt = new Date(fecha);
+                const dt = new Date(fecha + 'T12:00:00');
                 if (usarMesAnterior) { dt.setMonth(dt.getMonth() - 1); }
                 const yr = dt.getFullYear();
                 const mo = dt.getMonth() + 1;
                 const ky = yr + '-' + String(mo).padStart(2, '0');
                 return INPC[ky] || INPC['2024-12'];
             }
-            const d = new Date(fecha);
+            const d = new Date(fecha + 'T12:00:00');
             if (usarMesAnterior) {
                 d.setMonth(d.getMonth() - 1);
             }
