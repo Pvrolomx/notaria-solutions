@@ -971,13 +971,14 @@
                 isrEstado = isrEstadoPorEnajenante * numEnajenantes;
                 isrFederacion = isrTotal - isrEstado;
         
-        // ISR Cedular (impuesto estatal ADICIONAL)
-        const entidad = document.getElementById('entidadFederativa').value;
-        const estadosConCedular = ['jalisco', 'guanajuato', 'chihuahua', 'quintana_roo', 'yucatan'];
-        let isrCedular = 0;
-        if (estadosConCedular.includes(entidad)) {
-            isrCedular = utilidadGravable * 0.05;
-        }
+            }
+            
+            // ISR Cedular (impuesto estatal ADICIONAL al ISR federal)
+            const entidad = document.getElementById('entidadFederativa').value;
+            const estadosConCedular = ['jalisco', 'guanajuato', 'chihuahua', 'quintana_roo', 'yucatan'];
+            let isrCedular = 0;
+            if (estadosConCedular.includes(entidad) && !hayPerdida) {
+                isrCedular = utilidadGravable * 0.05;
             }
             // IVA local comercial
             const iva = esLocalComercial ? precioVenta * 0.16 : 0;
