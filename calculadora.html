@@ -1028,14 +1028,14 @@
             if (esExtranjero) {
                 if (hayPerdida) {
                     // PÉRDIDA FISCAL extranjero (Art.160 LISR)
-                    // Extranjero puede elegir Opción B (35% ganancia = ) si hay pérdida
+                    // Extranjero puede elegir Opción B (35% ganancia = $0) si hay pérdida
                     isr25 = precioVenta * 0.25;
-                    isr35 = 0; // Ganancia negativa = 
-                    isrTablas = 0; // Sin ganancia = 
+                    isr35 = 0; // Ganancia negativa = $0
+                    isrTablas = 0; // Sin ganancia = $0
                     isrTotal = 0;
                     isrFederacion = 0;
                     isrEstado = 0;
-                    mejorOpcion = '35% s/Ganancia (pérdida = )';
+                    mejorOpcion = '35% s/Ganancia (pérdida = $0)';
                 } else {
                     // Extranjero: TRES opciones (Art.160 LISR)
                     isr25 = precioVenta * 0.25; // 25% sobre ingreso SIN deducciones
